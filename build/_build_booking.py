@@ -1,0 +1,628 @@
+"""Builds the site-visit booking page."""
+import base64, json
+OUT='/sessions/clever-happy-ptolemy/mnt/outputs/'
+I=json.load(open(OUT+'_imgs.json'))
+LD='data:image/png;base64,'+base64.b64encode(open(OUT+'logo.png','rb').read()).decode()
+LW='data:image/png;base64,'+base64.b64encode(open(OUT+'logo-white.png','rb').read()).decode()
+
+HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Book a Free Site Visit | Expert Fence — DC, MD &amp; VA</title>
+<meta name="description" content="Book a free on-site fence estimate with Expert Fence. Pick an hour that works, upload photos of your project, and get a written quote. Residential and commercial, across Washington DC, Maryland and Virginia.">
+<meta name="keywords" content="book fence estimate DC, schedule fence site visit Virginia, free fence quote Maryland, fence estimate appointment Alexandria, commercial fence survey DMV">
+<link rel="canonical" href="https://www.expertfence.com/book/">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="__LD__">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","serviceType":"Free On-Site Fence Estimate",
+"provider":{"@id":"https://www.expertfence.com/#business","@type":"HomeAndConstructionBusiness","name":"Expert Fence","telephone":"+1-703-751-3008"},
+"areaServed":[{"@type":"City","name":"Washington"},{"@type":"State","name":"Virginia"},{"@type":"State","name":"Maryland"}],
+"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","description":"Free written estimate, no obligation"}}
+</script>
+<style>
+:root{--ink:#12150f;--mute:#6e756a;--line:#e6e3da;--bg:#fcfbf8;--bg2:#f2f0e9;
+--green:#1f4d33;--green-d:#0e2418;--cedar:#c07c33;--ok:#1e7d43;--red:#b03a2e;
+--display:'Bebas Neue','Barlow Condensed',Impact,sans-serif;--body:'Inter',system-ui,-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:.96;text-transform:uppercase;letter-spacing:.015em}
+.wrap{max-width:1240px;margin:0 auto;padding:0 clamp(1.4rem,4vw,2.4rem)}
+section{padding:clamp(2.6rem,5vw,4rem) 0}
+.tag{font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cedar);display:block;margin-bottom:.55rem}
+.h2{font-size:clamp(2.2rem,5vw,3.4rem)}
+.lede{color:var(--mute);font-size:clamp(1rem,1.4vw,1.1rem);max-width:62ch;margin-top:.8rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-family:var(--display);font-size:1.05rem;letter-spacing:.06em;padding:.85rem 1.6rem;border-radius:2px;border:2px solid transparent;cursor:pointer;transition:.25s;min-height:48px;text-transform:uppercase}
+.b-cedar{background:var(--cedar);color:#fff}.b-cedar:hover{background:#a5661f;transform:translateY(-2px)}
+.b-green{background:var(--green);color:#fff}.b-green:hover{background:var(--green-d)}
+.b-dark{border-color:var(--ink);color:var(--ink)}.b-dark:hover{background:var(--ink);color:#fff}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.topbar{background:var(--green-d);color:rgba(255,255,255,.85);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:.5rem}
+nav{position:sticky;top:0;z-index:200;background:rgba(252,251,248,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nrow{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.6rem 0}
+.brand{display:flex;flex-direction:column;align-items:center;gap:.2rem;width:fit-content}
+.logo{height:clamp(30px,3.8vw,40px);width:auto}
+.bsub{font-size:.52rem;letter-spacing:.22em;color:var(--mute);text-transform:uppercase;font-weight:600;text-align:center}
+.links{display:flex;gap:1.4rem;align-items:center;list-style:none;font-family:var(--display);font-size:1.06rem;letter-spacing:.05em}
+.links a{color:var(--mute)}.links a:hover,.links a.on{color:var(--ink)}
+.links .mobcta,.links .mobnote,.links .mobonly{display:none}
+.nact{display:flex;align-items:center;gap:.55rem}
+.nact .btn{padding:.7rem 1.15rem;font-size:.96rem;min-height:44px}
+.tel{font-family:var(--display);font-size:1.2rem}
+.burg{display:none;background:none;border:none;font-size:1.6rem;cursor:pointer;line-height:1;padding:.2rem .3rem}
+@media(max-width:1150px){.tel{display:none}}
+@media(max-width:980px){.links{gap:1rem;font-size:.88rem}.nact .btn{padding:.65rem .9rem;font-size:.9rem}}
+.head{background:var(--green-d);color:#fff;padding:clamp(2.4rem,5vw,3.8rem) 0 clamp(1.8rem,3.5vw,2.6rem);position:relative;overflow:hidden}
+.head::before{content:"";position:absolute;inset:0;background:url(__HEROIMG__) center/cover;opacity:.14}
+.head .wrap{position:relative;z-index:1}
+.head h1{font-size:clamp(2.4rem,6vw,4.4rem);color:#fff}
+.head p{color:rgba(255,255,255,.8);max-width:56ch;margin-top:.8rem}
+.crumb{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.7rem}
+.sync{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.1rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);padding:.45rem .9rem;font-size:.78rem}
+.dot{width:8px;height:8px;border-radius:50%;background:#4ade80;animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,.6)}70%{box-shadow:0 0 0 9px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+/* stepper */
+.steps{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:2rem}
+.stp{flex:1 1 150px;border-top:3px solid var(--line);padding-top:.6rem;font-size:.78rem;color:var(--mute);transition:.3s}
+.stp b{display:block;font-family:var(--display);font-size:1.15rem;letter-spacing:.05em;color:var(--mute)}
+.stp.on{border-top-color:var(--cedar)}.stp.on b{color:var(--ink)}
+.stp.done{border-top-color:var(--green)}.stp.done b{color:var(--green)}
+/* layout */
+.book{display:grid;grid-template-columns:1.35fr .65fr;gap:clamp(1.6rem,3.5vw,2.8rem);align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:4px;padding:clamp(1.3rem,3vw,2rem);margin-bottom:1rem}
+.panel h3{font-size:1.5rem;margin-bottom:.2rem}
+.panel .sub{font-size:.86rem;color:var(--mute);margin-bottom:1.1rem}
+/* type toggle */
+.tt{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.tt button{border:2px solid var(--line);background:#fff;border-radius:3px;padding:1.1rem 1rem;cursor:pointer;text-align:left;transition:.25s;min-height:74px}
+.tt button b{display:block;font-family:var(--display);font-size:1.3rem;letter-spacing:.04em;color:var(--ink)}
+.tt button span{font-size:.78rem;color:var(--mute)}
+.tt button.on{border-color:var(--green);background:#f2f8f3}
+/* calendar */
+.calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.calhead b{font-family:var(--display);font-size:1.5rem;letter-spacing:.04em}
+.calnav{display:flex;gap:.35rem}
+.calnav button{width:38px;height:38px;border:1.5px solid var(--line);background:#fff;cursor:pointer;font-size:1rem;border-radius:2px}
+.calnav button:hover:not(:disabled){border-color:var(--cedar)}
+.calnav button:disabled{opacity:.3;cursor:not-allowed}
+.dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.dow span{text-align:center;font-size:.68rem;font-weight:700;letter-spacing:.1em;color:var(--mute);text-transform:uppercase;padding:.3rem 0}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal button{aspect-ratio:1;border:1.5px solid var(--line);background:#fff;cursor:pointer;font-family:var(--body);font-size:.92rem;font-weight:600;
+ color:var(--ink);border-radius:2px;transition:.2s;position:relative;display:flex;align-items:center;justify-content:center;min-height:42px}
+.cal button:hover:not(:disabled){border-color:var(--cedar);transform:translateY(-2px)}
+.cal button:disabled{color:#c9c6bd;background:var(--bg2);cursor:not-allowed;border-color:transparent}
+.cal button.on{background:var(--green);color:#fff;border-color:var(--green)}
+.cal button.free::after{content:"";position:absolute;bottom:5px;width:4px;height:4px;border-radius:50%;background:var(--cedar)}
+.cal button.on::after{background:#fff}
+.cal .pad{visibility:hidden}
+.legend{display:flex;gap:1.2rem;margin-top:.9rem;font-size:.75rem;color:var(--mute);flex-wrap:wrap}
+.legend i{width:8px;height:8px;border-radius:50%;background:var(--cedar);display:inline-block;margin-right:.35rem}
+/* slots */
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem}
+.slot{border:1.5px solid var(--line);background:#fff;border-radius:2px;padding:.75rem .6rem;cursor:pointer;font-family:var(--body);
+ font-size:.88rem;font-weight:600;transition:.2s;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1rem}
+.slot small{font-weight:500;font-size:.7rem;color:var(--mute)}
+.slot:hover:not(:disabled){border-color:var(--cedar);transform:translateY(-2px)}
+.slot.on{background:var(--green);color:#fff;border-color:var(--green)}
+.slot.on small{color:rgba(255,255,255,.75)}
+.slot:disabled{opacity:.42;cursor:not-allowed;text-decoration:line-through}
+.hint{font-size:.82rem;color:var(--mute);padding:1.4rem 0;text-align:center}
+/* upload */
+.drop{border:2px dashed var(--line);border-radius:4px;padding:1.6rem 1rem;text-align:center;cursor:pointer;transition:.25s;background:var(--bg2)}
+.drop:hover,.drop.over{border-color:var(--cedar);background:#fdf6ec}
+.drop b{display:block;font-family:var(--display);font-size:1.25rem;letter-spacing:.04em}
+.drop span{font-size:.8rem;color:var(--mute)}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.8rem}
+.th{position:relative;aspect-ratio:4/3;background-size:cover;background-position:center;border-radius:2px;border:1px solid var(--line)}
+.th button{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(0,0,0,.62);color:#fff;cursor:pointer;font-size:.8rem}
+.th span{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);color:#fff;font-size:.62rem;padding:.15rem .3rem;text-align:center}
+/* fields */
+.f{margin-bottom:.85rem}
+.f label{display:block;font-size:.66rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mute);margin-bottom:.28rem}
+.f input,.f select,.f textarea{width:100%;padding:.8rem .9rem;border:1.5px solid var(--line);border-radius:2px;font-family:var(--body);font-size:16px;min-height:46px;background:#fff}
+.f textarea{min-height:84px}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(31,77,51,.13)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{border:1.5px solid var(--line);border-radius:2px;padding:.55rem .95rem;font-size:.84rem;cursor:pointer;background:#fff;min-height:44px;display:flex;align-items:center;transition:.2s;user-select:none}
+.chip input{display:none}.chip.sel{background:var(--green);color:#fff;border-color:var(--green)}
+/* summary rail */
+.rail{position:sticky;top:90px;background:var(--green-d);color:#fff;border-radius:4px;padding:1.5rem 1.4rem}
+.rail h3{color:#fff;font-size:1.45rem;margin-bottom:.9rem}
+.rail dl{border-top:1px solid rgba(255,255,255,.2)}
+.rail dt{font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:.8rem}
+.rail dd{font-size:.95rem;color:#fff;font-weight:600}
+.rail dd.empty{color:rgba(255,255,255,.35);font-weight:400;font-style:italic}
+.rail .go{margin-top:1.4rem}
+.rail .go .btn{width:100%}
+.rail .fine{font-size:.72rem;color:rgba(255,255,255,.55);margin-top:.7rem;text-align:center}
+#st{margin-top:.7rem;font-size:.86rem;font-weight:600;text-align:center}
+#st.err{color:#ffb4a8}#st.ok{color:#8ee6ad}
+/* confirmation */
+.okbox{text-align:center;padding:2.4rem 1.4rem}
+.okbox .t{width:62px;height:62px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:1.7rem;margin:0 auto 1rem}
+.okbox h3{font-size:2rem;margin-bottom:.4rem}
+.okbox .ref{font-family:var(--display);font-size:1.5rem;color:var(--cedar);margin:.4rem 0}
+.okbox p{color:var(--mute);font-size:.92rem;max-width:52ch;margin:0 auto}
+.addcal{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-top:1.4rem}
+.addcal .btn{font-size:.9rem;padding:.7rem 1.1rem;min-height:44px}
+/* integration note */
+.integ{background:var(--bg2);border-left:4px solid var(--cedar);padding:1.2rem 1.4rem;font-size:.86rem;color:var(--mute);margin-top:1.4rem}
+.integ b{color:var(--ink)}
+.integ code{background:#fff;border:1px solid var(--line);padding:.1rem .35rem;font-size:.82em;border-radius:2px}
+footer{background:var(--ink);color:rgba(255,255,255,.6);padding:3rem 0 1.4rem;font-size:.88rem}
+.frow{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1.1fr;gap:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.14)}
+footer h4{font-family:var(--display);color:#fff;font-size:1.1rem;letter-spacing:.1em;margin-bottom:.7rem}
+footer li{list-style:none;margin-bottom:.35rem}footer a:hover{color:var(--cedar)}
+.flogo{height:40px;width:auto;margin-bottom:.6rem}
+.legal{padding-top:1.2rem;font-size:.74rem;opacity:.55;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.mob{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:.55rem .7rem calc(.55rem + env(safe-area-inset-bottom));display:none;gap:.5rem;z-index:180}
+.mob .btn{flex:1;padding:.8rem;font-size:1rem}
+@media(max-width:1000px){.book{grid-template-columns:1fr}.rail{position:static}.frow{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){
+ body{padding-bottom:70px}
+ nav .wrap{padding-left:22px}
+ .links{position:fixed;inset:0;width:100%;background:#fff;flex-direction:column;align-items:stretch;gap:0;
+  padding:5.2rem clamp(1.4rem,4vw,2.4rem) calc(2rem + env(safe-area-inset-bottom));
+  transform:translateX(103%);transition:transform .36s cubic-bezier(.2,.8,.3,1);z-index:210;font-size:1.5rem;overflow-y:auto}
+ .links.on{transform:none}.links a{color:var(--ink)}
+ .links .mobonly{display:block}
+ .links>li{border-bottom:1px solid var(--line)}
+ .links>li>a{display:block;padding:.95rem 0}
+ .links .mobcta{border-bottom:none;display:flex;flex-direction:column;gap:.6rem;margin-top:1.7rem}
+ .links .mobcta .btn{width:100%;padding:1rem;font-size:1.2rem}
+ .links .mobnote{border-bottom:none;margin-top:1.3rem;font-size:.76rem;color:var(--mute);text-align:center;line-height:1.6;font-family:var(--body);letter-spacing:0}
+ .burg{display:block;z-index:220}.nact .btn{display:none}.mob{display:flex}
+ .tt,.f2{grid-template-columns:1fr}
+ .frow{grid-template-columns:1fr}
+ .slots{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">Free on-site estimates · DC · Maryland · Virginia</div>
+<nav>
+  <div class="wrap nrow">
+    <a href="expert-fence-mockup.html" class="brand">
+      <img class="logo" src="__LD__" alt="Expert Fence — DC, MD &amp; VA">
+      <span class="bsub">Since 1986 · DC · MD · VA</span>
+    </a>
+    <ul class="links" id="links">
+      <li><a href="expert-fence-mockup.html">Home</a></li>
+      <li><a href="expert-fence-about.html">About</a></li>
+      <li><a href="expert-fence-residential.html">Residential</a></li>
+      <li><a href="expert-fence-commercial.html">Commercial</a></li>
+      <li><a href="expert-fence-gallery.html">Gallery</a></li>
+      <li><a href="#" class="on">Book a Visit</a></li>
+      <li class="mobonly"><a href="expert-fence-materials.html">Shop Materials</a></li>
+      <li class="mobcta">
+        <a href="#book" class="btn b-cedar">Book a Visit</a>
+        <a href="tel:+17037513008" class="btn b-green">Call 703&middot;751&middot;3008</a>
+      </li>
+      <li class="mobnote">6027 Farrington Avenue, Alexandria, VA 22304<br>Class &ldquo;A&rdquo; Licensed &middot; Bonded &middot; Insured</li>
+    </ul>
+    <div class="nact">
+      <a href="tel:+17037513008" class="tel">703&middot;751&middot;3008</a>
+      <a href="expert-fence-materials.html" class="btn b-green">Shop Materials</a>
+      <a href="#book" class="btn b-cedar">Book a Visit</a>
+      <button class="burg" id="burg" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<header class="head">
+  <div class="wrap">
+    <p class="crumb">Home / Book a Site Visit</p>
+    <span class="tag">Free · No obligation</span>
+    <h1>Book Your<br>Site Visit</h1>
+    <p>Pick an hour that suits you, send a few photos, and we'll come measure. Most visits take 30 to 45 minutes and you get a written quote within one business day.</p>
+    <div class="sync"><span class="dot"></span><span id="syncTxt">Availability synced with the Expert Fence team calendar</span></div>
+  </div>
+</header>
+
+<section id="book">
+  <div class="wrap">
+    <div class="steps">
+      <div class="stp on" data-s="1"><b>01</b>Project type</div>
+      <div class="stp" data-s="2"><b>02</b>Choose a date</div>
+      <div class="stp" data-s="3"><b>03</b>Pick an hour</div>
+      <div class="stp" data-s="4"><b>04</b>Photos &amp; details</div>
+      <div class="stp" data-s="5"><b>05</b>Confirm</div>
+    </div>
+
+    <div class="book">
+      <div id="flow">
+
+        <div class="panel">
+          <h3>1 · What are we looking at?</h3>
+          <p class="sub">This decides which estimator we send and how long we block out.</p>
+          <div class="tt" id="tt">
+            <button type="button" data-t="Residential"><b>Residential</b><span>A home, yard, pool or driveway gate</span></button>
+            <button type="button" data-t="Commercial"><b>Commercial</b><span>HOA, builder, property management, facility</span></button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>2 · Choose a date</h3>
+          <p class="sub">Monday to Friday 7:00 AM – 5:00 PM, Saturday mornings. We book up to eight weeks out.</p>
+          <div class="calhead">
+            <b id="monthLbl"></b>
+            <div class="calnav"><button type="button" id="prev" aria-label="Previous month">‹</button><button type="button" id="next" aria-label="Next month">›</button></div>
+          </div>
+          <div class="dow"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+          <div class="cal" id="cal"></div>
+          <div class="legend"><span><i></i>Slots available</span><span>Grey = closed or fully booked</span></div>
+        </div>
+
+        <div class="panel">
+          <h3>3 · Pick an hour block</h3>
+          <p class="sub" id="slotSub">Select a date first.</p>
+          <div class="slots" id="slots"><p class="hint">Choose a date above to see open hours.</p></div>
+        </div>
+
+        <div class="panel">
+          <h3>4 · Photos &amp; project details</h3>
+          <p class="sub">Two or three photos of the fence line saves everyone a trip and gets you a sharper number.</p>
+          <div class="drop" id="drop" tabindex="0" role="button" aria-label="Add photos">
+            <b>Add photos</b>
+            <span>Tap to choose, or drag them here · up to 3 · JPG or PNG</span>
+          </div>
+          <input type="file" id="file" accept="image/*" multiple hidden>
+          <div class="thumbs" id="thumbs"></div>
+
+          <form id="bform" novalidate style="margin-top:1.2rem">
+            <div class="f2">
+              <div class="f"><label>Name *</label><input required name="Name" autocomplete="name" placeholder="Full name"></div>
+              <div class="f"><label>Phone *</label><input required type="tel" name="Phone" autocomplete="tel" placeholder="(703) 555-0123"></div>
+            </div>
+            <div class="f2">
+              <div class="f"><label>Email *</label><input required type="email" name="Email" inputmode="email" autocomplete="email" placeholder="you@email.com"></div>
+              <div class="f" id="coWrap" style="display:none"><label>Company</label><input name="Company" placeholder="Company / association"></div>
+            </div>
+            <div class="f"><label>Property address *</label><input required name="Address" autocomplete="street-address" placeholder="Where should we meet you?"></div>
+            <div class="f2">
+              <div class="f"><label>City *</label><input required name="City" placeholder="Alexandria"></div>
+              <div class="f"><label>ZIP *</label><input required name="ZIP" inputmode="numeric" placeholder="22304"></div>
+            </div>
+            <div class="f"><label>What do you need?</label><div class="chips" id="needs">
+              <label class="chip"><input type="checkbox" value="New fence">New fence</label>
+              <label class="chip"><input type="checkbox" value="Replace existing">Replace existing</label>
+              <label class="chip"><input type="checkbox" value="Repair">Repair</label>
+              <label class="chip"><input type="checkbox" value="Gate">Gate</label>
+              <label class="chip"><input type="checkbox" value="Railing">Railing</label>
+              <label class="chip"><input type="checkbox" value="Automation">Automation</label>
+              <label class="chip"><input type="checkbox" value="Materials only">Materials only</label>
+              <label class="chip"><input type="checkbox" value="Not sure">Not sure</label>
+            </div></div>
+            <div class="f"><label>Anything we should know?</label><textarea name="Notes" placeholder="Approx. length, gate access, dogs on site, parking, HOA requirements…"></textarea></div>
+            <div class="f"><label>Do you need to be home for the visit?</label><select name="Presence">
+              <option>Yes — I'll meet the estimator</option>
+              <option>No — measure without me, call after</option>
+              <option>Someone else will be there</option>
+            </select></div>
+          </form>
+        </div>
+
+        <div class="integ">
+          <b>For the developer:</b> live availability and two-way sync are stubbed in this build.
+          Replace <code>loadAvailability()</code> with a call to your middleware, which should proxy
+          <code>Google Calendar freeBusy.query</code> or <code>Microsoft Graph /me/calendar/getSchedule</code>
+          for the estimator calendars. On submit, <code>createCalendarEvent()</code> should POST to
+          <code>calendar.events.insert</code> (Google) or <code>/me/events</code> (Microsoft Graph) with the
+          customer as an attendee, which is also what pushes the notification into Teams. OAuth tokens must
+          stay server-side. The confirmation screen already issues a valid <code>.ics</code> so the flow
+          works end-to-end before that integration lands.
+        </div>
+      </div>
+
+      <aside>
+        <div class="rail">
+          <h3>Your visit</h3>
+          <dl>
+            <dt>Type</dt><dd class="empty" id="rType">Not selected</dd>
+            <dt>Date</dt><dd class="empty" id="rDate">Not selected</dd>
+            <dt>Time</dt><dd class="empty" id="rTime">Not selected</dd>
+            <dt>Photos</dt><dd class="empty" id="rPhotos">None yet</dd>
+          </dl>
+          <div class="go">
+            <button class="btn b-cedar" id="submit" disabled>Request This Visit</button>
+            <p class="fine">No payment. No obligation. We confirm by phone or email.</p>
+            <div id="st"></div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="frow">
+      <div>
+        <img class="flogo" src="__LW__" alt="Expert Fence">
+        <p>6027 Farrington Avenue<br>Alexandria, VA 22304</p>
+        <p style="margin-top:.5rem"><a href="tel:+17037513008">703-751-3008</a><br><a href="mailto:expertfence@expertfence.com">expertfence@expertfence.com</a></p>
+      </div>
+      <div><h4>Services</h4><ul>
+        <li><a href="expert-fence-residential.html">Residential Fencing</a></li>
+        <li><a href="expert-fence-commercial.html">Commercial &amp; Builder</a></li>
+        <li><a href="expert-fence-commercial.html#repair">Fence &amp; Railing Repair</a></li>
+        <li><a href="expert-fence-materials.html">Materials &amp; Delivery</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="expert-fence-about.html">About Us</a></li>
+        <li><a href="expert-fence-gallery.html">Gallery</a></li>
+        <li><a href="expert-fence-about.html#visit">Visit The Yard</a></li>
+        <li><a href="expert-fence-about.html#care">Fence Care</a></li>
+      </ul></div>
+      <div><h4>Service Area</h4><ul>
+        <li>Washington, DC</li><li>Alexandria &amp; Arlington, VA</li>
+        <li>Fairfax County, VA</li><li>Montgomery County, MD</li>
+      </ul></div>
+      <div><h4>Legal</h4><ul>
+        <li><a href="expert-fence-legal.html#privacy">Privacy Policy</a></li>
+        <li><a href="expert-fence-legal.html#terms">Terms of Use</a></li>
+        <li><a href="expert-fence-legal.html#sales">Terms of Sale</a></li>
+        <li><a href="expert-fence-legal.html#cookies">Cookies &amp; Tracking</a></li>
+        <li><a href="expert-fence-legal.html#accessibility">Accessibility</a></li>
+        <li><a href="expert-fence-legal.html#licensing">Licensing &amp; Complaints</a></li>
+      </ul></div>
+    </div>
+    <div class="legal"><span>© 2026 Expert Fence · Class “A” Licensed · Bonded · Insured</span><span><a href="expert-fence-legal.html#privacy">Privacy</a> · <a href="expert-fence-legal.html#terms">Terms</a> · <a href="expert-fence-legal.html#accessibility">Accessibility</a></span></div>
+  </div>
+</footer>
+
+<div class="mob">
+  <a href="tel:+17037513008" class="btn b-dark">Call</a>
+  <a href="#book" class="btn b-cedar">Book a Visit</a>
+</div>
+
+<script>
+/* ============================================================
+   BOOKING — site visit scheduler
+   Availability is generated locally in this build. To go live,
+   swap loadAvailability() for your middleware call and implement
+   createCalendarEvent(). Both are marked below.
+   ============================================================ */
+var OFFICE='laroche.dynasty@gmail.com';
+var $=function(s){return document.querySelector(s)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
+
+var state={type:null,date:null,slot:null,photos:[]};
+var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var today=new Date(); today.setHours(0,0,0,0);
+var maxDate=new Date(today); maxDate.setDate(maxDate.getDate()+56);
+var viewY=today.getFullYear(), viewM=today.getMonth();
+
+/* hour blocks: Mon–Fri 7–5, Sat 8–12 */
+function blocks(d){
+  var day=d.getDay(); if(day===0) return [];
+  var out=[], start=day===6?8:7, end=day===6?12:17;
+  for(var h=start;h<end;h++) out.push(h);
+  return out;
+}
+/* ---- REPLACE ME: live free/busy lookup -------------------- */
+function loadAvailability(d,hour){
+  /* Deterministic stand-in so the demo behaves consistently.
+     Live: GET /api/availability?date=YYYY-MM-DD  → [{hour, free}] */
+  var k=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()+hour*7;
+  return (k*2654435761 % 97) > 26;          /* ~73% of blocks open */
+}
+function createCalendarEvent(payload){
+  /* Live: POST to your middleware, which calls
+     Google  → POST /calendar/v3/calendars/{id}/events
+     MS 365  → POST https://graph.microsoft.com/v1.0/me/events
+     Include the customer as an attendee so they get the invite,
+     and post the same summary to your Teams channel webhook. */
+  console.log('createCalendarEvent →',payload);
+  return Promise.resolve({ok:true});
+}
+function fmtHour(h){var p=h>=12?'PM':'AM',x=h%12||12;return x+':00 '+p}
+function slotLabel(h){return fmtHour(h)+' – '+fmtHour(h+1)}
+function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function longDate(d){return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}
+
+/* ---------- calendar ---------- */
+function drawCal(){
+  $('#monthLbl').textContent=MONTHS[viewM]+' '+viewY;
+  var first=new Date(viewY,viewM,1), n=new Date(viewY,viewM+1,0).getDate(), html='';
+  for(var i=0;i<first.getDay();i++) html+='<button class="pad" disabled></button>';
+  for(var day=1;day<=n;day++){
+    var d=new Date(viewY,viewM,day); d.setHours(0,0,0,0);
+    var open=blocks(d).some(function(h){return loadAvailability(d,h)});
+    var ok=d>=today&&d<=maxDate&&blocks(d).length&&open;
+    var sel=state.date&&iso(state.date)===iso(d);
+    html+='<button type="button" data-d="'+iso(d)+'" '+(ok?'':'disabled')+' class="'+(ok?'free ':'')+(sel?'on':'')+'">'+day+'</button>';
+  }
+  $('#cal').innerHTML=html;
+  $('#prev').disabled=(viewY===today.getFullYear()&&viewM===today.getMonth());
+  var last=new Date(maxDate.getFullYear(),maxDate.getMonth(),1);
+  $('#next').disabled=(new Date(viewY,viewM,1)>=last);
+}
+$('#prev').onclick=function(){if(--viewM<0){viewM=11;viewY--}drawCal()};
+$('#next').onclick=function(){if(++viewM>11){viewM=0;viewY++}drawCal()};
+$('#cal').addEventListener('click',function(e){
+  var b=e.target.closest('button[data-d]'); if(!b||b.disabled)return;
+  var p=b.dataset.d.split('-'); state.date=new Date(+p[0],+p[1]-1,+p[2]); state.slot=null;
+  drawCal(); drawSlots(); sync();
+});
+
+/* ---------- hour blocks ---------- */
+function drawSlots(){
+  if(!state.date){$('#slots').innerHTML='<p class="hint">Choose a date above to see open hours.</p>';return}
+  var d=state.date, hs=blocks(d);
+  $('#slotSub').textContent=longDate(d)+(d.getDay()===6?' · Saturday mornings only':'');
+  $('#slots').innerHTML=hs.map(function(h){
+    var free=loadAvailability(d,h);
+    return '<button type="button" class="slot'+(state.slot===h?' on':'')+'" data-h="'+h+'" '+(free?'':'disabled')+'>'
+      +slotLabel(h)+'<small>'+(free?'1 hour':'booked')+'</small></button>';
+  }).join('');
+}
+$('#slots').addEventListener('click',function(e){
+  var b=e.target.closest('.slot'); if(!b||b.disabled)return;
+  state.slot=+b.dataset.h; drawSlots(); sync();
+});
+
+/* ---------- project type ---------- */
+$$('#tt button').forEach(function(b){
+  b.onclick=function(){
+    state.type=b.dataset.t;
+    $$('#tt button').forEach(function(x){x.classList.toggle('on',x===b)});
+    $('#coWrap').style.display = state.type==='Commercial'?'':'none';
+    sync();
+  };
+});
+$$('.chip').forEach(function(c){var i=c.querySelector('input');
+  c.onclick=function(e){e.preventDefault();i.checked=!i.checked;c.classList.toggle('sel',i.checked)}});
+
+/* ---------- photos (downscaled in-browser so the email stays sendable) ---------- */
+var MAXP=3;
+function addFiles(list){
+  [].slice.call(list).forEach(function(f){
+    if(state.photos.length>=MAXP||!/^image\\//.test(f.type))return;
+    var img=new Image(), url=URL.createObjectURL(f);
+    img.onload=function(){
+      var w=img.width,h=img.height,m=1400;
+      if(w>m||h>m){var s=Math.min(m/w,m/h); w=Math.round(w*s); h=Math.round(h*s)}
+      var c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      c.toBlob(function(blob){
+        state.photos.push({blob:blob,url:c.toDataURL('image/jpeg',.6),name:(f.name||'photo').replace(/\\.[^.]+$/,'')+'.jpg',kb:Math.round(blob.size/1024)});
+        URL.revokeObjectURL(url); drawThumbs(); sync();
+      },'image/jpeg',.72);
+    };
+    img.src=url;
+  });
+}
+function drawThumbs(){
+  $('#thumbs').innerHTML=state.photos.map(function(p,i){
+    return '<div class="th" style="background-image:url('+p.url+')"><button type="button" data-r="'+i+'" aria-label="Remove photo">✕</button><span>'+p.kb+' KB</span></div>';
+  }).join('');
+  $('#drop').style.display=state.photos.length>=MAXP?'none':'';
+}
+$('#thumbs').addEventListener('click',function(e){
+  var b=e.target.closest('[data-r]'); if(!b)return;
+  state.photos.splice(+b.dataset.r,1); drawThumbs(); sync();
+});
+$('#drop').onclick=function(){$('#file').click()};
+$('#drop').onkeydown=function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();$('#file').click()}};
+$('#file').onchange=function(e){addFiles(e.target.files); e.target.value=''};
+['dragenter','dragover'].forEach(function(ev){$('#drop').addEventListener(ev,function(e){e.preventDefault();$('#drop').classList.add('over')})});
+['dragleave','drop'].forEach(function(ev){$('#drop').addEventListener(ev,function(e){e.preventDefault();$('#drop').classList.remove('over')})});
+$('#drop').addEventListener('drop',function(e){addFiles(e.dataTransfer.files)});
+
+/* ---------- summary + step state ---------- */
+function sync(){
+  var set=function(id,val){var el=$(id); el.textContent=val||el.dataset.d||'Not selected'; el.classList.toggle('empty',!val)};
+  set('#rType',state.type);
+  set('#rDate',state.date?longDate(state.date):null);
+  set('#rTime',state.slot!==null?slotLabel(state.slot):null);
+  var p=state.photos.length; $('#rPhotos').textContent=p?p+' photo'+(p>1?'s':'')+' attached':'None yet';
+  $('#rPhotos').classList.toggle('empty',!p);
+  var done=[!!state.type,!!state.date,state.slot!==null,true,false];
+  $$('.stp').forEach(function(s,i){s.classList.toggle('done',done[i]&&i<3);s.classList.toggle('on',!done[i]&&(i===0||done[i-1]))});
+  $('#submit').disabled=!(state.type&&state.date&&state.slot!==null);
+}
+
+/* ---------- .ics + calendar links ---------- */
+function pad(n){return String(n).padStart(2,'0')}
+function stamp(d,h){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(h)+'0000'}
+function icsFile(ref){
+  var d=state.date,h=state.slot;
+  var body=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Expert Fence//Booking//EN','BEGIN:VEVENT',
+    'UID:'+ref+'@expertfence.com','DTSTAMP:'+stamp(new Date(),9)+'Z',
+    'DTSTART;TZID=America/New_York:'+stamp(d,h),'DTEND;TZID=America/New_York:'+stamp(d,h+1),
+    'SUMMARY:Expert Fence — free site visit ('+state.type+')',
+    'LOCATION:'+($('[name=Address]').value+', '+$('[name=City]').value+' '+$('[name=ZIP]').value).replace(/,/g,'\\\\,'),
+    'DESCRIPTION:Reference '+ref+'. Expert Fence estimator visit. Questions: (703) 751-3008',
+    'END:VEVENT','END:VCALENDAR'].join('\\r\\n');
+  return 'data:text/calendar;charset=utf-8,'+encodeURIComponent(body);
+}
+function googleLink(ref){
+  var d=state.date,h=state.slot;
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+   +'&text='+encodeURIComponent('Expert Fence — free site visit')
+   +'&dates='+stamp(d,h)+'/'+stamp(d,h+1)
+   +'&details='+encodeURIComponent('Reference '+ref+' · Expert Fence estimator visit · (703) 751-3008')
+   +'&location='+encodeURIComponent($('[name=Address]').value+', '+$('[name=City]').value);
+}
+
+/* ---------- submit ---------- */
+$('#submit').addEventListener('click',async function(){
+  var form=$('#bform'), st=$('#st'), bad=false;
+  form.querySelectorAll('[required]').forEach(function(i){
+    var ok=i.value.trim()&&(i.type!=='email'||i.value.includes('@'));
+    i.style.borderColor=ok?'':'#b03a2e'; if(!ok)bad=true;
+  });
+  if(bad){st.textContent='Please complete the highlighted fields.';st.className='err';
+    form.scrollIntoView({behavior:'smooth',block:'center'});return}
+
+  var fd=new FormData(form), g=function(k){return fd.get(k)||'—'};
+  var needs=$$('#needs input:checked').map(function(i){return i.value}).join(', ')||'Not specified';
+  var ref='EFV-'+iso(state.date).replace(/-/g,'').slice(2)+'-'+String(state.slot)+Math.random().toString(36).slice(2,5).toUpperCase();
+  var when=longDate(state.date)+' · '+slotLabel(state.slot);
+
+  var btn=this; btn.disabled=true; btn.textContent='Requesting…';
+  st.textContent='Sending your request…'; st.className='';
+
+  var p=new FormData();
+  var fields={
+    _subject:'SITE VISIT REQUEST — '+state.type+' — '+when+' — '+g('Name'),
+    _template:'table',_captcha:'false',_replyto:g('Email'),_cc:g('Email'),
+    'Reference':ref,'Visit Type':state.type,'Requested Date':longDate(state.date),
+    'Requested Hour':slotLabel(state.slot),'Duration':'1 hour',
+    'Customer':g('Name'),'Company':g('Company'),'Phone':g('Phone'),'Email':g('Email'),
+    'Property Address':g('Address')+', '+g('City')+' '+g('ZIP'),
+    'Scope':needs,'Customer Present':g('Presence'),'Notes':g('Notes'),
+    'Photos Attached':String(state.photos.length),
+    'Requested At':new Date().toLocaleString('en-US',{dateStyle:'full',timeStyle:'short'}),
+    'ACTION':'Confirm this slot and add it to the estimator calendar.'
+  };
+  Object.keys(fields).forEach(function(k){p.append(k,fields[k])});
+  state.photos.forEach(function(ph,i){p.append('Photo '+(i+1),ph.blob,ref+'-'+(i+1)+'-'+ph.name)});
+
+  try{
+    var res=await fetch('https://formsubmit.co/ajax/'+OFFICE,{method:'POST',headers:{Accept:'application/json'},body:p});
+    if(!res.ok) throw new Error();
+    await createCalendarEvent(fields);
+    var ics=icsFile(ref), gcal=googleLink(ref);
+    $('#flow').innerHTML='<div class="panel"><div class="okbox"><div class="t">✓</div>'
+      +'<h3>Visit Requested</h3><div class="ref">'+ref+'</div>'
+      +'<p>We have your request for <b>'+when+'</b>. Our office will confirm by phone or email — usually within a couple of hours during business hours. '
+      +(state.photos.length?'Your '+state.photos.length+' photo'+(state.photos.length>1?'s are':' is')+' attached to the request. ':'')
+      +'Need to change it? Call <a href="tel:+17037513008" style="color:var(--green);font-weight:600">(703) 751-3008</a>.</p>'
+      +'<div class="addcal"><a class="btn b-cedar" href="'+gcal+'" target="_blank" rel="noopener">Add to Google Calendar</a>'
+      +'<a class="btn b-dark" href="'+ics+'" download="expert-fence-visit-'+ref+'.ics">Download .ics (Outlook / Apple)</a></div>'
+      +'</div></div>';
+    $$('.stp').forEach(function(s){s.classList.add('done');s.classList.remove('on')});
+    $('.rail .go').innerHTML='<p class="fine" style="font-size:.85rem;color:#8ee6ad">Request sent. Reference '+ref+'</p>';
+    window.scrollTo({top:$('#book').offsetTop-70,behavior:'smooth'});
+  }catch(e){
+    btn.disabled=false; btn.textContent='Request This Visit';
+    st.className='err';
+    st.innerHTML='Could not send. Please call <a href="tel:+17037513008" style="color:#ffd9a8;font-weight:700">(703) 751-3008</a>.';
+  }
+});
+
+/* nav */
+var L=$('#links'),B=$('#burg');
+B.onclick=function(){L.classList.toggle('on');B.textContent=L.classList.contains('on')?'✕':'☰'};
+L.querySelectorAll('a').forEach(function(a){a.onclick=function(){L.classList.remove('on');B.textContent='☰'}});
+
+drawCal(); drawSlots(); sync();
+</script>
+</body>
+</html>"""
+
+HTML = (HTML.replace('__LD__', LD).replace('__LW__', LW)
+            .replace('__HEROIMG__', I['hero_drivegate']))
+open(OUT + 'expert-fence-booking.html', 'w').write(HTML)
+print('booking page %.0f kb' % (len(HTML) / 1024))

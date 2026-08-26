@@ -1,0 +1,351 @@
+"""Builds the legal / policies page and wires legal links into every footer."""
+import base64, re, json, sys
+sys.path.insert(0, '.')
+
+OUT = '/sessions/clever-happy-ptolemy/mnt/outputs/'
+LD = 'data:image/png;base64,' + base64.b64encode(open(OUT + 'logo.png', 'rb').read()).decode()
+LW = 'data:image/png;base64,' + base64.b64encode(open(OUT + 'logo-white.png', 'rb').read()).decode()
+
+SECTIONS = [
+ ('privacy', 'Privacy Policy', """
+<p><b>Who we are.</b> Expert Fence is a fence installation, fabrication and material supply company located at 6027 Farrington Avenue, Alexandria, Virginia 22304. You can reach us at <a href="tel:+17037513008">(703) 751-3008</a> or <a href="mailto:expertfence@expertfence.com">expertfence@expertfence.com</a>.</p>
+
+<h4>Information we collect</h4>
+<p>We only collect what we need to quote, schedule and complete work. When you submit an estimate request, bid request, material order or newsletter signup, we collect the information you provide — typically your name, company, email address, telephone number, property or delivery address, and details about your project.</p>
+<p>When you place a material order we also collect order contents, fulfillment preference and any customization instructions. Payment is processed by our office; <b>we do not collect or store full credit card numbers on this website.</b></p>
+<p>Automatically, our site and its analytics tools may record your IP address, browser and device type, referring page, pages viewed and approximate location derived from your IP address.</p>
+
+<h4>How we use it</h4>
+<p>To prepare and deliver estimates and bids; to fulfill and deliver material orders; to schedule site visits and installations; to communicate about your project; to keep records required for licensing, warranty and tax purposes; to improve the website; and to measure and target our advertising.</p>
+
+<h4>Who we share it with</h4>
+<p>We do not sell your personal information. We share it only with service providers who help us operate — including our accounting system (QuickBooks) for orders and invoicing, form and email delivery providers, delivery carriers, and analytics and advertising platforms (see <a href="#cookies">Cookies &amp; Tracking</a>). We may also disclose information where required by law, to enforce our agreements, or in connection with a sale or transfer of the business.</p>
+
+<h4>Retention</h4>
+<p>Estimate and order records are retained as long as needed for warranty, licensing and tax obligations — generally seven years. Marketing contact information is retained until you unsubscribe.</p>
+
+<h4>Your choices</h4>
+<p>You may unsubscribe from marketing email at any time using the link in any message. You may request a copy, correction or deletion of the personal information we hold about you by emailing <a href="mailto:expertfence@expertfence.com">expertfence@expertfence.com</a>. Deletion requests are subject to records we must keep by law. Depending on where you live, you may have additional rights under Virginia's Consumer Data Protection Act or comparable law; we honor those requests regardless of residency.</p>
+
+<h4>Children</h4>
+<p>This website is intended for adults. We do not knowingly collect personal information from anyone under 16.</p>
+
+<h4>Security</h4>
+<p>We use reasonable administrative and technical safeguards to protect the information we hold. No method of transmission over the internet is completely secure, and we cannot guarantee absolute security.</p>
+"""),
+
+ ('communications', 'Communications Consent', """
+<p>By providing your telephone number on a form on this website, you agree that Expert Fence and its representatives may contact you at that number about your inquiry, estimate, order or project — including by telephone call, text message and email — using automated or manual means.</p>
+<p><b>Consent to receive marketing calls or texts is not a condition of purchase.</b> Message and data rates may apply. Message frequency varies. Reply STOP to any text message to opt out, or HELP for assistance. You may withdraw consent at any time by calling <a href="tel:+17037513008">(703) 751-3008</a> or emailing us; withdrawing consent for marketing does not stop transactional messages about work already in progress.</p>
+<p>Calls to or from Expert Fence may be monitored or recorded for quality and training purposes.</p>
+"""),
+
+ ('terms', 'Terms of Use', """
+<p>By using this website you agree to these terms. If you do not agree, please do not use the site.</p>
+
+<h4>Content and accuracy</h4>
+<p>Descriptions, specifications, availability, dimensions and pricing shown on this website are provided for convenience and are subject to change without notice. Photographs are representative; actual materials, finishes and grain vary. Product availability shown reflects our inventory system at the time of display and is <b>not a guarantee of stock</b>. Nothing on this site constitutes a binding offer or a fixed quotation.</p>
+
+<h4>Estimates and quotations</h4>
+<p>Only a written estimate or bid issued by Expert Fence constitutes a quotation, and only for the scope stated in it. Website content, calculators and category pages do not create a price commitment.</p>
+
+<h4>Intellectual property</h4>
+<p>The Expert Fence name, logo, site design, text and project photography are owned by Expert Fence or used with permission, and may not be copied, reproduced or republished without written consent. Third-party marks appearing on this site — including accreditation and rating marks — remain the property of their owners and are used to identify those organizations.</p>
+
+<h4>Third-party links</h4>
+<p>We link to third-party sites for convenience. We do not control and are not responsible for their content, products or privacy practices.</p>
+
+<h4>Disclaimer of warranties</h4>
+<p>Except for warranties expressly stated in a signed contract or written warranty document, this website and its content are provided "as is" without warranties of any kind, express or implied, including implied warranties of merchantability, fitness for a particular purpose and non-infringement.</p>
+
+<h4>Limitation of liability</h4>
+<p>To the fullest extent permitted by law, Expert Fence is not liable for indirect, incidental, special, consequential or punitive damages arising from your use of this website. Nothing in these terms limits any warranty or obligation expressly set out in a signed contract for work performed.</p>
+"""),
+
+ ('sales', 'Terms of Material Sale', """
+<h4>Pricing and availability</h4>
+<p>Prices are subject to change without notice and are confirmed when our office accepts your order. Trade and volume pricing is available to qualifying accounts and may require verification. Displayed stock levels are drawn from our inventory system and may not reflect real-time availability; we will contact you promptly if an ordered item is short.</p>
+
+<h4>Custom cutting and fabrication — final sale</h4>
+<p><b>Material cut to length, milled, drilled, finished or otherwise modified to your specification, and any custom-fabricated item including gates, railings, ornamental work and turned post caps, is final sale.</b> These items are made to your dimensions and cannot be returned, exchanged or refunded. Please verify all measurements before authorizing production. Lead times for custom work are estimates and are confirmed at order acceptance.</p>
+
+<h4>Returns on stock material</h4>
+<p>Unused, undamaged stock material in original condition may be returned within 30 days with proof of purchase. A restocking fee may apply. Special-order items, clearance items, and any modified material are not returnable. Return freight is the customer's responsibility unless the return results from our error.</p>
+
+<h4>Delivery, pickup and inspection</h4>
+<p>Delivery dates are estimates. Someone must be available to receive and inspect the delivery, or delivery may be left at the address provided at the customer's risk. <b>Please inspect all material at delivery or pickup and note any shortage or damage on the delivery ticket. Claims for shortage or visible damage must be made within 48 hours.</b> Delivery to a site that is inaccessible, unsafe or unprepared may incur a redelivery charge.</p>
+
+<h4>Payment and title</h4>
+<p>Payment in full is due before release of material unless credit terms have been established in writing. Title and risk of loss pass to the customer upon delivery or pickup. Wood is a natural product; variation in color, grain, knots and moisture content, and normal checking, cupping or weathering, are characteristics of the material and not defects.</p>
+"""),
+
+ ('work', 'Estimates, Contracts &amp; Warranty', """
+<p>Written estimates are valid for 30 days unless stated otherwise, and are based on conditions visible at the time of the site visit. Undisclosed or concealed conditions — rock, buried debris, utilities not marked, unstable soil, unrecorded easements — may require a change order.</p>
+<p>Work is performed under a written contract that governs scope, price, deposit, schedule and warranty. Where the contract and this website differ, <b>the signed contract controls</b>. Deposits, progress payments and cancellation rights are as stated in that contract and in accordance with applicable state law, including any statutory right to cancel.</p>
+<p>Expert Fence warrants its workmanship for the period stated in your contract. Manufactured products — vinyl, aluminum, steel, hardware, automation equipment — carry the manufacturer's warranty, which we will register and pass through. Warranties do not cover normal weathering of wood, damage from impact, vehicles, storms, fallen trees, flooding, frost heave in saturated soil, vandalism, third-party alteration, staining or sealing performed by others, or failure to perform reasonable maintenance.</p>
+<p>Customer is responsible for identifying property lines and for obtaining any neighbor or association consent required. Where we coordinate a survey, permit or association submission on your behalf, we do so as your agent and cannot guarantee an approval outcome or the timeline of a third-party authority.</p>
+"""),
+
+ ('cookies', 'Cookies &amp; Tracking', """
+<p>This website uses cookies and similar technologies for three purposes:</p>
+<ul>
+<li><b>Essential.</b> Remembering your language selection and the contents of your material order so the site works as expected. These cannot be disabled.</li>
+<li><b>Analytics.</b> Understanding which pages are viewed and how visitors move through the site, so we can improve it. We may use Google Analytics for this purpose.</li>
+<li><b>Advertising and remarketing.</b> Measuring the performance of our advertising and showing our ads to people who have visited this site. We may use the Meta pixel and Google Ads conversion tracking for this purpose.</li>
+</ul>
+<p>You can control cookies through your browser settings. You can opt out of Google advertising personalization at <a href="https://adssettings.google.com" target="_blank" rel="noopener">adssettings.google.com</a> and adjust Meta ad preferences in your Facebook or Instagram account settings. Blocking cookies may affect how parts of this site function.</p>
+<p>We honor Global Privacy Control and "Do Not Track" signals where our platforms support them.</p>
+"""),
+
+ ('accessibility', 'Accessibility Statement', """
+<p>Expert Fence is committed to keeping this website usable by everyone, including people using screen readers, keyboard navigation, magnification or other assistive technology. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.1 Level AA.</p>
+<p>Ongoing measures include descriptive alternative text on meaningful images, keyboard-operable menus, forms and galleries, visible focus indicators, sufficient color contrast, respect for reduced-motion preferences, and labeled form fields.</p>
+<p><b>If any part of this site is difficult for you to use, we want to hear about it and we will help you directly.</b> Call <a href="tel:+17037513008">(703) 751-3008</a> or email <a href="mailto:expertfence@expertfence.com">expertfence@expertfence.com</a> and we will provide the information, quote or order assistance you need by phone or in person.</p>
+"""),
+
+ ('licensing', 'Licensing &amp; Regulatory Disclosures', """
+<p>Expert Fence is licensed, bonded and insured to perform work in the District of Columbia, Maryland and Virginia. Certificates of insurance naming an additional insured are available on request.</p>
+<table class="lic">
+<tr><th>Virginia</th><td>Class “A” Contractor License — Virginia Department of Professional and Occupational Regulation, Board for Contractors. Complaints regarding a Virginia contractor may be filed with the Board within the statutory period. Board for Contractors, 9960 Mayland Drive, Suite 400, Richmond, VA 23233.</td></tr>
+<tr><th>Maryland</th><td>Registered with the Maryland Home Improvement Commission (MHIC). MHIC maintains a Guaranty Fund for eligible homeowner claims. Maryland Home Improvement Commission, 1100 North Eutaw Street, Baltimore, MD 21201.</td></tr>
+<tr><th>Washington, DC</th><td>Licensed through the DC Department of Licensing and Consumer Protection (DLCP), 1100 4th Street SW, Washington, DC 20024.</td></tr>
+<tr><th>Local</th><td>Business licenses held with Fairfax County, Virginia and the City of Alexandria, Virginia.</td></tr>
+</table>
+<p>License numbers appear on every written contract and estimate. We encourage you to verify any contractor's license before signing — with us or with anyone else.</p>
+<p>Underground utility marking is coordinated through Miss Utility (811) before excavation, as required by law. Private utilities, irrigation, invisible fencing and low-voltage lines are not covered by public marking and should be identified by the property owner.</p>
+"""),
+
+ ('governing', 'Governing Law, Disputes &amp; Changes', """
+<p>These terms and any dispute arising from this website or from the sale of material are governed by the laws of the Commonwealth of Virginia, without regard to conflict-of-law principles. Venue for any action lies in the state courts serving the City of Alexandria, Virginia, unless a signed contract for work specifies otherwise or applicable consumer-protection law provides you a different venue.</p>
+<p>Before filing a claim, we ask that you contact us directly so we can attempt to resolve the matter. Most issues are settled with a phone call and a site visit.</p>
+<p>We may update these statements as our practices, services or the law change. The effective date below indicates the most recent revision. Material changes will be noted on this page. Continued use of the site after an update constitutes acceptance of the revised terms.</p>
+<p><b>Copyright.</b> © 2026 Expert Fence. All rights reserved. If you believe content on this site infringes your copyright, contact <a href="mailto:expertfence@expertfence.com">expertfence@expertfence.com</a> with the material at issue, your contact information, and a statement of your good-faith belief, and we will investigate promptly.</p>
+"""),
+]
+
+toc = ''.join(f'<a href="#{sid}">{title}</a>' for sid, title, _ in SECTIONS)
+body = ''.join(f'''
+  <article class="leg" id="{sid}">
+    <h2>{title}</h2>
+    {html}
+  </article>''' for sid, title, html in SECTIONS)
+
+HTML = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Privacy Policy, Terms &amp; Legal Notices | Expert Fence — DC, MD &amp; VA</title>
+<meta name="description" content="Expert Fence privacy policy, communications consent, terms of use, terms of material sale, warranty terms, cookie and tracking notice, accessibility statement, and licensing disclosures for DC, Maryland and Virginia.">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.expertfence.com/legal/">
+<link rel="icon" href="{LD}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{{--ink:#12150f;--mute:#6e756a;--line:#e6e3da;--bg:#fcfbf8;--bg2:#f2f0e9;
+--green:#1f4d33;--green-d:#0e2418;--cedar:#c07c33;--red:#b03a2e;
+--display:'Bebas Neue','Barlow Condensed',Impact,sans-serif;--body:'Inter',system-ui,-apple-system,sans-serif}}
+*{{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}}
+html{{scroll-behavior:smooth;scroll-padding-top:120px;-webkit-text-size-adjust:100%}}
+body{{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.68;font-size:16px;overflow-x:hidden}}
+a{{color:inherit}}
+h1,h2,h3{{font-family:var(--display);font-weight:400;line-height:.98;text-transform:uppercase;letter-spacing:.015em}}
+.wrap{{max-width:1240px;margin:0 auto;padding:0 clamp(1.4rem,4vw,2.4rem)}}
+.tag{{font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cedar);display:block;margin-bottom:.55rem}}
+.btn{{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-family:var(--display);font-size:1.05rem;letter-spacing:.06em;padding:.85rem 1.6rem;border-radius:2px;border:2px solid transparent;cursor:pointer;transition:.25s;min-height:48px;text-transform:uppercase;text-decoration:none}}
+.b-cedar{{background:var(--cedar);color:#fff}}.b-cedar:hover{{background:#a5661f}}
+.b-green{{background:var(--green);color:#fff}}.b-green:hover{{background:var(--green-d)}}
+.b-dark{{border-color:var(--ink);color:var(--ink)}}.b-dark:hover{{background:var(--ink);color:#fff}}
+.topbar{{background:var(--green-d);color:rgba(255,255,255,.85);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:.5rem}}
+nav{{position:sticky;top:0;z-index:200;background:rgba(252,251,248,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}}
+.nrow{{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.6rem 0}}
+.brand{{display:flex;flex-direction:column;align-items:center;gap:.2rem;width:fit-content;text-decoration:none}}
+.logo{{height:clamp(30px,3.8vw,40px);width:auto}}
+.bsub{{font-size:.52rem;letter-spacing:.22em;color:var(--mute);text-transform:uppercase;font-weight:600;text-align:center}}
+.links{{display:flex;gap:1.5rem;align-items:center;list-style:none;font-family:var(--display);font-size:1.06rem;letter-spacing:.05em}}
+.links a{{color:var(--mute);text-decoration:none}}.links a:hover,.links a.on{{color:var(--ink)}}
+.links .mobcta,.links .mobnote,.links .mobonly{{display:none}}
+.nact{{display:flex;align-items:center;gap:.55rem}}
+.nact .btn{{padding:.7rem 1.15rem;font-size:.96rem;min-height:44px}}
+.tel{{font-family:var(--display);font-size:1.2rem;text-decoration:none}}
+.burg{{display:none;background:none;border:none;font-size:1.6rem;cursor:pointer;line-height:1;padding:.2rem .3rem}}
+@media(max-width:1150px){{.tel{{display:none}}}}
+@media(max-width:980px){{.links{{gap:1.1rem;font-size:.9rem}}.nact .btn{{padding:.65rem .9rem;font-size:.9rem}}}}
+.head{{background:var(--green-d);color:#fff;padding:clamp(2.6rem,6vw,4.4rem) 0 clamp(2rem,4vw,3rem)}}
+.head h1{{font-size:clamp(2.4rem,6vw,4.4rem);color:#fff}}
+.head p{{color:rgba(255,255,255,.78);max-width:66ch;margin-top:.9rem}}
+.crumb{{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.7rem}}
+.eff{{margin-top:1.2rem;font-size:.8rem;color:rgba(255,255,255,.6);border-top:1px solid rgba(255,255,255,.2);padding-top:.9rem}}
+.note{{background:#fdf5ea;border-left:4px solid var(--cedar);padding:1rem 1.2rem;margin:1.8rem 0 0;font-size:.88rem;color:#6a4a22}}
+.note b{{color:#4a3216}}
+.layout{{display:grid;grid-template-columns:250px 1fr;gap:clamp(1.6rem,4vw,3.4rem);padding:clamp(2.4rem,5vw,4rem) 0}}
+.toc{{position:sticky;top:90px;align-self:start;border-left:2px solid var(--line);padding-left:1rem}}
+.toc a{{display:block;font-size:.86rem;color:var(--mute);text-decoration:none;padding:.4rem 0;transition:.2s;border-left:2px solid transparent;margin-left:-1rem;padding-left:1rem}}
+.toc a:hover{{color:var(--ink)}}
+.toc a.on{{color:var(--green);font-weight:700;border-left-color:var(--cedar)}}
+.leg{{margin-bottom:clamp(2.4rem,5vw,3.6rem);scroll-margin-top:120px}}
+.leg h2{{font-size:clamp(1.7rem,3.4vw,2.4rem);color:var(--green-d);padding-bottom:.6rem;border-bottom:2px solid var(--line);margin-bottom:1rem}}
+.leg h4{{font-family:var(--body);font-size:.95rem;font-weight:700;text-transform:none;letter-spacing:0;margin:1.4rem 0 .35rem;color:var(--ink)}}
+.leg p{{color:var(--mute);font-size:.94rem;margin-bottom:.8rem}}
+.leg b{{color:var(--ink)}}
+.leg ul{{margin:0 0 .9rem 1.1rem}}
+.leg li{{color:var(--mute);font-size:.94rem;margin-bottom:.45rem}}
+.leg a{{color:var(--green);font-weight:600}}
+table.lic{{width:100%;border-collapse:collapse;font-size:.9rem;margin:1rem 0;background:#fff;border:1px solid var(--line)}}
+table.lic th{{text-align:left;vertical-align:top;width:150px;padding:.8rem .9rem;background:var(--bg2);font-family:var(--display);
+ font-size:1.05rem;font-weight:400;letter-spacing:.04em;color:var(--green-d);border-bottom:1px solid var(--line)}}
+table.lic td{{padding:.8rem .9rem;color:var(--mute);border-bottom:1px solid var(--line)}}
+.contactbar{{background:var(--bg2);padding:clamp(2rem,4vw,3rem) 0;text-align:center}}
+.contactbar h2{{font-size:clamp(1.8rem,4vw,2.8rem)}}
+.contactbar p{{color:var(--mute);margin:.7rem auto 1.3rem;max-width:56ch}}
+footer{{background:var(--ink);color:rgba(255,255,255,.6);padding:3rem 0 1.4rem;font-size:.88rem}}
+.frow{{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.14)}}
+footer h4{{font-family:var(--display);color:#fff;font-size:1.1rem;letter-spacing:.1em;margin-bottom:.7rem}}
+footer li{{list-style:none;margin-bottom:.35rem}}
+footer a{{text-decoration:none}}footer a:hover{{color:var(--cedar)}}
+.flogo{{height:40px;width:auto;margin-bottom:.6rem}}
+.legal{{padding-top:1.2rem;font-size:.74rem;opacity:.6;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}}
+.mob{{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:.55rem .7rem calc(.55rem + env(safe-area-inset-bottom));display:none;gap:.5rem;z-index:180}}
+.mob .btn{{flex:1;padding:.8rem;font-size:1rem}}
+@media(max-width:1000px){{.layout{{grid-template-columns:1fr}}.toc{{position:static;display:flex;flex-wrap:wrap;gap:.4rem;border-left:none;padding:0}}
+ .toc a{{border:1.5px solid var(--line);border-radius:2px;padding:.5rem .85rem;margin:0;background:#fff;font-size:.8rem}}
+ .toc a.on{{background:var(--ink);color:#fff;border-color:var(--ink)}}
+ .frow{{grid-template-columns:1fr 1fr}}}}
+@media(max-width:760px){{
+ body{{padding-bottom:70px}}
+ nav .wrap{{padding-left:22px}}
+ .links{{position:fixed;inset:0;width:100%;background:#fff;flex-direction:column;align-items:stretch;gap:0;
+  padding:5.2rem clamp(1.4rem,4vw,2.4rem) calc(2rem + env(safe-area-inset-bottom));
+  transform:translateX(103%);transition:transform .36s cubic-bezier(.2,.8,.3,1);z-index:210;font-size:1.5rem;overflow-y:auto}}
+ .links.on{{transform:none}}.links a{{color:var(--ink)}}
+ .links .mobonly{{display:block}}
+ .links>li{{border-bottom:1px solid var(--line)}}
+ .links>li>a{{display:block;padding:.95rem 0}}
+ .links .mobcta{{border-bottom:none;display:flex;flex-direction:column;gap:.6rem;margin-top:1.7rem}}
+ .links .mobcta .btn{{width:100%;padding:1rem;font-size:1.2rem}}
+ .links .mobnote{{border-bottom:none;margin-top:1.3rem;font-size:.76rem;color:var(--mute);text-align:center;line-height:1.6;font-family:var(--body);letter-spacing:0}}
+ .burg{{display:block;z-index:220}}.nact .btn{{display:none}}.mob{{display:flex}}
+ .frow{{grid-template-columns:1fr}}
+ table.lic th{{width:auto;display:block}}table.lic td{{display:block}}
+}}
+@media print{{nav,.mob,.topbar,.toc,.contactbar{{display:none}}.layout{{grid-template-columns:1fr}}}}
+@media(prefers-reduced-motion:reduce){{*{{animation:none!important;transition:none!important}}}}
+</style>
+</head>
+<body>
+
+<div class="topbar">Licensed · Bonded · Insured in DC · Maryland · Virginia</div>
+<nav>
+  <div class="wrap nrow">
+    <a href="expert-fence-mockup.html" class="brand">
+      <img class="logo" src="{LD}" alt="Expert Fence — DC, MD &amp; VA">
+      <span class="bsub">Since 1986 · DC · MD · VA</span>
+    </a>
+    <ul class="links" id="links">
+      <li><a href="expert-fence-mockup.html">Home</a></li>
+      <li><a href="expert-fence-about.html">About</a></li>
+      <li><a href="expert-fence-residential.html">Residential</a></li>
+      <li><a href="expert-fence-commercial.html">Commercial</a></li>
+      <li><a href="expert-fence-gallery.html">Gallery</a></li>
+      <li class="mobonly"><a href="expert-fence-materials.html">Shop Materials</a></li>
+      <li class="mobcta">
+        <a href="expert-fence-residential.html#quote" class="btn b-cedar">Free Estimate</a>
+        <a href="tel:+17037513008" class="btn b-green">Call 703&middot;751&middot;3008</a>
+      </li>
+      <li class="mobnote">6027 Farrington Avenue, Alexandria, VA 22304<br>Class &ldquo;A&rdquo; Licensed &middot; Bonded &middot; Insured</li>
+    </ul>
+    <div class="nact">
+      <a href="tel:+17037513008" class="tel">703&middot;751&middot;3008</a>
+      <a href="expert-fence-materials.html" class="btn b-green">Shop Materials</a>
+      <a href="expert-fence-residential.html#quote" class="btn b-cedar">Free Estimate</a>
+      <button class="burg" id="burg" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<header class="head">
+  <div class="wrap">
+    <p class="crumb">Home / Legal &amp; Policies</p>
+    <span class="tag">Legal &amp; policies</span>
+    <h1>Privacy, Terms<br>&amp; Disclosures</h1>
+    <p>Plain-language versions of the policies that govern this website, our material sales and our work. If anything here is unclear, call us and ask — we would rather explain it than have you guess.</p>
+    <p class="eff"><b>Effective date:</b> <span id="eff">17 August 2026</span> · Expert Fence, 6027 Farrington Avenue, Alexandria, VA 22304 · (703) 751-3008</p>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <aside class="toc" id="toc">{toc}</aside>
+  <main>{body}
+    <div class="note">
+      <b>A note for Expert Fence:</b> these documents are a thorough starting point drafted to reflect how this business actually operates in DC, Maryland and Virginia — but they are not legal advice, and no template is a substitute for review by a licensed attorney. Before publishing, have counsel confirm the license numbers, the warranty period stated in your contracts, your statutory cancellation and Guaranty Fund notices, and the governing-law and venue language. Insert actual license numbers where referenced.
+    </div>
+  </main>
+</div>
+
+<section class="contactbar">
+  <div class="wrap">
+    <h2>Questions About Any Of This?</h2>
+    <p>A real person at our Alexandria office will walk you through it — privacy requests, warranty questions, license verification or accessibility help.</p>
+    <a href="tel:+17037513008" class="btn b-cedar">Call 703&middot;751&middot;3008</a>
+    <a href="mailto:expertfence@expertfence.com" class="btn b-dark">Email Us</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="frow">
+      <div>
+        <img class="flogo" src="{LW}" alt="Expert Fence">
+        <p>6027 Farrington Avenue<br>Alexandria, VA 22304</p>
+        <p style="margin-top:.5rem"><a href="tel:+17037513008">703-751-3008</a><br><a href="mailto:expertfence@expertfence.com">expertfence@expertfence.com</a></p>
+      </div>
+      <div><h4>Services</h4><ul>
+        <li><a href="expert-fence-residential.html">Residential Fencing</a></li>
+        <li><a href="expert-fence-commercial.html">Commercial &amp; Builder</a></li>
+        <li><a href="expert-fence-materials.html">Materials &amp; Delivery</a></li>
+        <li><a href="expert-fence-about.html#beyond">Beyond Fencing</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="expert-fence-about.html">About Us</a></li>
+        <li><a href="expert-fence-gallery.html">Gallery</a></li>
+        <li><a href="expert-fence-about.html#visit">Visit The Yard</a></li>
+        <li><a href="expert-fence-about.html#care">Fence Care</a></li>
+      </ul></div>
+      <div><h4>Legal</h4><ul>
+        <li><a href="#privacy">Privacy Policy</a></li>
+        <li><a href="#terms">Terms of Use</a></li>
+        <li><a href="#sales">Terms of Sale</a></li>
+        <li><a href="#cookies">Cookies &amp; Tracking</a></li>
+        <li><a href="#accessibility">Accessibility</a></li>
+        <li><a href="#licensing">Licensing &amp; Complaints</a></li>
+      </ul></div>
+    </div>
+    <div class="legal"><span>© 2026 Expert Fence · Class “A” Licensed · Bonded · Insured — DC · MD · VA</span><span>Custom-cut &amp; fabricated items are final sale</span></div>
+  </div>
+</footer>
+
+<div class="mob">
+  <a href="tel:+17037513008" class="btn b-dark">Call</a>
+  <a href="expert-fence-residential.html#quote" class="btn b-cedar">Free Estimate</a>
+</div>
+
+<script>
+var L=document.getElementById('links'),B=document.getElementById('burg');
+B.onclick=function(){{L.classList.toggle('on');B.textContent=L.classList.contains('on')?'✕':'☰'}};
+L.querySelectorAll('a').forEach(function(a){{a.onclick=function(){{L.classList.remove('on');B.textContent='☰'}}}});
+/* highlight the section currently in view */
+var links=[].slice.call(document.querySelectorAll('#toc a')),
+    secs=links.map(function(a){{return document.querySelector(a.getAttribute('href'))}});
+function mark(){{
+  var y=window.scrollY+150, at=0;
+  secs.forEach(function(s,i){{if(s&&s.offsetTop<=y)at=i}});
+  links.forEach(function(a,i){{a.classList.toggle('on',i===at)}});
+}}
+addEventListener('scroll',mark,{{passive:true}}); mark();
+</script>
+</body>
+</html>"""
+
+open(OUT + 'expert-fence-legal.html', 'w').write(HTML)
+print('legal page %.0f kb · %d sections' % (len(HTML) / 1024, len(SECTIONS)))

@@ -1,0 +1,658 @@
+"""Generates the Residential and Commercial detail pages for Expert Fence."""
+import json, base64, io, re
+from PIL import Image
+
+OUT = '/sessions/clever-happy-ptolemy/mnt/outputs/'
+U   = '/sessions/clever-happy-ptolemy/mnt/uploads/'
+I   = json.load(open(OUT + '_imgs.json'))
+LD  = 'data:image/png;base64,' + base64.b64encode(open(OUT + 'logo.png', 'rb').read()).decode()
+LW  = 'data:image/png;base64,' + base64.b64encode(open(OUT + 'logo-white.png', 'rb').read()).decode()
+
+
+def enc(fn, w, h, q=64):
+    im = Image.open(U + fn).convert('RGB')
+    tr, sr = w / h, im.width / im.height
+    if sr > tr:
+        nw = int(im.height * tr); im = im.crop(((im.width - nw) // 2, 0, (im.width - nw) // 2 + nw, im.height))
+    else:
+        nh = int(im.width / tr); im = im.crop((0, (im.height - nh) // 2, im.width, (im.height - nh) // 2 + nh))
+    im = im.resize((w, h), Image.LANCZOS)
+    b = io.BytesIO(); im.save(b, 'JPEG', quality=q, optimize=True, progressive=True)
+    return 'data:image/jpeg;base64,' + base64.b64encode(b.getvalue()).decode()
+
+
+HERO_RES = enc('Wood-Fence-with-Matching-Planter-courtesy-@flippinggvl-via-instagram.webp', 1240, 620, 62)
+HERO_COM = enc('TNA-Concrete-Types-of-Fences-Cover.jpg', 1240, 620, 62)
+
+CSS = """
+:root{--ink:#12150f;--mute:#6e756a;--line:#e6e3da;--bg:#fcfbf8;--bg2:#f2f0e9;
+--green:#1f4d33;--green-d:#0e2418;--cedar:#c07c33;--ok:#1e7d43;--red:#b03a2e;
+--display:'Bebas Neue','Barlow Condensed',Impact,sans-serif;--body:'Inter',system-ui,-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--body);background:var(--bg);color:var(--ink);line-height:1.6;font-size:16px;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:.96;text-transform:uppercase;letter-spacing:.015em}
+.wrap{max-width:1240px;margin:0 auto;padding:0 clamp(1.4rem,4vw,2.4rem)}
+section{padding:clamp(3.2rem,7vw,6rem) 0}
+.tag{font-size:.7rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cedar);display:block;margin-bottom:.55rem}
+.h2{font-size:clamp(2.4rem,5.4vw,4rem)}
+.lede{color:var(--mute);font-size:clamp(1rem,1.4vw,1.12rem);max-width:64ch;margin-top:.9rem}
+.band{background:var(--bg2)}.dark{background:var(--green-d);color:#eef3ef}
+.dark h2,.dark h3{color:#fff}.dark .lede{color:rgba(255,255,255,.75)}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.8,.3,1),transform .8s cubic-bezier(.2,.8,.3,1)}
+.rv.in{opacity:1;transform:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-family:var(--display);font-size:1.05rem;letter-spacing:.06em;padding:.85rem 1.6rem;border-radius:2px;border:2px solid transparent;cursor:pointer;transition:.25s;min-height:48px;text-transform:uppercase}
+.b-cedar{background:var(--cedar);color:#fff}.b-cedar:hover{background:#a5661f;transform:translateY(-2px)}
+.b-green{background:var(--green);color:#fff}.b-green:hover{background:var(--green-d);transform:translateY(-2px)}
+.b-out{background:#fff;color:var(--ink);border-color:#fff}.b-out:hover{background:#efeae0;border-color:#efeae0}
+.b-dark{border-color:var(--ink);color:var(--ink)}.b-dark:hover{background:var(--ink);color:#fff}
+.topbar{background:var(--green-d);color:rgba(255,255,255,.85);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:.5rem}
+nav{position:sticky;top:0;z-index:200;background:rgba(252,251,248,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nrow{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.6rem 0}
+.brand{display:flex;flex-direction:column;align-items:center;gap:.2rem;width:fit-content}
+.logo{height:clamp(30px,3.8vw,40px);width:auto}
+.bsub{font-size:.52rem;letter-spacing:.22em;color:var(--mute);text-transform:uppercase;font-weight:600;text-align:center}
+.links{display:flex;gap:1.5rem;align-items:center;list-style:none;font-family:var(--display);font-size:1.06rem;letter-spacing:.05em}
+.links a{color:var(--mute)}.links a:hover,.links a.on{color:var(--ink)}
+.links .mobcta,.links .mobnote,.links .mobonly{display:none}
+.nact{display:flex;align-items:center;gap:.55rem}
+.nact .btn{padding:.7rem 1.15rem;font-size:.96rem;min-height:44px}
+.tel{font-family:var(--display);font-size:1.2rem}
+.burg{display:none;background:none;border:none;font-size:1.6rem;cursor:pointer;line-height:1;padding:.2rem .3rem}
+@media(max-width:1150px){.tel{display:none}}
+@media(max-width:980px){.links{gap:1.1rem;font-size:.9rem}.nact .btn{padding:.65rem .9rem;font-size:.9rem}}
+.hero{position:relative;display:grid;align-items:end;overflow:hidden;background:#101a13;min-height:min(58vh,480px)}
+.hero .bgimg{position:absolute;inset:0;background-size:cover;background-position:center;animation:kb 26s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.12)}}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,13,8,.93) 0%,rgba(6,13,8,.8) 34%,rgba(6,13,8,.35) 68%,rgba(6,13,8,.1) 100%),linear-gradient(180deg,rgba(6,13,8,.35),rgba(6,13,8,.78))}
+.hero .wrap{position:relative;z-index:2;max-width:none;margin:0;padding:clamp(3.4rem,7vw,5.5rem) clamp(1.4rem,4vw,2.4rem) clamp(2.6rem,5vw,3.6rem) clamp(1.4rem,3.4vw,2.75rem);color:#fff}
+.hero .copy{max-width:min(880px,66%)}
+.hero h1{font-size:clamp(2.9rem,7vw,5.6rem);text-shadow:0 3px 26px rgba(0,0,0,.6)}
+.hero h1 span{display:block;color:var(--cedar)}
+.hero p{color:rgba(255,255,255,.9);max-width:46ch;margin-top:1rem;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+.crumb{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:.7rem}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:1.1rem}
+.opt{background:#fff;border:1px solid var(--line);border-radius:3px;overflow:hidden;display:flex;flex-direction:column;transition:.32s}
+.opt:hover{transform:translateY(-5px);box-shadow:0 18px 44px rgba(20,35,24,.13);border-color:var(--cedar)}
+.opt .im{aspect-ratio:4/3;background-size:cover;background-position:center}
+.opt .bd{padding:1.2rem 1.3rem 1.4rem;display:flex;flex-direction:column;flex:1}
+.opt h3{font-size:1.45rem;margin-bottom:.15rem}
+.opt .best{font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--cedar);font-weight:700;margin-bottom:.5rem}
+.opt p{font-size:.87rem;color:var(--mute);flex:1}
+.opt ul{list-style:none;margin-top:.8rem;display:grid;gap:.3rem}
+.opt li{font-size:.82rem;color:var(--mute);padding-left:1.1rem;position:relative}
+.opt li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;background:var(--cedar);border-radius:1px}
+.cmp{width:100%;border-collapse:collapse;font-size:.88rem;background:#fff;border:1px solid var(--line)}
+.cmp th,.cmp td{padding:.85rem .9rem;text-align:left;border-bottom:1px solid var(--line)}
+.cmp thead th{background:var(--green-d);color:#fff;font-family:var(--display);font-size:1.05rem;letter-spacing:.05em;font-weight:400}
+.cmp tbody tr:nth-child(even){background:var(--bg2)}
+.cmp td:first-child{font-weight:600;color:var(--ink)}
+.cmp td{color:var(--mute)}
+.scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:rgba(255,255,255,.24);border:1px solid rgba(255,255,255,.24)}
+.st{background:var(--green-d);padding:1.5rem 1.3rem}
+.st b{font-family:var(--display);font-size:2.2rem;color:rgba(255,255,255,.35);display:block;line-height:1}
+.st h3{font-size:1.3rem;color:#fff;margin:.25rem 0 .35rem}
+.st p{font-size:.85rem;color:rgba(238,243,239,.75)}
+.tips{display:grid;gap:.55rem;max-width:900px}
+.tip{border:1px solid var(--line);background:#fff;border-radius:3px;overflow:hidden}
+.tip button{width:100%;text-align:left;background:none;border:none;padding:1.1rem 1.25rem;cursor:pointer;font-family:var(--display);font-size:1.3rem;letter-spacing:.03em;color:var(--ink);display:flex;justify-content:space-between;gap:1rem;align-items:center;text-transform:uppercase;min-height:56px}
+.tip button:hover{background:var(--bg2)}
+.tip .mark{font-family:var(--body);font-size:1.35rem;font-weight:300;color:var(--cedar);transition:transform .35s;line-height:1}
+.tip.on .mark{transform:rotate(45deg)}
+.tip .body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.2,.8,.3,1)}
+.tip .body p{padding:0 1.25rem 1.25rem;font-size:.9rem;color:var(--mute)}
+.tip.on .body{max-height:320px}
+.formsec{background:var(--bg2)}
+.fgrid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(1.8rem,4vw,3.4rem);align-items:start}
+.formcard{background:#fff;border:1px solid var(--line);border-radius:4px;padding:clamp(1.4rem,3vw,2.2rem)}
+.formcard h3{font-size:1.9rem;margin-bottom:.3rem}
+.formcard .sub{font-size:.88rem;color:var(--mute);margin-bottom:1.3rem}
+.f{margin-bottom:.85rem}
+.f label{display:block;font-size:.66rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mute);margin-bottom:.28rem}
+.f input,.f select,.f textarea{width:100%;padding:.8rem .9rem;border:1.5px solid var(--line);border-radius:2px;font-family:var(--body);font-size:16px;min-height:46px;background:#fff}
+.f textarea{min-height:88px}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(31,77,51,.13)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{border:1.5px solid var(--line);border-radius:2px;padding:.6rem 1rem;font-size:.84rem;cursor:pointer;background:#fff;min-height:44px;display:flex;align-items:center;transition:.2s;user-select:none}
+.chip input{display:none}.chip.sel{background:var(--green);color:#fff;border-color:var(--green)}
+.fine{font-size:.73rem;color:var(--mute);text-align:center;margin-top:.8rem}
+#st{margin-top:.8rem;font-size:.9rem;font-weight:600;text-align:center}
+#st.ok{color:var(--ok)}#st.err{color:var(--red)}
+.okbox{text-align:center;padding:2.6rem 1.4rem}
+.okbox .t{width:60px;height:60px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:1.6rem;margin:0 auto 1rem}
+.okbox h3{font-size:1.9rem;margin-bottom:.4rem}.okbox p{color:var(--mute);font-size:.9rem}
+.side h3{font-size:1.55rem;margin-bottom:.6rem}
+.side p{font-size:.92rem;color:var(--mute);margin-bottom:1rem}
+.side ul{list-style:none;display:grid;gap:.55rem;margin-bottom:1.4rem}
+.side li{font-size:.9rem;color:var(--mute);padding-left:1.4rem;position:relative}
+.side li::before{content:"";position:absolute;left:0;top:.55em;width:8px;height:8px;background:var(--cedar);border-radius:2px}
+.sideim{aspect-ratio:16/10;background-size:cover;background-position:center;border-radius:3px;margin-bottom:1.2rem}
+footer{background:var(--ink);color:rgba(255,255,255,.6);padding:3rem 0 1.4rem;font-size:.88rem}
+.frow{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:2rem;padding-bottom:2rem;border-bottom:1px solid rgba(255,255,255,.14)}
+footer h4{font-family:var(--display);color:#fff;font-size:1.1rem;letter-spacing:.1em;margin-bottom:.7rem}
+footer li{list-style:none;margin-bottom:.35rem}
+footer a:hover{color:var(--cedar)}
+.flogo{height:40px;width:auto;margin-bottom:.6rem}
+.legal{padding-top:1.2rem;font-size:.74rem;opacity:.55;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.mob{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:.55rem .7rem calc(.55rem + env(safe-area-inset-bottom));display:none;gap:.5rem;z-index:180}
+.mob .btn{flex:1;padding:.8rem;font-size:1rem}
+@media(max-width:1000px){.fgrid{grid-template-columns:1fr}.frow{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.hero .copy{max-width:100%}}
+@media(max-width:760px){
+ body{padding-bottom:70px}
+ nav .wrap{padding-left:22px}
+ .links{position:fixed;inset:0;width:100%;background:#fff;flex-direction:column;align-items:stretch;gap:0;
+  padding:5.2rem clamp(1.4rem,4vw,2.4rem) calc(2rem + env(safe-area-inset-bottom));
+  transform:translateX(103%);transition:transform .36s cubic-bezier(.2,.8,.3,1);z-index:210;font-size:1.5rem;overflow-y:auto}
+ .links.on{transform:none}.links a{color:var(--ink)}
+ .links .mobonly{display:block}
+ .links>li{border-bottom:1px solid var(--line)}
+ .links>li>a{display:block;padding:.95rem 0}
+ .links .mobcta{border-bottom:none;display:flex;flex-direction:column;gap:.6rem;margin-top:1.7rem}
+ .links .mobcta .btn{width:100%;padding:1rem;font-size:1.2rem}
+ .links .mobnote{border-bottom:none;margin-top:1.3rem;font-size:.76rem;color:var(--mute);text-align:center;line-height:1.6;font-family:var(--body);letter-spacing:0}
+ .burg{display:block;z-index:220}.nact .btn{display:none}.mob{display:flex}
+ .hero h1{font-size:clamp(2.6rem,11vw,4.2rem)}
+ .frow,.f2{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+"""
+
+NAV = """<div class="topbar">__TOPBAR__</div>
+<nav>
+  <div class="wrap nrow">
+    <a href="expert-fence-mockup.html" class="brand">
+      <img class="logo" src="__LD__" alt="Expert Fence — DC, MD &amp; VA">
+      <span class="bsub">Since 1986 · DC · MD · VA</span>
+    </a>
+    <ul class="links" id="links">
+      <li><a href="expert-fence-mockup.html">Home</a></li>
+      <li><a href="expert-fence-about.html">About</a></li>
+      <li><a href="expert-fence-residential.html"__ONRES__>Residential</a></li>
+      <li><a href="expert-fence-commercial.html"__ONCOM__>Commercial</a></li>
+      <li><a href="expert-fence-mockup.html#work">Work</a></li>
+      <li class="mobonly"><a href="expert-fence-materials.html">Shop Materials</a></li>
+      <li class="mobcta">
+        <button class="btn b-cedar" onclick="document.getElementById('quote').scrollIntoView({behavior:'smooth'})">__CTA__</button>
+        <a href="tel:+17037513008" class="btn b-green">Call 703&middot;751&middot;3008</a>
+      </li>
+      <li class="mobnote">6027 Farrington Avenue, Alexandria, VA 22304<br>Class &ldquo;A&rdquo; Licensed &middot; Bonded &middot; Insured</li>
+    </ul>
+    <div class="nact">
+      <a href="tel:+17037513008" class="tel">703&middot;751&middot;3008</a>
+      <a href="expert-fence-materials.html" class="btn b-green">Shop Materials</a>
+      <a href="#quote" class="btn b-cedar">__CTA__</a>
+      <button class="burg" id="burg" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</nav>"""
+
+FOOTER = """<footer>
+  <div class="wrap">
+    <div class="frow">
+      <div>
+        <img class="flogo" src="__LW__" alt="Expert Fence">
+        <p>6027 Farrington Avenue<br>Alexandria, VA 22304</p>
+        <p style="margin-top:.5rem"><a href="tel:+17037513008">703-751-3008</a><br><a href="mailto:expertfence@expertfence.com">expertfence@expertfence.com</a></p>
+      </div>
+      <div><h4>Services</h4><ul>
+        <li><a href="expert-fence-residential.html">Residential Fencing</a></li>
+        <li><a href="expert-fence-commercial.html">Commercial &amp; Builder</a></li>
+        <li><a href="expert-fence-materials.html">Materials &amp; Delivery</a></li>
+        <li><a href="expert-fence-about.html#beyond">Beyond Fencing</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="expert-fence-about.html">About Us</a></li>
+        <li><a href="expert-fence-about.html#visit">Visit The Yard</a></li>
+        <li><a href="expert-fence-about.html#care">Fence Care</a></li>
+        <li><a href="expert-fence-mockup.html#work">Our Work</a></li>
+      </ul></div>
+      <div><h4>Service Area</h4><ul>
+        <li>Washington, DC</li><li>Alexandria &amp; Arlington, VA</li>
+        <li>Fairfax County, VA</li><li>Montgomery County, MD</li>
+        <li>Prince George's County, MD</li>
+      </ul></div>
+    </div>
+    <div class="legal"><span>© 2026 Expert Fence · Class “A” Licensed · Bonded · Insured</span><span>A+ BBB · Top Rated Angi &amp; Consumers' Checkbook</span></div>
+  </div>
+</footer>
+<div class="mob">
+  <a href="tel:+17037513008" class="btn b-dark">Call</a>
+  <a href="#quote" class="btn b-cedar">__CTA__</a>
+</div>"""
+
+JS = """
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.1,rootMargin:'0px 0px -6% 0px'});
+$$('.rv').forEach(el=>io.observe(el));
+const L=$('#links'),B=$('#burg');
+B.onclick=()=>{L.classList.toggle('on');B.textContent=L.classList.contains('on')?'✕':'☰'};
+L.querySelectorAll('a').forEach(a=>a.onclick=()=>{L.classList.remove('on');B.textContent='☰'});
+L.querySelectorAll('.mobcta button').forEach(b=>b.addEventListener('click',()=>{L.classList.remove('on');B.textContent='☰'}));
+$$('.tip button').forEach(b=>b.onclick=()=>{const t=b.parentElement,o=t.classList.contains('on');$$('.tip').forEach(x=>x.classList.remove('on'));if(!o)t.classList.add('on')});
+$$('.chip').forEach(c=>{const i=c.querySelector('input');c.onclick=e=>{e.preventDefault();i.checked=!i.checked;c.classList.toggle('sel',i.checked)}});
+
+/* independent form for this page only */
+const OFFICE='laroche.dynasty@gmail.com';
+$('#qform').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const form=e.target,st=$('#st');let bad=false;
+  form.querySelectorAll('[required]').forEach(i=>{const ok=i.value.trim()&&(i.type!=='email'||i.value.includes('@'));i.style.borderColor=ok?'':'#b03a2e';if(!ok)bad=true});
+  if(bad){st.textContent='Please complete the highlighted fields.';st.className='err';return}
+  const fd=new FormData(form),g=k=>fd.get(k)||'—';
+  const picks=[...form.querySelectorAll('.chip input:checked')].map(i=>i.value).join(', ')||'Not specified';
+  const ref='EF-'+new Date().toISOString().slice(2,10).replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
+  const p=new FormData();
+  Object.entries(Object.assign({
+    _subject:'__SUBJ__ — '+g('Name')+' — '+ref,_template:'table',_captcha:'false',
+    _replyto:fd.get('Email')||'',_cc:fd.get('Email')||'',
+    'Reference':ref,'Enquiry Type':'__KIND__','Submitted':new Date().toLocaleString('en-US',{dateStyle:'full',timeStyle:'short'}),
+    'Selections':picks
+  },Object.fromEntries([...fd.entries()].filter(([k])=>!k.startsWith('_')))))
+   .forEach(([k,v])=>p.append(k,v));
+  const btn=form.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Sending…';
+  st.textContent='Sending…';st.className='';
+  try{
+    const r=await fetch('https://formsubmit.co/ajax/'+OFFICE,{method:'POST',headers:{Accept:'application/json'},body:p});
+    if(!r.ok)throw new Error();
+    $('#formwrap').innerHTML='<div class="okbox"><div class="t">✓</div><h3>Request Received</h3><p>Reference <b>'+ref+'</b>. An Expert Fence team member will follow up within one business day. Need it sooner? <a href="tel:+17037513008" style="color:var(--green);font-weight:600">(703) 751-3008</a></p></div>';
+  }catch(err){
+    btn.disabled=false;btn.textContent='__BTN__';
+    st.className='err';st.innerHTML='Could not send. Please call <a href="tel:+17037513008" style="color:var(--cedar);font-weight:700">(703) 751-3008</a> or email <a href="mailto:'+OFFICE+'" style="color:var(--cedar);font-weight:700">us directly</a>.';
+  }
+});
+"""
+
+
+def page(**k):
+    nav = (NAV.replace('__TOPBAR__', k['topbar']).replace('__LD__', LD)
+              .replace('__ONRES__', ' class="on"' if k['kind'] == 'Residential' else '')
+              .replace('__ONCOM__', ' class="on"' if k['kind'] == 'Commercial' else '')
+              .replace('__CTA__', k['cta']))
+    foot = FOOTER.replace('__LW__', LW).replace('__CTA__', k['cta'])
+    js = (JS.replace('__SUBJ__', k['subject']).replace('__KIND__', k['kind']).replace('__BTN__', k['btn']))
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{k['title']}</title>
+<meta name="description" content="{k['desc']}">
+<meta name="keywords" content="{k['kw']}">
+<link rel="canonical" href="{k['canon']}">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="website"><meta property="og:title" content="{k['title']}">
+<meta property="og:description" content="{k['desc']}"><meta property="og:url" content="{k['canon']}">
+<link rel="icon" href="{LD}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">{k['ld']}</script>
+<style>{CSS}</style>
+</head>
+<body>
+{nav}
+<header class="hero">
+  <div class="bgimg" style="background-image:url({k['hero']})"></div>
+  <div class="wrap"><div class="copy">
+    <p class="crumb">Home / Services / {k['kind']}</p>
+    <span class="tag">{k['eyebrow']}</span>
+    <h1>{k['h1a']}<span>{k['h1b']}</span></h1>
+    <p>{k['sub']}</p>
+  </div></div>
+</header>
+{k['body']}
+<section class="formsec" id="quote">
+  <div class="wrap">
+    <div class="rv" style="margin-bottom:2rem">
+      <span class="tag">{k['formeyebrow']}</span>
+      <h2 class="h2">{k['formhead']}</h2>
+      <p class="lede">{k['formlede']}</p>
+    </div>
+    <div class="fgrid rv">
+      <div class="side">
+        <div class="sideim" style="background-image:url({k['sideimg']})"></div>
+        <h3>{k['sidehead']}</h3>
+        <p>{k['sidebody']}</p>
+        <ul>{k['sidelist']}</ul>
+        <p style="font-size:.88rem"><b>Prefer to talk?</b><br><a href="tel:+17037513008" style="color:var(--green);font-weight:700;font-size:1.1rem">(703) 751-3008</a></p>
+      </div>
+      <div class="formcard" id="formwrap">
+        <h3>{k['formtitle']}</h3>
+        <p class="sub">{k['formsub']}</p>
+        <form id="qform" novalidate>{k['fields']}
+          <button type="submit" class="btn b-cedar" style="width:100%;margin-top:.5rem">{k['btn']}</button>
+          <p class="fine">{k['formfine']}</p>
+          <div id="st"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{foot}
+<script>{js}</script>
+</body>
+</html>"""
+
+
+# ---------------------------------------------------------------- RESIDENTIAL
+res_opts = [
+    (I['g_privblack'], 'Wood Privacy', 'Most popular', 'Full-height board fence that closes the yard off completely. Cedar or pressure-treated, 6 ft standard, 8 ft where code allows.',
+     ['Total privacy and wind break', 'Cedar resists rot and insects', 'Stain any colour you like', 'Re-seal every 2–3 years']),
+    (I['g_horizwood'], 'Horizontal Cedar', 'Modern homes', 'Boards run horizontally for a contemporary line. A premium build — it needs more posts and tighter tolerances than a standard fence.',
+     ['Clean modern appearance', 'Pairs with flat-top posts', 'Higher material and labour cost', 'Best on level or gently sloped runs']),
+    (I['g_blackvinyl'], 'Vinyl Privacy', 'Zero maintenance', 'Tongue-and-groove vinyl panels in white, tan or black. Never needs staining and will not rot, warp or attract insects.',
+     ['No painting or sealing, ever', 'Rinse clean with a hose', 'Limited lifetime warranty', 'Higher upfront, lower lifetime cost']),
+    (I['g_blackalum'], 'Ornamental Aluminum', 'Pools & views', 'Powder-coated aluminum pickets that secure the yard without blocking the view. The standard choice for pool enclosures.',
+     ['Meets pool barrier code', 'Will not rust or rot', 'Keeps sightlines open', 'Follows sloped ground well']),
+    (I['g_blackpicket'], 'Picket & Estate', 'Front yards', 'Traditional spaced picket at 3–4 ft. Defines the property and contains pets without walling off the front of the house.',
+     ['Classic curb appeal', 'Wood or vinyl', 'Gothic, French or flat tops', 'HOA-friendly heights']),
+    (I['g_cedargate'], 'Custom Gates & Arbors', 'Make it yours', 'Arched gates, arbors, pergolas and driveway gates fabricated in our Alexandria shop to your opening and design.',
+     ['Built to your exact opening', 'Matching hardware and finish', 'Automation-ready', '3–5 week lead time']),
+]
+res_cards = ''.join(f"""
+      <article class="opt">
+        <div class="im" style="background-image:url({im})"></div>
+        <div class="bd"><h3>{t}</h3><span class="best">{b}</span><p>{d}</p><ul>{''.join(f'<li>{x}</li>' for x in li)}</ul></div>
+      </article>""" for im, t, b, d, li in res_opts)
+
+res_body = f"""
+<section>
+  <div class="wrap">
+    <div class="rv" style="margin-bottom:2rem">
+      <span class="tag">Choose a style</span>
+      <h2 class="h2">Six Ways To Fence A Yard</h2>
+      <p class="lede">Most homeowners land on one of these. If you are torn between two, we will price both on the same estimate so you can compare real numbers instead of guessing.</p>
+    </div>
+    <div class="opts rv">{res_cards}
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="rv" style="margin-bottom:2rem">
+      <span class="tag">Compare</span>
+      <h2 class="h2">Which One Is Right?</h2>
+      <p class="lede">An honest side-by-side. Costs are relative, not quotes — every yard is different, and grade, access and gates move the number more than material does.</p>
+    </div>
+    <div class="scroller rv"><table class="cmp">
+      <thead><tr><th>&nbsp;</th><th>Wood</th><th>Vinyl</th><th>Aluminum</th><th>Chain Link</th></tr></thead>
+      <tbody>
+        <tr><td>Privacy</td><td>Complete</td><td>Complete</td><td>None — open pickets</td><td>None</td></tr>
+        <tr><td>Upfront cost</td><td>$$</td><td>$$$</td><td>$$$</td><td>$</td></tr>
+        <tr><td>Maintenance</td><td>Re-seal every 2–3 yrs</td><td>Rinse occasionally</td><td>Wash annually</td><td>None</td></tr>
+        <tr><td>Typical lifespan</td><td>15–25 yrs cedar</td><td>30+ yrs</td><td>30+ yrs</td><td>20+ yrs</td></tr>
+        <tr><td>Handles slopes</td><td>Stepped or racked</td><td>Stepped only</td><td>Racks smoothly</td><td>Racks smoothly</td></tr>
+        <tr><td>Pool code</td><td>Possible with spec</td><td>Possible with spec</td><td>Best option</td><td>Possible with spec</td></tr>
+        <tr><td>Pets</td><td>Excellent</td><td>Excellent</td><td>Check picket spacing</td><td>Excellent</td></tr>
+        <tr><td>Repairable</td><td>Board by board</td><td>Panel by panel</td><td>Section by section</td><td>Easily</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <div class="rv" style="margin-bottom:2rem">
+      <span class="tag">What to expect</span>
+      <h2 class="h2">From Call To Complete</h2>
+      <p class="lede">A typical residential fence runs three to five weeks from signature, most of which is permits and fabrication, not build time.</p>
+    </div>
+    <div class="steps rv">
+      <div class="st"><b>01</b><h3>Free Estimate</h3><p>We walk the line with you, measure, check grade and discuss materials. 30–45 minutes, no obligation.</p></div>
+      <div class="st"><b>02</b><h3>Drawing &amp; Quote</h3><p>A layout drawing and itemized quote — material, posts, gates, hardware, labour and a start window.</p></div>
+      <div class="st"><b>03</b><h3>Permits &amp; HOA</h3><p>We pull county permits, submit HOA paperwork and schedule Miss Utility marking. Usually 2–3 weeks.</p></div>
+      <div class="st"><b>04</b><h3>Install</h3><p>Posts set and cured, then panels and gates. Most residential yards are 2–4 days on site.</p></div>
+      <div class="st"><b>05</b><h3>Walkthrough</h3><p>We walk it with you, adjust every gate, clear the site and hand over care instructions.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="rv" style="margin-bottom:2rem">
+      <span class="tag">Common questions</span>
+      <h2 class="h2">Before You Decide</h2>
+    </div>
+    <div class="tips rv">
+      <div class="tip"><button type="button">Do I need a permit or HOA approval?<span class="mark">+</span></button><div class="body"><p>Almost always at least one of the two. Most DMV jurisdictions require a permit for fences over 4 ft in a front yard or over 6–7 ft anywhere, and nearly every HOA requires design approval before work starts. We handle both submissions as part of the job — it is the single most common reason a fence project stalls when a homeowner tries to manage it alone.</p></div></div>
+      <div class="tip"><button type="button">How close to the property line can it go?<span class="mark">+</span></button><div class="body"><p>Generally you may build up to your line, but a few inches inside it is safer — it keeps every post, footing and board on your property and avoids a dispute later. If you are unsure where the line actually is, we can coordinate a survey or stake-out before we quote. Utility and drainage easements may also restrict what can be built and where.</p></div></div>
+      <div class="tip"><button type="button">Who owns the fence, and which side faces out?<span class="mark">+</span></button><div class="body"><p>If it is entirely on your property, it is your fence. Convention across the DMV is that the finished side — rails hidden — faces your neighbour, and many HOAs require it. We will confirm the orientation on the drawing before we build so there are no surprises on install day.</p></div></div>
+      <div class="tip"><button type="button">What about my slope?<span class="mark">+</span></button><div class="body"><p>There are two ways to follow grade. Stepping holds each panel level and leaves triangular gaps at the bottom — standard for vinyl and pre-built panels. Racking angles the panel to follow the ground with no gap, which aluminum and site-built wood handle well. We will show you which your yard needs and what it does to the look.</p></div></div>
+      <div class="tip"><button type="button">Can you match or repair my existing fence?<span class="mark">+</span></button><div class="body"><p>Often, yes. We keep common profiles in stock and can mill or fabricate to match an older run, including historic picket and cap profiles around Old Town. Bring a photo and a measurement to the estimate. If a fence is more than about half failed, replacement usually costs less than chasing repairs.</p></div></div>
+    </div>
+  </div>
+</section>
+"""
+
+res_fields = """
+          <div class="f2">
+            <div class="f"><label>Name *</label><input required name="Name" autocomplete="name" placeholder="Full name"></div>
+            <div class="f"><label>Phone *</label><input required type="tel" name="Phone" autocomplete="tel" placeholder="(703) 555-0123"></div>
+          </div>
+          <div class="f"><label>Email *</label><input required type="email" name="Email" inputmode="email" autocomplete="email" placeholder="you@email.com"></div>
+          <div class="f2">
+            <div class="f"><label>Property address</label><input name="Address" autocomplete="street-address" placeholder="Street address"></div>
+            <div class="f"><label>ZIP *</label><input required name="ZIP" inputmode="numeric" placeholder="22304"></div>
+          </div>
+          <div class="f"><label>Style you're considering</label><div class="chips">
+            <label class="chip"><input type="checkbox" value="Wood Privacy">Wood Privacy</label>
+            <label class="chip"><input type="checkbox" value="Horizontal Cedar">Horizontal Cedar</label>
+            <label class="chip"><input type="checkbox" value="Vinyl">Vinyl</label>
+            <label class="chip"><input type="checkbox" value="Ornamental Aluminum">Aluminum</label>
+            <label class="chip"><input type="checkbox" value="Picket">Picket</label>
+            <label class="chip"><input type="checkbox" value="Chain Link">Chain Link</label>
+            <label class="chip"><input type="checkbox" value="Custom Gate / Arbor">Custom Gate</label>
+            <label class="chip"><input type="checkbox" value="Repair">Repair</label>
+            <label class="chip"><input type="checkbox" value="Not sure yet">Not sure</label>
+          </div></div>
+          <div class="f2">
+            <div class="f"><label>Approx. linear feet</label><input name="Linear Feet" placeholder="e.g. 180 ft"></div>
+            <div class="f"><label>Height</label><select name="Height"><option>Not sure</option><option>3–4 ft</option><option>5 ft</option><option>6 ft</option><option>7–8 ft</option></select></div>
+          </div>
+          <div class="f2">
+            <div class="f"><label>Number of gates</label><select name="Gates"><option>Not sure</option><option>None</option><option>1</option><option>2</option><option>3+</option><option>Driveway gate</option></select></div>
+            <div class="f"><label>Timeline</label><select name="Timeline"><option>As soon as possible</option><option>Within 1 month</option><option>1–3 months</option><option>Just budgeting</option></select></div>
+          </div>
+          <div class="f"><label>Is this replacing an existing fence?</label><select name="Replacement"><option>No — new fence</option><option>Yes — removing old fence</option><option>Partial replacement / repair</option></select></div>
+          <div class="f"><label>Anything else?</label><textarea name="Details" placeholder="Slope, pets, pool, HOA requirements, neighbour considerations…"></textarea></div>
+          <div class="f"><label>How did you hear about us?</label><select name="Source"><option>Google / Internet</option><option>Referral</option><option>Consumers' Checkbook</option><option>Angi</option><option>Saw a fence we built</option><option>Other</option></select></div>
+"""
+
+RES = page(
+    kind='Residential', topbar='Free estimates across DC · Maryland · Virginia', cta='Free Estimate',
+    title='Residential Fence Installation | Wood, Vinyl, Aluminum &amp; Picket | DC, MD &amp; VA',
+    desc='Residential fence installation across Washington DC, Maryland and Virginia. Wood privacy, horizontal cedar, vinyl, ornamental aluminum, picket and custom gates. Free estimates from a Class A licensed contractor since 1986.',
+    kw='residential fence installation DC, privacy fence Alexandria VA, wood fence Arlington, vinyl fence Fairfax, aluminum pool fence Virginia, picket fence Maryland, backyard fence contractor DMV, fence permit HOA approval Virginia, custom gate Alexandria',
+    canon='https://www.expertfence.com/residential/', hero=HERO_RES,
+    eyebrow='For homeowners', h1a='Your Yard,', h1b='Finished Properly.',
+    sub='Privacy, pets, pools or pure curb appeal — six ways to fence a yard, and honest guidance on which one actually fits yours.',
+    body=res_body,
+    formeyebrow='Free · No obligation', formhead='Get Your Estimate',
+    formlede='The more you tell us, the more accurate the first number is. Nothing here commits you to anything.',
+    sideimg=I['g_horizwood'], sidehead='What happens next',
+    sidebody='We read every request personally. Expect a call or email within one business day to schedule a site visit at a time that works for you.',
+    sidelist=''.join(f'<li>{x}</li>' for x in [
+        'A real person calls — no automated follow-up',
+        'On-site visit at your convenience, including evenings',
+        'Written itemized quote, not a ballpark',
+        'No deposit requested until you sign',
+        'Permits and HOA paperwork handled by us']),
+    formtitle='Residential Estimate Request', formsub='For homeowners and residential properties.',
+    fields=res_fields, btn='Request My Free Estimate',
+    formfine='We never share your information. Most estimates are scheduled within one business day.',
+    subject='RESIDENTIAL ESTIMATE REQUEST',
+    ld=json.dumps({"@context": "https://schema.org", "@type": "Service", "serviceType": "Residential Fence Installation",
+                   "provider": {"@id": "https://www.expertfence.com/#business", "@type": "HomeAndConstructionBusiness",
+                                "name": "Expert Fence", "telephone": "+1-703-751-3008",
+                                "address": {"@type": "PostalAddress", "streetAddress": "6027 Farrington Avenue", "addressLocality": "Alexandria", "addressRegion": "VA", "postalCode": "22304", "addressCountry": "US"}},
+                   "areaServed": [{"@type": "City", "name": "Washington"}, {"@type": "State", "name": "Virginia"}, {"@type": "State", "name": "Maryland"}],
+                   "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Residential Fence Types", "itemListElement": [
+                       {"@type": "Offer", "itemOffered": {"@type": "Service", "name": n}} for n in
+                       ["Wood Privacy Fence", "Horizontal Cedar Fence", "Vinyl Privacy Fence", "Ornamental Aluminum Fence", "Picket Fence", "Custom Gates and Arbors"]]}}))
+
+# ---------------------------------------------------------------- COMMERCIAL
+com_opts = [
+    (I['g_brickmetal'], 'Ornamental & Masonry', 'Communities & entrances', 'Powder-coated aluminum or steel between masonry piers. The standard treatment for community entrances, clubhouses and amenity areas.',
+     ['Highest perceived value', 'Meets pool barrier code', 'Pier and panel coordination', 'Matching entry gates']),
+    (I['g_blackalum'], 'Ornamental Aluminum & Steel', 'Pools & amenities', 'Commercial-grade sections in 4–8 ft heights, with self-closing self-latching gate hardware for code compliance.',
+     ['Pool code compliant configurations', 'Industrial powder coat finish', 'Racks to follow grade', '20-year finish warranty available']),
+    (I['g_gabion'], 'Security & Perimeter', 'Sites & facilities', 'Chain link, welded wire and heavy steel perimeter systems for utility yards, storage, construction sites and facilities.',
+     ['Height and gauge to spec', 'Barbed or razor top options', 'Cantilever and slide gates', 'Temporary or permanent']),
+    (I['g_woodalum'], 'Screening & Enclosures', 'Dumpsters & equipment', 'Dumpster corrals, HVAC and generator screening, and utility enclosures built to jurisdiction and landlord requirements.',
+     ['Meets screening ordinances', 'Wood, composite or metal', 'Heavy-duty gate hardware', 'Vehicle-impact protection']),
+    (I['g_ranchrail'], 'Property Line & Development', 'Builders & developers', 'Long-run boundary fencing for new development, phased to your construction schedule across multiple lots.',
+     ['Volume and per-lot pricing', 'Phased to your schedule', 'Multi-site coordination', 'Single point of contact']),
+    (I['g_stonewall'], 'Access Control & Automation', 'Gated entry', 'Automated swing and slide operators, keypads, card readers, intercom and vehicle detection for controlled entry.',
+     ['UL 325 compliant operators', 'Keypad, card, intercom, app', 'Safety loops and photo eyes', 'Service contracts available']),
+]
+com_cards = ''.join(f"""
+      <article class="opt">
+        <div class="im" style="background-image:url({im})"></div>
+        <div class="bd"><h3>{t}</h3><span class="best">{b}</span><p>{d}</p><ul>{''.join(f'<li>{x}</li>' for x in li)}</ul></div>
+      </article>""" for im, t, b, d, li in com_opts)
+
+com_body = f"""
+<section>
+  <div class="wrap">
+    <div class="rv" style="margin-bottom:2rem">
+      <span class="tag">Capabilities</span>
+      <h2 class="h2">Six Commercial Systems</h2>
+      <p class="lede">Whether it is a single dumpster corral or forty lots of boundary fence phased across two years, the same crews and the same project contact see it through.</p>
+    </div>
+    <div class="opts rv">{com_cards}
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div class="rv" style="margin-bottom:2rem">
+      <span class="tag">Who we work with</span>
+      <h2 class="h2">Built For Your Schedule</h2>
+      <p class="lede">Commercial fencing fails on coordination far more often than on craft. Here is how we are set up to hold a date.</p>
+    </div>
+    <div class="scroller rv"><table class="cmp">
+      <thead><tr><th>Client type</th><th>Typical scope</th><th>What matters most</th><th>How we handle it</th></tr></thead>
+      <tbody>
+        <tr><td>General contractors</td><td>Site perimeter, screening, amenity fencing</td><td>Holding the schedule</td><td>Dedicated project contact, phased mobilization, weekly look-ahead</td></tr>
+        <tr><td>New home builders</td><td>Per-lot fencing across a development</td><td>Per-unit pricing and speed</td><td>Volume pricing, lot-by-lot release, no re-quote per lot</td></tr>
+        <tr><td>HOAs &amp; communities</td><td>Pools, clubhouses, boundary, entrances</td><td>Code compliance and board approval</td><td>Code-compliant drawings, board presentation support, phased budgets</td></tr>
+        <tr><td>Property managers</td><td>Repairs, replacement, screening</td><td>Response time</td><td>Standing pricing, priority scheduling, single invoice per property</td></tr>
+        <tr><td>Municipal &amp; institutional</td><td>Parks, schools, utility, facilities</td><td>Documentation and compliance</td><td>Full licensing, insurance certs, prevailing wage capable, submittals</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <div class="rv" style="margin-bottom:2rem">
+      <span class="tag">How we run a job</span>
+      <h2 class="h2">Bid To Closeout</h2>
+      <p class="lede">Documented at every step, so your project manager is never guessing where the fence package stands.</p>
+    </div>
+    <div class="steps rv">
+      <div class="st"><b>01</b><h3>Takeoff &amp; Bid</h3><p>Plan review and takeoff from your drawings, returned as a line-item bid with alternates priced separately.</p></div>
+      <div class="st"><b>02</b><h3>Submittals</h3><p>Product data, shop drawings, finish samples, insurance certificates and licensing for your submittal package.</p></div>
+      <div class="st"><b>03</b><h3>Permits &amp; Coordination</h3><p>Permits pulled, utility marking scheduled, and mobilization coordinated against your construction sequence.</p></div>
+      <div class="st"><b>04</b><h3>Fabrication &amp; Install</h3><p>Gates and specials fabricated in our shop; our own crews install. Progress reported weekly.</p></div>
+      <div class="st"><b>05</b><h3>Punch &amp; Closeout</h3><p>Joint walk, punch list cleared, O&amp;M and warranty documentation delivered with final invoice.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="rv" style="margin-bottom:2rem">
+      <span class="tag">Common questions</span>
+      <h2 class="h2">What Contractors Ask</h2>
+    </div>
+    <div class="tips rv">
+      <div class="tip"><button type="button">Are you licensed, bonded and insured across the DMV?<span class="mark">+</span></button><div class="body"><p>Yes. Expert Fence holds a Virginia Class A contractor licence and is licensed, bonded and insured in Washington DC, Maryland and Virginia, including Maryland Home Improvement Commission registration and DC and local jurisdiction licensing. General liability and workers' compensation certificates are issued on request, and we can name additional insureds for your project.</p></div></div>
+      <div class="tip"><button type="button">Can you hold a construction schedule across multiple sites?<span class="mark">+</span></button><div class="body"><p>That is the core of our commercial work. Crews are in-house rather than subcontracted, which means we control the calendar instead of chasing someone else's. You get one project contact who knows every site, phased mobilization tied to your sequence, and a weekly look-ahead so you know when we land.</p></div></div>
+      <div class="tip"><button type="button">Do you provide submittals and shop drawings?<span class="mark">+</span></button><div class="body"><p>Yes — product data, shop drawings for gates and specials, finish samples, and all licensing and insurance documentation, formatted for your submittal package. For pool and barrier work we provide the code-compliance documentation your inspector will ask for.</p></div></div>
+      <div class="tip"><button type="button">What are your payment terms for trade accounts?<span class="mark">+</span></button><div class="body"><p>Approved commercial accounts can be set up on net terms with progress billing against schedule of values. New accounts typically start with a deposit and progress payments; we will discuss terms during the bid rather than surprising you at contract.</p></div></div>
+      <div class="tip"><button type="button">Do you sell material to other fencing contractors?<span class="mark">+</span></button><div class="body"><p>Yes. Our Alexandria yard sells contractor-grade material at trade pricing, including posts, panels, hardware and custom fabrication, with delivery across the DMV. If you are a fencing contractor who needs material rather than labour, that is a separate and welcome conversation.</p></div></div>
+    </div>
+  </div>
+</section>
+"""
+
+com_fields = """
+          <div class="f2">
+            <div class="f"><label>Name *</label><input required name="Name" autocomplete="name" placeholder="Full name"></div>
+            <div class="f"><label>Company *</label><input required name="Company" autocomplete="organization" placeholder="Company name"></div>
+          </div>
+          <div class="f2">
+            <div class="f"><label>Email *</label><input required type="email" name="Email" inputmode="email" autocomplete="email" placeholder="you@company.com"></div>
+            <div class="f"><label>Phone *</label><input required type="tel" name="Phone" autocomplete="tel" placeholder="(703) 555-0123"></div>
+          </div>
+          <div class="f"><label>Organization type *</label><select required name="Org Type">
+            <option value="">Select…</option><option>General contractor</option><option>New home builder / developer</option>
+            <option>HOA or community association</option><option>Property management</option>
+            <option>Municipal / institutional</option><option>Fencing contractor (buying material)</option><option>Other</option>
+          </select></div>
+          <div class="f"><label>Project type</label><div class="chips">
+            <label class="chip"><input type="checkbox" value="Ornamental & masonry">Ornamental &amp; Masonry</label>
+            <label class="chip"><input type="checkbox" value="Pool / amenity">Pool / Amenity</label>
+            <label class="chip"><input type="checkbox" value="Security perimeter">Security Perimeter</label>
+            <label class="chip"><input type="checkbox" value="Screening / enclosure">Screening / Enclosure</label>
+            <label class="chip"><input type="checkbox" value="Property line / development">Property Line</label>
+            <label class="chip"><input type="checkbox" value="Access control / automation">Access Control</label>
+            <label class="chip"><input type="checkbox" value="Repair / replacement">Repair</label>
+            <label class="chip"><input type="checkbox" value="Material only">Material Only</label>
+          </div></div>
+          <div class="f2">
+            <div class="f"><label>Project location</label><input name="Location" placeholder="City / jurisdiction"></div>
+            <div class="f"><label>Number of sites</label><select name="Sites"><option>1</option><option>2–5</option><option>6–20</option><option>20+</option></select></div>
+          </div>
+          <div class="f2">
+            <div class="f"><label>Approx. linear feet</label><input name="Linear Feet" placeholder="e.g. 2,400 ft"></div>
+            <div class="f"><label>Target start</label><select name="Start"><option>Immediate</option><option>Within 30 days</option><option>1–3 months</option><option>3–6 months</option><option>Bidding / budgeting</option></select></div>
+          </div>
+          <div class="f"><label>Do you have drawings or a spec?</label><select name="Drawings">
+            <option>Yes — I can send plans</option><option>Yes — but preliminary</option><option>No — need design assistance</option></select></div>
+          <div class="f"><label>Scope &amp; requirements</label><textarea name="Scope" placeholder="Scope, phasing, code requirements, submittal needs, prevailing wage, insurance requirements…"></textarea></div>
+"""
+
+COM = page(
+    kind='Commercial', topbar='Commercial &amp; builder programs · DC · MD · VA', cta='Request a Bid',
+    title='Commercial Fence Contractor | Builders, HOAs &amp; Property Managers | DC, MD &amp; VA',
+    desc='Commercial fence contractor serving Washington DC, Maryland and Virginia since 1986. Pool and amenity fencing, security perimeter, screening enclosures, development boundary fencing and gate automation. Class A licensed, in-house crews, full submittals.',
+    kw='commercial fence contractor DC, commercial fencing Maryland Virginia, pool fence code compliance HOA, builder fence program Northern Virginia, dumpster enclosure screening Alexandria, security perimeter fencing DMV, gate automation commercial, development boundary fencing',
+    canon='https://www.expertfence.com/commercial/', hero=HERO_COM,
+    eyebrow='For contractors, builders &amp; HOAs', h1a='On Spec.', h1b='On Schedule.',
+    sub='In-house crews, full submittal packages, and one project contact who knows every one of your sites.',
+    body=com_body,
+    formeyebrow='Bids &amp; RFQs', formhead='Request A Bid',
+    formlede='Send the scope and we will return a line-item bid. Plans welcome — reply to the confirmation email with drawings attached.',
+    sideimg=I['g_brickmetal'], sidehead='What you get back',
+    sidebody='Commercial requests are reviewed by our estimating team and returned as a line-item bid, with alternates priced separately so you can value-engineer without a re-quote.',
+    sidelist=''.join(f'<li>{x}</li>' for x in [
+        'Line-item bid, alternates priced separately',
+        'Shop drawings and product data for submittals',
+        'Insurance certificates with additional insured',
+        'Phased mobilization against your schedule',
+        'Weekly look-ahead once underway',
+        'Trade pricing available on material-only orders']),
+    formtitle='Commercial Bid Request', formsub='For contractors, builders, HOAs and property managers.',
+    fields=com_fields, btn='Submit Bid Request',
+    formfine='Bids typically returned within 2–3 business days depending on scope.',
+    subject='COMMERCIAL BID REQUEST',
+    ld=json.dumps({"@context": "https://schema.org", "@type": "Service", "serviceType": "Commercial Fence Installation",
+                   "provider": {"@id": "https://www.expertfence.com/#business", "@type": "HomeAndConstructionBusiness",
+                                "name": "Expert Fence", "telephone": "+1-703-751-3008",
+                                "address": {"@type": "PostalAddress", "streetAddress": "6027 Farrington Avenue", "addressLocality": "Alexandria", "addressRegion": "VA", "postalCode": "22304", "addressCountry": "US"}},
+                   "areaServed": [{"@type": "City", "name": "Washington"}, {"@type": "State", "name": "Virginia"}, {"@type": "State", "name": "Maryland"}],
+                   "hasOfferCatalog": {"@type": "OfferCatalog", "name": "Commercial Fence Systems", "itemListElement": [
+                       {"@type": "Offer", "itemOffered": {"@type": "Service", "name": n}} for n in
+                       ["Ornamental and Masonry Fencing", "Pool and Amenity Fencing", "Security Perimeter Fencing",
+                        "Screening and Dumpster Enclosures", "Development Boundary Fencing", "Gate Automation and Access Control"]]}}))
+
+open(OUT + 'expert-fence-residential.html', 'w').write(RES)
+open(OUT + 'expert-fence-commercial.html', 'w').write(COM)
+print('residential %.0f kb · commercial %.0f kb' % (len(RES) / 1024, len(COM) / 1024))
