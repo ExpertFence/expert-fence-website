@@ -276,7 +276,7 @@ img[loading=lazy]{background:#e6e3da}
 
         <div class="panel">
           <h3>2 · Choose a date</h3>
-          <p class="sub">Monday to Friday 7:00 AM – 5:00 PM, Saturday mornings. We book up to eight weeks out.</p>
+          <p class="sub">Monday to Friday 8:30 AM – 1:00 PM. We book up to eight weeks out.</p>
           <div class="calhead">
             <b id="monthLbl"></b>
             <div class="calnav"><button type="button" id="prev" aria-label="Previous month">‹</button><button type="button" id="next" aria-label="Next month">›</button></div>
@@ -424,11 +424,11 @@ var today=new Date(); today.setHours(0,0,0,0);
 var maxDate=new Date(today); maxDate.setDate(maxDate.getDate()+56);
 var viewY=today.getFullYear(), viewM=today.getMonth();
 
-/* hour blocks: Mon–Fri 7–5, Sat 8–12 */
+/* hour blocks: Mon–Fri 8:30am–1pm, 45-min slots (values are minutes-since-midnight) */
 function blocks(d){
-  var day=d.getDay(); if(day===0) return [];
-  var out=[], start=day===6?8:7, end=day===6?12:17;
-  for(var h=start;h<end;h++) out.push(h);
+  var day=d.getDay(); if(day===0||day===6) return [];
+  var out=[], start=510, end=780;
+  for(var m=start;m<end;m+=45) out.push(m);
   return out;
 }
 /* ---- REPLACE ME: live free/busy lookup -------------------- */
@@ -447,8 +447,8 @@ function createCalendarEvent(payload){
   console.log('createCalendarEvent →',payload);
   return Promise.resolve({ok:true});
 }
-function fmtHour(h){var p=h>=12?'PM':'AM',x=h%12||12;return x+':00 '+p}
-function slotLabel(h){return fmtHour(h)+' – '+fmtHour(h+1)}
+function fmtHour(mins){var h=Math.floor(mins/60),m=mins%60,p=h>=12?'PM':'AM',x=h%12||12;return x+(m?':'+String(m).padStart(2,'0'):':00')+' '+p}
+function slotLabel(h){return fmtHour(h)+' – '+fmtHour(h+45)}
 function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function longDate(d){return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}
 
@@ -481,11 +481,11 @@ $('#cal').addEventListener('click',function(e){
 function drawSlots(){
   if(!state.date){$('#slots').innerHTML='<p class="hint">Choose a date above to see open hours.</p>';return}
   var d=state.date, hs=blocks(d);
-  $('#slotSub').textContent=longDate(d)+(d.getDay()===6?' · Saturday mornings only':'');
+  $('#slotSub').textContent=longDate(d);
   $('#slots').innerHTML=hs.map(function(h){
     var free=loadAvailability(d,h);
     return '<button type="button" class="slot'+(state.slot===h?' on':'')+'" data-h="'+h+'" '+(free?'':'disabled')+'>'
-      +slotLabel(h)+'<small>'+(free?'1 hour':'booked')+'</small></button>';
+      +slotLabel(h)+'<small>'+(free?'45 min':'booked')+'</small></button>';
   }).join('');
 }
 $('#slots').addEventListener('click',function(e){
@@ -556,12 +556,12 @@ function sync(){
 
 /* ---------- .ics + calendar links ---------- */
 function pad(n){return String(n).padStart(2,'0')}
-function stamp(d,h){return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(h)+'0000'}
+function stamp(d,mins){var h=Math.floor(mins/60),m=mins%60;return d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'T'+pad(h)+pad(m)+'00'}
 function icsFile(ref){
   var d=state.date,h=state.slot;
   var body=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Expert Fence//Booking//EN','BEGIN:VEVENT',
-    'UID:'+ref+'@expertfence.com','DTSTAMP:'+stamp(new Date(),9)+'Z',
-    'DTSTART;TZID=America/New_York:'+stamp(d,h),'DTEND;TZID=America/New_York:'+stamp(d,h+1),
+    'UID:'+ref+'@expertfence.com','DTSTAMP:'+stamp(new Date(),540)+'Z',
+    'DTSTART;TZID=America/New_York:'+stamp(d,h),'DTEND;TZID=America/New_York:'+stamp(d,h+45),
     'SUMMARY:Expert Fence — free site visit ('+state.type+')',
     'LOCATION:'+($('[name=Address]').value+', '+$('[name=City]').value+' '+$('[name=ZIP]').value).replace(/,/g,'\\,'),
     'DESCRIPTION:Reference '+ref+'. Expert Fence estimator visit. Questions: (703) 751-3008',
@@ -572,7 +572,7 @@ function googleLink(ref){
   var d=state.date,h=state.slot;
   return 'https://calendar.google.com/calendar/render?action=TEMPLATE'
    +'&text='+encodeURIComponent('Expert Fence — free site visit')
-   +'&dates='+stamp(d,h)+'/'+stamp(d,h+1)
+   +'&dates='+stamp(d,h)+'/'+stamp(d,h+45)
    +'&details='+encodeURIComponent('Reference '+ref+' · Expert Fence estimator visit · (703) 751-3008')
    +'&location='+encodeURIComponent($('[name=Address]').value+', '+$('[name=City]').value);
 }
@@ -600,7 +600,7 @@ $('#submit').addEventListener('click',async function(){
     _subject:'SITE VISIT REQUEST — '+state.type+' — '+when+' — '+g('Name'),
     _template:'table',_captcha:'false',_replyto:g('Email'),_cc:g('Email'),
     'Reference':ref,'Visit Type':state.type,'Requested Date':longDate(state.date),
-    'Requested Hour':slotLabel(state.slot),'Duration':'1 hour',
+    'Requested Hour':slotLabel(state.slot),'Duration':'45 minutes',
     'Customer':g('Name'),'Company':g('Company'),'Phone':g('Phone'),'Email':g('Email'),
     'Property Address':g('Address')+', '+g('City')+' '+g('ZIP'),
     'Scope':needs,'Customer Present':g('Presence'),'Notes':g('Notes'),
