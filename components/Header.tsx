@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
+import FenceDivider from "@/components/FenceDivider";
 
 const navLinks = [
   { href: "/services", label: "Services" },
@@ -52,6 +53,7 @@ export default function Header() {
           </Link>
         </div>
       </div>
+      <FenceDivider className="text-brand-500" />
     </header>
   );
 }

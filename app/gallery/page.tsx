@@ -8,6 +8,16 @@ export const metadata: Metadata = {
   description: "Completed fence installation projects across the DMV.",
 };
 
+const SERVICE_ART: Record<string, "wood" | "vinyl" | "chainlink" | "aluminum" | "commercial" | "residential" | "repair"> = {
+  "wood-fence-installation": "wood",
+  "vinyl-pvc-fence-installation": "vinyl",
+  "chain-link-fence-installation": "chainlink",
+  "aluminum-ornamental-iron-fence": "aluminum",
+  "commercial-fencing": "commercial",
+  "residential-fencing": "residential",
+  "fence-repair-gate-installation": "repair",
+};
+
 export default function GalleryPage() {
   return (
     <>
@@ -16,8 +26,8 @@ export default function GalleryPage() {
           <p className="eyebrow text-brand-400">Project Gallery</p>
           <h1 className="mt-2 text-4xl font-bold text-white">Recent Work Across the DMV</h1>
           <p className="mx-auto mt-4 max-w-2xl text-navy-100/80">
-            This gallery is ready to go — the tiles below are placeholders reserved for real before/after and
-            completed-project photography.
+            The tiles below are placeholder brand art reserved for real before/after and completed-project
+            photography — swap each one out as jobs wrap.
           </p>
         </div>
       </section>
@@ -25,10 +35,10 @@ export default function GalleryPage() {
       <section className="section">
         <div className="container-page grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s) => (
-            <PlaceholderTile key={s.slug} label={s.name} />
+            <PlaceholderTile key={s.slug} label={s.name} variant={SERVICE_ART[s.slug] || "hero"} sample />
           ))}
           {services.slice(0, 3).map((s) => (
-            <PlaceholderTile key={`${s.slug}-2`} label={`${s.name} — before/after`} />
+            <PlaceholderTile key={`${s.slug}-2`} label={`${s.name} — before/after`} variant={SERVICE_ART[s.slug] || "hero"} sample />
           ))}
         </div>
       </section>

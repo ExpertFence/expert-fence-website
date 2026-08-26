@@ -23,7 +23,7 @@ export default function AboutPage() {
               commercial perimeter security — without losing the local, answer-the-phone service homeowners expect.
             </p>
           </div>
-          <PlaceholderTile label="Crew or founder photo" className="!aspect-video border-white/20 bg-white/5 text-navy-100 [&_p]:text-navy-100" />
+          <PlaceholderTile label="Locally Owned & Operated" variant="crew" className="!aspect-video" />
         </div>
       </section>
 

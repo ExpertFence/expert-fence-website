@@ -1,23 +1,29 @@
-// Clearly-labeled visual placeholder — intentionally not a real photo.
-// Swap these out for real project photography before launch.
+import FenceArt from "@/components/illustrations/FenceArt";
+
+// Custom brand illustration tile — used wherever a real project photo isn't
+// available yet. Renders hand-built SVG art (not a photo, not a stock image)
+// so the site reads as a finished, on-brand design. Pass `sample` only for
+// spots that inherently claim to show real completed work (gallery), so
+// visitors aren't misled into thinking it's an actual project photo.
 export default function PlaceholderTile({
   label,
+  variant = "hero",
+  sample = false,
   className = "",
 }: {
   label: string;
+  variant?: "wood" | "vinyl" | "chainlink" | "aluminum" | "commercial" | "residential" | "repair" | "crew" | "hero";
+  sample?: boolean;
   className?: string;
 }) {
   return (
-    <div
-      className={`flex aspect-[4/3] flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-navy-200 bg-navy-50 p-4 text-center ${className}`}
-    >
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-navy-300" aria-hidden="true">
-        <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="8.5" cy="10" r="1.5" stroke="currentColor" strokeWidth="1.5" />
-        <path d="M21 15l-5-5-9 9" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-      </svg>
-      <p className="text-xs font-medium text-navy-400">{label}</p>
-      <p className="text-[10px] uppercase tracking-wide text-navy-300">Sample placeholder — add real photo</p>
+    <div className={`relative aspect-[4/3] overflow-hidden rounded-lg shadow-card ${className}`}>
+      <FenceArt variant={variant} label={label} />
+      {sample && (
+        <span className="absolute right-3 top-3 rounded-full bg-black/40 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur">
+          Sample art — add real photo
+        </span>
+      )}
     </div>
   );
 }

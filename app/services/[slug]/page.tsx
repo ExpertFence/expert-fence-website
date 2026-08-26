@@ -5,6 +5,16 @@ import { services, serviceAreas } from "@/lib/site-config";
 import CTASection from "@/components/CTASection";
 import PlaceholderTile from "@/components/PlaceholderTile";
 
+const SERVICE_ART: Record<string, "wood" | "vinyl" | "chainlink" | "aluminum" | "commercial" | "residential" | "repair"> = {
+  "wood-fence-installation": "wood",
+  "vinyl-pvc-fence-installation": "vinyl",
+  "chain-link-fence-installation": "chainlink",
+  "aluminum-ornamental-iron-fence": "aluminum",
+  "commercial-fencing": "commercial",
+  "residential-fencing": "residential",
+  "fence-repair-gate-installation": "repair",
+};
+
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
 }
@@ -43,7 +53,7 @@ export default function ServiceDetailPage({ params }: { params: { slug: string }
               </Link>
             </div>
           </div>
-          <PlaceholderTile label={`${service.name} example`} className="!aspect-video border-white/20 bg-white/5 text-navy-100 [&_p]:text-navy-100" />
+          <PlaceholderTile label={service.name} variant={SERVICE_ART[service.slug] || "hero"} className="!aspect-video" />
         </div>
       </section>
 

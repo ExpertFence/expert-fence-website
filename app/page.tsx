@@ -42,7 +42,7 @@ export default function HomePage() {
               </div>
             </dl>
           </div>
-          <PlaceholderTile label="Hero project photo" className="!aspect-video border-white/20 bg-white/5 text-navy-100 [&_p]:text-navy-100" />
+          <PlaceholderTile label="Expert Fence — DMV Installations" variant="hero" className="!aspect-video" />
         </div>
       </section>
 
@@ -113,10 +113,10 @@ export default function HomePage() {
             </ul>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <PlaceholderTile label="Completed wood fence" />
-            <PlaceholderTile label="Vinyl privacy fence" className="mt-8" />
-            <PlaceholderTile label="Crew on job site" className="-mt-8" />
-            <PlaceholderTile label="Ornamental aluminum gate" />
+            <PlaceholderTile label="Wood Fence Installs" variant="wood" />
+            <PlaceholderTile label="Vinyl Privacy Fencing" variant="vinyl" className="mt-8" />
+            <PlaceholderTile label="Licensed & Insured Crews" variant="crew" className="-mt-8" />
+            <PlaceholderTile label="Ornamental Aluminum Gates" variant="aluminum" />
           </div>
         </div>
       </section>
