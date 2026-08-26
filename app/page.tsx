@@ -2,6 +2,20 @@ import Link from "next/link";
 import { services, serviceAreas, siteConfig } from "@/lib/site-config";
 import CTASection from "@/components/CTASection";
 import PlaceholderTile from "@/components/PlaceholderTile";
+import HeroSlideshow from "@/components/HeroSlideshow";
+import Ticker from "@/components/Ticker";
+import ProcessSteps from "@/components/ProcessSteps";
+
+const galleryItems: { label: string; variant: Parameters<typeof PlaceholderTile>[0]["variant"] }[] = [
+  { label: "Cedar Privacy & Drive Gate", variant: "wood" },
+  { label: "Artisan Custom Gate", variant: "commercial" },
+  { label: "Pool Enclosure", variant: "aluminum" },
+  { label: "Scalloped Vinyl Picket", variant: "vinyl" },
+  { label: "Custom Arched Gate", variant: "residential" },
+  { label: "Estate Drive Gate", variant: "hero" },
+  { label: "Lattice Gate Under Arch", variant: "repair" },
+  { label: "Vinyl Privacy", variant: "vinyl" },
+];
 
 export default function HomePage() {
   return (
@@ -13,7 +27,7 @@ export default function HomePage() {
           <div>
             <p className="eyebrow text-brand-400">Licensed &amp; Insured · Serving the Entire DMV</p>
             <h1 className="mt-3 text-4xl font-bold leading-tight text-white sm:text-5xl">
-              Fences Built Right the First Time — {siteConfig.yearsInBusiness}+ Years Serving DC, Maryland &amp; Virginia
+              Built Right. Built To Last. — {siteConfig.yearsInBusiness}+ Years Serving DC, Maryland &amp; Virginia
             </h1>
             <p className="mt-5 max-w-xl text-lg text-navy-100/80">
               Wood, vinyl, chain link, aluminum, and commercial fencing — installed by local crews who know DMV permits,
@@ -42,7 +56,7 @@ export default function HomePage() {
               </div>
             </dl>
           </div>
-          <PlaceholderTile label="Expert Fence — DMV Installations" variant="hero" className="!aspect-video" />
+          <HeroSlideshow />
         </div>
       </section>
 
@@ -57,8 +71,36 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Services overview */}
+      <Ticker />
+
+      {/* Gallery teaser */}
       <section className="section">
+        <div className="container-page">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Our Work</p>
+              <h2 className="mt-2 text-3xl font-bold text-navy-900">Fences We&apos;ve Built</h2>
+            </div>
+            <Link href="/gallery" className="text-sm font-semibold text-brand-600 hover:underline">
+              Browse the full gallery →
+            </Link>
+          </div>
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {galleryItems.map((item, i) => (
+              <PlaceholderTile
+                key={item.label + i}
+                label={item.label}
+                variant={item.variant}
+                sample
+                className={i === 0 ? "sm:col-span-2 sm:row-span-2 !aspect-square" : "!aspect-square"}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Services overview */}
+      <section className="section bg-navy-50">
         <div className="container-page">
           <div className="max-w-2xl">
             <p className="eyebrow">What We Install</p>
@@ -86,12 +128,12 @@ export default function HomePage() {
       </section>
 
       {/* Why choose us */}
-      <section className="section bg-navy-50">
+      <section className="section">
         <div className="container-page grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
             <p className="eyebrow">Why Homeowners &amp; Businesses Choose Us</p>
             <h2 className="mt-2 text-3xl font-bold text-navy-900">
-              Local Crews Who Know the DMV's Permits, Soil &amp; HOAs
+              Local Crews Who Know the DMV&apos;s Permits, Soil &amp; HOAs
             </h2>
             <ul className="mt-6 space-y-4">
               {[
@@ -117,6 +159,17 @@ export default function HomePage() {
             <PlaceholderTile label="Vinyl Privacy Fencing" variant="vinyl" className="mt-8" />
             <PlaceholderTile label="Licensed & Insured Crews" variant="crew" className="-mt-8" />
             <PlaceholderTile label="Ornamental Aluminum Gates" variant="aluminum" />
+          </div>
+        </div>
+      </section>
+
+      {/* Process */}
+      <section className="section bg-navy-900">
+        <div className="container-page">
+          <p className="eyebrow text-brand-400">How It Works</p>
+          <h2 className="mt-2 text-3xl font-bold text-white">Four Steps From Quote to Finished Fence</h2>
+          <div className="mt-10">
+            <ProcessSteps />
           </div>
         </div>
       </section>

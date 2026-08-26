@@ -33,3 +33,18 @@ body {
 .eyebrow {
   @apply text-sm font-semibold uppercase tracking-wide text-brand-600;
 }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 26s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
+}

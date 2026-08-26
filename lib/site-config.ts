@@ -1,27 +1,23 @@
-// ⚠️ PLACEHOLDER BUSINESS INFO — replace every value in this file with
-// Expert Fence's real details before sending customers to the live site.
-// Phone number below uses the North American "555-01xx" block, which is
-// permanently reserved for fictitious use and is not a real, dialable number.
-
 export const siteConfig = {
   businessName: "Expert Fence",
-  tagline: "DMV's Trusted Fence Installation & Repair Experts",
-  phoneDisplay: "(301) 555-0142",
-  phoneHref: "+13015550142",
-  email: "info@expertfence-placeholder.com",
+  tagline: "DMV's Trusted Fence Installation & Repair Experts Since 1986",
+  phoneDisplay: "(703) 751-3008",
+  phoneHref: "+17037513008",
+  email: "expertfence@expertfence.com",
   address: {
-    line1: "[Street Address — add real address]",
-    city: "Upper Marlboro",
-    state: "MD",
-    zip: "20772",
+    line1: "6027 Farrington Avenue",
+    city: "Alexandria",
+    state: "VA",
+    zip: "22304",
   },
   hours: [
-    { day: "Monday – Friday", time: "7:00 AM – 6:00 PM" },
-    { day: "Saturday", time: "8:00 AM – 4:00 PM" },
-    { day: "Sunday", time: "Closed (emergency repairs by request)" },
+    { day: "Monday – Friday", time: "7:00 AM – 4:30 PM" },
+    { day: "Saturday", time: "8:00 AM – 12:00 PM" },
+    { day: "Sunday", time: "Closed" },
   ],
-  license: "MHIC / Class A Contractor License #[Add License Number]",
-  yearsInBusiness: 15,
+  license: 'Class "A" Licensed · Bonded · Insured — DC · MD · VA [add license #]',
+  yearsInBusiness: 40,
+  foundingYear: 1986,
   social: {
     facebook: "https://facebook.com/",
     instagram: "https://instagram.com/",
