@@ -635,20 +635,39 @@ const F={
   c:'Send It',f:'No pressure. No obligation.'}
 };
 const ov=document.getElementById('ov'),mc=document.getElementById('mc');
+const OFFICE='Sales@ExpertFence.com';
 let shown=false,open=false;
 function show(k,preset){
   const d=F[k];if(!d)return;
   mc.innerHTML=`<div class="mh"><img loading="eager" decoding="async" width="392" height="126" class="mlogo" src="assets/img/img-e8301d99f1.png" alt="Expert Fence"><span class="tag" style="color:#e8bd8a">${d.k}</span><h3>${d.t}</h3><p>${d.s}</p></div>
     <div class="mb"><form id="mf" novalidate>${d.b}
-    <button class="btn b-cedar" style="width:100%;margin-top:.4rem">${d.c}</button><p class="fine">${d.f}</p></form></div>`;
+    <button class="btn b-cedar" style="width:100%;margin-top:.4rem">${d.c}</button><p class="mfst" style="margin-top:.6rem;font-size:.9rem;font-weight:600;text-align:center"></p><p class="fine">${d.f}</p></form></div>`;
   mc.querySelectorAll('.chip').forEach(c=>{const i=c.querySelector('input');
     if(preset&&i.value===preset){i.checked=true;c.classList.add('sel')}
     c.onclick=e=>{e.preventDefault();i.checked=!i.checked;c.classList.toggle('sel',i.checked)}});
-  mc.querySelector('#mf').onsubmit=e=>{e.preventDefault();let bad=false;
-    e.target.querySelectorAll('[required]').forEach(i=>{const g=i.value.trim()&&(i.type!=='email'||i.value.includes('@'));i.style.borderColor=g?'':'#c0392b';if(!g)bad=true});
+  mc.querySelector('#mf').onsubmit=async e=>{e.preventDefault();let bad=false;
+    const form=e.target,btn=form.querySelector('button'),st=mc.querySelector('.mfst');
+    form.querySelectorAll('[required]').forEach(i=>{const g=i.value.trim()&&(i.type!=='email'||i.value.includes('@'));i.style.borderColor=g?'':'#c0392b';if(!g)bad=true});
     if(bad)return;
-    mc.innerHTML=`<div class="ok"><div class="t">✓</div><h3>Got It</h3><p>We'll reach out within one business day. Need it sooner? <a href="tel:+17037513008" style="color:var(--green);font-weight:600">703-751-3008</a></p></div>`;
-    setTimeout(hide,4000)};
+    const fd=new FormData(form),name=fd.get('Name')||'Newsletter Signup',email=fd.get('Email')||'';
+    const picks=[...form.querySelectorAll('.chip input:checked')].map(i=>i.value).join(', ');
+    const ref='EF-'+new Date().toISOString().slice(2,10).replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
+    const p=new FormData();
+    Object.entries(Object.assign({_subject:d.t.toUpperCase()+' — '+name+' — '+ref,_template:'table',_captcha:'false',_replyto:email,_cc:email,
+      'Reference':ref,'Source':d.t,'Submitted':new Date().toLocaleString('en-US',{dateStyle:'full',timeStyle:'short'})},
+      picks?{'Selections':picks}:{},Object.fromEntries([...fd.entries()])))
+     .forEach(([key,val])=>p.append(key,val));
+    btn.disabled=true;btn.textContent='Sending…';st.textContent='';
+    try{
+      const r=await fetch('https://formsubmit.co/ajax/'+OFFICE,{method:'POST',headers:{Accept:'application/json'},body:p});
+      if(!r.ok)throw new Error();
+      mc.innerHTML=`<div class="ok"><div class="t">✓</div><h3>Got It</h3><p>We'll reach out within one business day. Need it sooner? <a href="tel:+17037513008" style="color:var(--green);font-weight:600">703-751-3008</a></p></div>`;
+      setTimeout(hide,4000);
+    }catch(err){
+      btn.disabled=false;btn.textContent=d.c;
+      st.style.color='#b03a2e';st.textContent='Could not send — please call 703-751-3008 or email Sales@ExpertFence.com directly.';
+    }
+  };
   ov.classList.add('on');document.body.style.overflow='hidden';open=true;
 }
 function hide(){ov.classList.remove('on');document.body.style.overflow='';open=false}
