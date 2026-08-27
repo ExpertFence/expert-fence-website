@@ -651,11 +651,12 @@ function show(k,preset){
     if(bad)return;
     const fd=new FormData(form),name=fd.get('Name')||'Newsletter Signup',email=fd.get('Email')||'';
     const picks=[...form.querySelectorAll('.chip input:checked')].map(i=>i.value).join(', ');
+    const chipNames=new Set([...form.querySelectorAll('.chip input[name]')].map(i=>i.name));
     const ref='EF-'+new Date().toISOString().slice(2,10).replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
     const p=new FormData();
     Object.entries(Object.assign({_subject:d.t.toUpperCase()+' — '+name+' — '+ref,_template:'table',_captcha:'false',_replyto:email,_cc:email,
       'Reference':ref,'Source':d.t,'Submitted':new Date().toLocaleString('en-US',{dateStyle:'full',timeStyle:'short'})},
-      picks?{'Selections':picks}:{},Object.fromEntries([...fd.entries()])))
+      picks?{'Selections':picks}:{},Object.fromEntries([...fd.entries()].filter(([k])=>!chipNames.has(k)))))
      .forEach(([key,val])=>p.append(key,val));
     btn.disabled=true;btn.textContent='Sending…';st.textContent='';
     try{

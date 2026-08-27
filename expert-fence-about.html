@@ -6,7 +6,7 @@
 <title>About Expert Fence | 40 Years of Fence Building in DC, MD &amp; VA</title>
 <meta name="description" content="Expert Fence has built fences across Washington DC, Maryland and Virginia since 1986. Class A licensed, A+ BBB rated, zero complaints. Meet our team, visit our Alexandria yard, and see the full range of services beyond fencing.">
 <meta name="keywords" content="about expert fence, fence company Alexandria VA, best fence company DC, licensed fence contractor Maryland, BBB accredited fence company Virginia, fence maintenance tips, landscape architecture DMV, site survey fence line, fence staining sealing">
-<link rel="canonical" href="https://www.expertfence.com/about/">
+<link rel="canonical" href="https://www.expertfence.com/expert-fence-about.html">
 <link rel="alternate" hreflang="en" href="https://www.expertfence.com/expert-fence-about.html">
 <link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/expert-fence-about.html">
 <link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/expert-fence-about.html">
@@ -15,14 +15,14 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="About Expert Fence — 40 Years in DC, MD &amp; VA">
 <meta property="og:description" content="Class A licensed, A+ BBB rated, zero complaints in four decades. Meet the team behind the DMV's fence experts.">
-<meta property="og:url" content="https://www.expertfence.com/about/">
+<meta property="og:url" content="https://www.expertfence.com/expert-fence-about.html">
 <link rel="icon" href="assets/img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"AboutPage","url":"https://www.expertfence.com/about/",
+{"@context":"https://schema.org","@type":"AboutPage","url":"https://www.expertfence.com/expert-fence-about.html",
 "mainEntity":{"@type":"HomeAndConstructionBusiness","@id":"https://www.expertfence.com/#business",
 "name":"Expert Fence","foundingDate":"1986","url":"https://www.expertfence.com/","telephone":"+1-703-751-3008",
 "email":"expertfence@expertfence.com","priceRange":"$$",
@@ -663,11 +663,12 @@ function show(k){
     if(bad)return;
     const fd=new FormData(form),name=fd.get('Name')||'Newsletter Signup',email=fd.get('Email')||'';
     const picks=[...form.querySelectorAll('.chip input:checked')].map(i=>i.value).join(', ');
+    const chipNames=new Set([...form.querySelectorAll('.chip input[name]')].map(i=>i.name));
     const ref='EF-'+new Date().toISOString().slice(2,10).replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
     const p=new FormData();
     Object.entries(Object.assign({_subject:d.t.toUpperCase()+' — '+name+' — '+ref,_template:'table',_captcha:'false',_replyto:email,_cc:email,
       'Reference':ref,'Source':d.t,'Submitted':new Date().toLocaleString('en-US',{dateStyle:'full',timeStyle:'short'})},
-      picks?{'Selections':picks}:{},Object.fromEntries([...fd.entries()])))
+      picks?{'Selections':picks}:{},Object.fromEntries([...fd.entries()].filter(([k])=>!chipNames.has(k)))))
      .forEach(([key,val])=>p.append(key,val));
     btn.disabled=true;btn.textContent='Sending…';st.textContent='';
     try{
