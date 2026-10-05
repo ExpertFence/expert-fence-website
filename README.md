@@ -29,7 +29,7 @@ share image, so links preview correctly on Facebook, Instagram, LinkedIn and X.
 ## Forms
 
 Every lead form posts to `/api/contact` (`api/contact.mjs`, a Vercel Function), which emails the submission
-to expertfence@expertfence.com through Resend from website@notify.expertfence.com. It needs the`n`RESEND_API_KEY` environment variable in Vercel. Booking-page photos are sent as attachments.
+to expertfence@expertfence.com through Resend from website@notify.expertfence.com. It needs the`n`RESEND_API_KEY` environment variable in Vercel. Booking-page photos are sent as attachments. The customer gets a copy of their submission (Spanish for /es/ pages).
 
 ## Build tooling
 
