@@ -393,7 +393,7 @@ footer li{list-style:none;margin-bottom:.35rem}footer a:hover{color:var(--cedar)
    swap loadAvailability() for your middleware call and implement
    createCalendarEvent(). Both are marked below.
    ============================================================ */
-var OFFICE='laroche.dynasty@gmail.com';
+var OFFICE='expertfence@expertfence.com';
 var $=function(s){return document.querySelector(s)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
 
 var state={type:null,date:null,slot:null,photos:[]};

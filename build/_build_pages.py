@@ -236,7 +236,7 @@ $$('.tip button').forEach(b=>b.onclick=()=>{const t=b.parentElement,o=t.classLis
 $$('.chip').forEach(c=>{const i=c.querySelector('input');c.onclick=e=>{e.preventDefault();i.checked=!i.checked;c.classList.toggle('sel',i.checked)}});
 
 /* independent form for this page only */
-const OFFICE='laroche.dynasty@gmail.com';
+const OFFICE='expertfence@expertfence.com';
 $('#qform').addEventListener('submit',async e=>{
   e.preventDefault();
   const form=e.target,st=$('#st');let bad=false;

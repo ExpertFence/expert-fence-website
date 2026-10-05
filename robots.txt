@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /expert-fence-materials.html
-Disallow: /expert-fence-proposal.html
 Disallow: /build/
 
 Sitemap: https://www.expertfence.com/sitemap.xml

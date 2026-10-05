@@ -14,20 +14,22 @@ Static, multi-page marketing site for Expert Fence — plain HTML/CSS/JS, no bui
 | `expert-fence-booking.html` | Site-visit scheduler |
 | `expert-fence-materials.html` | Materials / online store |
 | `expert-fence-legal.html` | Privacy, terms, licensing disclosures |
-| `expert-fence-proposal.html` | Internal client proposal / e-sign page (not for public nav) |
 
 Images live in `assets/img/` (JPEG/WebP pairs with lazy-loading, generated from source photography).
 
-## Before this goes live to real customers
+## Marketing tags
 
-Everything below is a placeholder so the site can deploy today — replace before sharing the link publicly:
+Meta Pixel, Google Analytics 4 / Google Ads and the LinkedIn Insight Tag are loaded by
+`assets/js/ef-analytics.js`. Paste each ID into the `TAGS` block at the top of that file; a blank ID
+keeps that tag off. Form submissions fire `Lead` / `generate_lead`; phone and email clicks fire `Contact`.
 
-- License numbers on `expert-fence-legal.html` (`AW-XXXXXXX`, `G-XXXXXXX` style placeholders)
-- `YOUR_PIXEL_ID` / `YOUR_META_PIXEL_ID` analytics placeholders
-- Form submission target (`formsubmit.co`) currently posts to a personal Gmail — point it at the real business inbox
-- Accreditation badge art on the About page (BBB/Angi/Checkbook marks are placeholders pending licensing)
-- Legal page content — reviewed by AI, needs sign-off from a licensed attorney before publishing
+Every page carries Open Graph and Twitter Card tags with `assets/img/og-share.jpg` (1200×630) as the
+share image, so links preview correctly on Facebook, Instagram, LinkedIn and X.
 
+## Forms
+
+Lead forms post through formsubmit.co to expertfence@expertfence.com. The first submission after an address change
+triggers a one-time activation email from FormSubmit to that inbox — click it or submissions are held.
 ## Build tooling
 
 `build/` contains the Python scripts used to generate these pages (Pillow-based image processing, HTML templating). They read from source photography that isn't part of this repo, so they're kept for reference/history rather than being directly re-runnable as-is.
