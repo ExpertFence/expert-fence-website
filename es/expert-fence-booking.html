@@ -631,7 +631,7 @@ $('#submit').addEventListener('click',async function(){
 
   try{
     var res=await fetch('https://formsubmit.co/ajax/'+OFFICE,{method:'POST',headers:{Accept:'application/json'},body:p});
-    if(!res.ok) throw new Error();
+    if(!res.ok||String((await res.json().catch(()=>({}))).success)!=='true') throw new Error();
     await createCalendarEvent(fields);
     var ics=icsFile(ref), gcal=googleLink(ref);
     $('#flow').innerHTML='<div class="panel"><div class="okbox"><div class="t">✓</div>'

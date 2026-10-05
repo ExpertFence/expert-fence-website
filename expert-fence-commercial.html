@@ -545,7 +545,7 @@ $('#qform').addEventListener('submit',async e=>{
   st.textContent='Sending…';st.className='';
   try{
     const r=await fetch('https://formsubmit.co/ajax/'+OFFICE,{method:'POST',headers:{Accept:'application/json'},body:p});
-    if(!r.ok)throw new Error();
+    if(!r.ok||String((await r.json().catch(()=>({}))).success)!=='true')throw new Error();
     $('#formwrap').innerHTML='<div class="okbox"><div class="t">✓</div><h3>Request Received</h3><p>Reference <b>'+ref+'</b>. An Expert Fence team member will follow up within one business day. Need it sooner? <a href="tel:+17037513008" style="color:var(--green);font-weight:600">(703) 751-3008</a></p></div>';
   }catch(err){
     btn.disabled=false;btn.textContent='Submit Bid Request';
