@@ -630,7 +630,7 @@ $('#submit').addEventListener('click',async function(){
   state.photos.forEach(function(ph,i){p.append('Photo '+(i+1),ph.blob,ref+'-'+(i+1)+'-'+ph.name)});
 
   try{
-    var res=await fetch('https://formsubmit.co/ajax/'+OFFICE,{method:'POST',headers:{Accept:'application/json'},body:p});
+    var res=await fetch('/api/contact',{method:'POST',headers:{Accept:'application/json'},body:p});
     if(!res.ok||String((await res.json().catch(()=>({}))).success)!=='true') throw new Error();
     await createCalendarEvent(fields);
     var ics=icsFile(ref), gcal=googleLink(ref);

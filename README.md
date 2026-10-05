@@ -28,8 +28,9 @@ share image, so links preview correctly on Facebook, Instagram, LinkedIn and X.
 
 ## Forms
 
-Lead forms post through formsubmit.co to expertfence@expertfence.com. The first submission after an address change
-triggers a one-time activation email from FormSubmit to that inbox — click it or submissions are held.
+Every lead form posts to `/api/contact` (`api/contact.mjs`, a Vercel Function), which emails the submission
+to expertfence@expertfence.com through Resend from website@notify.expertfence.com. It needs the`n`RESEND_API_KEY` environment variable in Vercel. Booking-page photos are sent as attachments.
+
 ## Build tooling
 
 `build/` contains the Python scripts used to generate these pages (Pillow-based image processing, HTML templating). They read from source photography that isn't part of this repo, so they're kept for reference/history rather than being directly re-runnable as-is.

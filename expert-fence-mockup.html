@@ -658,7 +658,7 @@ function show(k,preset){
      .forEach(([key,val])=>p.append(key,val));
     btn.disabled=true;btn.textContent='Sending…';st.textContent='';
     try{
-      const r=await fetch('https://formsubmit.co/ajax/'+OFFICE,{method:'POST',headers:{Accept:'application/json'},body:p});
+      const r=await fetch('/api/contact',{method:'POST',headers:{Accept:'application/json'},body:p});
       if(!r.ok||String((await r.json().catch(()=>({}))).success)!=='true')throw new Error();
       mc.innerHTML=`<div class="ok"><div class="t">✓</div><h3>Got It</h3><p>We'll reach out within one business day. Need it sooner? <a href="tel:+17037513008" style="color:var(--green);font-weight:600">703-751-3008</a></p></div>`;
       setTimeout(hide,4000);

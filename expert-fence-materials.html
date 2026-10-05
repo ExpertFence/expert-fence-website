@@ -823,7 +823,7 @@ async function submitOrder(){
   }).forEach(([k,v])=>payload.append(k,v));
 
   try{
-    const res=await fetch('https://formsubmit.co/ajax/'+OFFICE_EMAIL,{method:'POST',headers:{Accept:'application/json'},body:payload});
+    const res=await fetch('/api/contact',{method:'POST',headers:{Accept:'application/json'},body:payload});
     if(!res.ok||String((await res.json().catch(()=>({}))).success)!=='true') throw new Error();
     // decrement local inventory to demonstrate the sync behaviour
     cart.forEach(l=>{const p=CATALOG.find(x=>x.sku===l.sku); if(p&&p.stock>0)p.stock=Math.max(0,p.stock-l.qty)});

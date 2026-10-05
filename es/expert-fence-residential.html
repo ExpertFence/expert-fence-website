@@ -458,7 +458,7 @@ $('#qform').addEventListener('submit',async e=>{
   const btn=form.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Enviando…';
   st.textContent='Enviando…';st.className='';
   try{
-    const r=await fetch('https://formsubmit.co/ajax/'+OFFICE,{method:'POST',headers:{Accept:'application/json'},body:p});
+    const r=await fetch('/api/contact',{method:'POST',headers:{Accept:'application/json'},body:p});
     if(!r.ok||String((await r.json().catch(()=>({}))).success)!=='true')throw new Error();
     $('#formwrap').innerHTML='<div class="okbox"><div class="t">✓</div><h3>Solicitud Recibida</h3><p>Referencia <b>'+ref+'</b>. Un miembro del equipo de Expert Fence le contactará dentro de un día hábil. ¿Lo necesita antes? <a href="tel:+17037513008" style="color:var(--green);font-weight:600">(703) 751-3008</a></p></div>';
   }catch(err){
