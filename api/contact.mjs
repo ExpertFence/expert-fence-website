@@ -5,7 +5,8 @@
 
 const TO = 'expertfence@expertfence.com';
 const FROM = 'Expert Fence Website <website@notify.expertfence.com>';
-const ALLOWED_ORIGINS = ['https://www.expertfence.com', 'https://expertfence.com'];
+const REVIEW_URL = 'https://g.page/r/Cef39bttPF9cEBM/review'; // Google Business Profile "write a review" link
+const ALLOWED_ORIGINS =['https://www.expertfence.com', 'https://expertfence.com'];
 const MAX_ATTACH_BYTES = 3.5 * 1024 * 1024; // stay under Vercel's 4.5 MB request limit
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -74,6 +75,13 @@ export async function POST(request) {
     const intro = es
       ? '<p>Gracias por contactar a Expert Fence. Recibimos su solicitud y le responderemos dentro de un día hábil. ¿Lo necesita antes? Llame al <a href="tel:+17037513008">(703) 751-3008</a>.</p><p>Esta es una copia de lo que nos envió:</p>'
       : '<p>Thank you for contacting Expert Fence. We received your request and will get back to you within one business day. Need us sooner? Call <a href="tel:+17037513008">(703) 751-3008</a>.</p><p>Here is a copy of what you sent us:</p>';
+    const review = es
+      ? ['¿Ya trabajamos juntos antes? Una reseña en Google ayuda a otros vecinos a encontrarnos.', 'Déjenos una reseña en Google']
+      : ['Worked with us before? A Google review helps your neighbors find us.', 'Leave us a Google review'];
+    const reviewHtml =
+      `<div style="font-family:Arial,sans-serif;font-size:14px;margin-top:22px;padding-top:16px;border-top:1px solid #e6e3da">` +
+      `<p style="margin:0 0 10px">${review[0]}</p>` +
+      `<a href="${REVIEW_URL}" style="display:inline-block;background:#c07c33;color:#fff;text-decoration:none;font-weight:bold;padding:11px 20px;border-radius:3px">★ ${review[1]}</a></div>`;
     const copy = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
@@ -82,8 +90,9 @@ export async function POST(request) {
         to: [replyTo],
         reply_to: TO,
         subject: (es ? 'Copia de su solicitud — ' : 'Copy of your request — ') + subject,
-        html: `<div style="font-family:Arial,sans-serif;font-size:14px">${intro}</div>` + html,
-        text: (es ? 'Copia de su solicitud a Expert Fence:\n\n' : 'Copy of your request to Expert Fence:\n\n') + text,
+        html: `<div style="font-family:Arial,sans-serif;font-size:14px">${intro}</div>` + html + reviewHtml,
+        text: (es ? 'Copia de su solicitud a Expert Fence:\n\n' : 'Copy of your request to Expert Fence:\n\n') + text +
+          `\n\n${review[0]}\n${review[1]}: ${REVIEW_URL}`,
       }),
     });
     if (!copy.ok) console.error('Customer copy failed', copy.status, await copy.text());
