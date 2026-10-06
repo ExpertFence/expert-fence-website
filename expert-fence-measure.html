@@ -235,7 +235,14 @@ img[loading=lazy]{background:#e6e3da}
 .mst{font-size:.85rem;color:var(--mute);margin:0 0 .6rem;min-height:1.3em}
 .mst.err{color:var(--red)}
 #map{height:min(68vh,620px);min-height:380px;border-radius:4px;border:1px solid var(--line);background:#1d2a20;cursor:crosshair}
-#map .leaflet-tile-container img{width:512.5px!important;height:512.5px!important}  /* hide hairline seams between tiles */
+/* overlap tiles by half a pixel so no hairline seams show between them */
+#map .t256 img.leaflet-tile{width:256.5px!important;height:256.5px!important}
+#map .t512 img.leaflet-tile{width:512.5px!important;height:512.5px!important}
+.pin{width:22px;height:22px;background:var(--green);border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.pinlbl{background:#fff;color:var(--ink);border:none;border-radius:3px;padding:3px 7px;font:600 12px/1.3 Inter,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.35);white-space:nowrap}
+.picks{display:flex;flex-direction:column;gap:.35rem;margin:-.2rem 0 .6rem}
+.pick{text-align:left;padding:.65rem .8rem;border:1.5px solid var(--line);background:#fff;border-radius:2px;font:500 .9rem Inter,sans-serif;cursor:pointer;min-height:44px}
+.pick:hover{border-color:var(--cedar)}
 .tools{display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap}
 .tb{flex:1;min-height:44px;border:1.5px solid var(--line);background:#fff;border-radius:2px;font-family:var(--display);font-size:1rem;letter-spacing:.05em;cursor:pointer}
 .tb:hover{border-color:var(--cedar)}
@@ -257,7 +264,7 @@ img[loading=lazy]{background:#e6e3da}
 .okbox{text-align:center;padding:1rem .5rem}
 .okbox .t{width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:1.6rem;margin:0 auto .8rem}
 @media(max-width:900px){
-  .mgrid{grid-template-columns:1fr}
+  .mgrid{grid-template-columns:minmax(0,1fr)}
   .sum{position:static}
   #map{height:62vh;min-height:340px}
 }
@@ -315,13 +322,14 @@ img[loading=lazy]{background:#e6e3da}
         <button class="btn b-dark loc" type="button" id="locate" title="Use my location" aria-label="Use my location">◎</button>
       </form>
       <p class="mst" id="mst">Search your address, or tap ◎ if you're standing on the property.</p>
+      <div class="picks" id="picks"></div>
       <div id="map" role="application" aria-label="Satellite map — tap to place fence posts"></div>
       <div class="tools">
         <button type="button" class="tb" id="undo">↶ Undo</button>
         <button type="button" class="tb" id="newrun">＋ New section</button>
         <button type="button" class="tb" id="clear">✕ Clear</button>
       </div>
-      <p class="fineprint">Tap the map to set each corner post. Drag a post to adjust it. Use <b>New section</b> for a separate run, like the other side of the house. Aerial measurements are approximate; we confirm every foot on site. Imagery: USDA NAIP / USGS The National Map.</p>
+      <p class="fineprint">Tap the map to set each corner post. Drag a post to adjust it. Use <b>New section</b> for a separate run, like the other side of the house. Aerial measurements are approximate; we confirm every foot on site. Imagery: Virginia VBMP, Maryland iMAP, DC Office of the CTO, USGS.</p>
     </div>
 
     <aside class="sum">
@@ -405,9 +413,9 @@ img[loading=lazy]{background:#e6e3da}
 <script>
 /* ============================================================
    MEASURE YOUR FENCE — draw the fence line on aerial imagery.
-   Imagery: USGS cached tiles to zoom 16, then the USDA NAIP 30cm
-   survey rendered on demand (public domain, no API key).
-   Address search goes through /api/geocode (US Census geocoder).
+   Imagery: Virginia, Maryland and DC government aerial surveys
+   (6-inch or sharper, public services, no API key) over USGS.
+   Address search goes through /api/geocode (Census, then OpenStreetMap).
    The layout is encoded in the URL hash (#L=...), so the link in
    the office email reopens the exact drawing.
    ============================================================ */
@@ -418,18 +426,29 @@ var $=function(s){return document.querySelector(s)};
    Example once Expert Fence confirms its numbers: {'Wood privacy':[38,55], 'Chain link':[22,34], ...} */
 var PRICES=null, GATE={walk:[450,900], drive:[1600,3800]};
 
-var map=L.map('map',{zoomControl:true,doubleClickZoom:false,maxZoom:21}).setView([38.8462,-77.0910],11);
+var map=L.map('map',{zoomControl:true,doubleClickZoom:false,maxZoom:22}).setView([38.8462,-77.0910],11);
+
+/* Imagery, bottom to top. Each state's own survey only draws inside that state.
+   - USGS national imagery: fast regional overview, sharp to zoom 16.
+   - Virginia VBMP 2022–2025 (6-inch to 1-ft), pre-rendered tiles.
+   - Maryland six-inch 2023–2025, rendered on request; transparent outside Maryland.
+   - DC 2025 orthophoto (8 cm), rendered on request; transparent outside DC. */
 L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
-  {maxNativeZoom:16,maxZoom:21,attribution:'USGS The National Map'}).addTo(map);
-var NAIP=L.TileLayer.extend({getTileUrl:function(c){
+  {maxNativeZoom:16,maxZoom:22,className:'t256',attribution:'USGS The National Map'}).addTo(map);
+L.tileLayer('https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VBMP_Imagery/MostRecentImagery_WGS/MapServer/tile/{z}/{y}/{x}',
+  {minZoom:12,maxNativeZoom:20,maxZoom:22,bounds:[[36.5,-83.7],[39.47,-75.2]],className:'t256',attribution:'Virginia VBMP'}).addTo(map);
+/* ArcGIS "export" services: ask for exactly the area of each 512px tile */
+var Export=L.TileLayer.extend({getTileUrl:function(c){
   var s=this.getTileSize().x,   /* c.z is the map zoom; each tile is s px at that zoom */
       nw=L.CRS.EPSG3857.project(map.unproject([c.x*s,c.y*s],c.z)),
       se=L.CRS.EPSG3857.project(map.unproject([(c.x+1)*s,(c.y+1)*s],c.z));
-  return 'https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage?bbox='
-    +[nw.x,se.y,se.x,nw.y].map(function(v){return v.toFixed(1)}).join(',')
-    +'&bboxSR=3857&imageSR=3857&size=512,512&format=jpg&f=image';
+  return this._url+'&bbox='+[nw.x,se.y,se.x,nw.y].map(function(v){return v.toFixed(1)}).join(',')
+    +'&bboxSR=3857&imageSR=3857&size='+s+','+s+'&f=image';
 }});
-new NAIP('',{tileSize:512,minZoom:16,maxZoom:21,maxNativeZoom:21,attribution:'USDA NAIP'}).addTo(map);
+new Export('https://mdgeodata.md.gov/imagery/rest/services/SixInch/SixInchImagery2023_2024_2025/MapServer/export?format=png32&transparent=true',
+  {tileSize:512,minZoom:13,maxZoom:22,bounds:[[37.88,-79.49],[39.73,-75.04]],className:'t512',attribution:'Maryland iMAP'}).addTo(map);
+new Export('https://imagery.dcgis.dc.gov/dcgis/rest/services/Ortho/Ortho_2025/ImageServer/exportImage?format=png32&noData=0,0,0',
+  {tileSize:512,minZoom:13,maxZoom:22,bounds:[[38.79,-77.12],[38.996,-76.909]],className:'t512',attribution:'DC Office of the CTO'}).addTo(map);
 
 var runs=[[]], layer=L.layerGroup().addTo(map), home=null;
 var FT=3.28084;
@@ -483,17 +502,27 @@ function decode(s){return s.split('|').map(function(r){return r.split(';').map(f
 
 function msg(t,err){var m=$('#mst');m.textContent=t;m.className='mst'+(err?' err':'')}
 function goTo(lat,lng,label){
-  map.setView([lat,lng],19);   /* 19 = the imagery's native 30cm detail */
+  map.setView([lat,lng],20);   /* DMV survey imagery is 6-inch or sharper, so 20 is crisp */
   if(innerWidth<900)$('#map').scrollIntoView({behavior:'smooth',block:'start'});
   if(home)home.remove();
-  home=L.circleMarker([lat,lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f4d33',fillOpacity:1}).addTo(map);
-  msg((label?label+' — ':'')+'Tap where each corner post goes. Sharp imagery loads in a few seconds.');
+  home=L.marker([lat,lng],{interactive:false,icon:L.divIcon({className:'',html:'<div class="pin"></div>',iconSize:[22,22],iconAnchor:[11,22]})}).addTo(map);
+  if(label)home.bindTooltip(label,{permanent:true,direction:'top',offset:[0,-22],className:'pinlbl'});
+  msg('Found it. Tap where each corner post goes; drag a post to fine-tune.');
+  $('#picks').innerHTML='';
 }
 $('#find').onsubmit=function(e){
   e.preventDefault(); var q=$('#addr').value.trim(); if(q.length<5){msg('Enter your street address.',true);return}
-  msg('Finding your property…');
+  msg('Finding your property…'); $('#picks').innerHTML='';
   fetch('/api/geocode?q='+encodeURIComponent(q)).then(function(r){return r.json()}).then(function(j){
-    if(j.lat)goTo(j.lat,j.lng,j.address); else msg("We couldn't find that address. Try street, city and ZIP.",true);
+    var m=j.matches||[];
+    if(m.length===1){goTo(m[0].lat,m[0].lng,m[0].address);return}
+    if(m.length>1){
+      msg('Which one is your property?');
+      $('#picks').innerHTML=m.map(function(x,i){return '<button type="button" class="pick" data-i="'+i+'">'+x.address.replace(/</g,'&lt;')+'</button>'}).join('');
+      $('#picks').onclick=function(ev){var b=ev.target.closest('.pick');if(b){var x=m[+b.dataset.i];goTo(x.lat,x.lng,x.address)}};
+      return;
+    }
+    msg("We couldn't find that address. Try the street number and name with your ZIP code.",true);
   }).catch(function(){msg('Search is unavailable right now. Zoom and drag the map to your property instead.',true)});
 };
 $('#locate').onclick=function(){
@@ -504,7 +533,7 @@ $('#locate').onclick=function(){
 };
 
 var m=location.hash.match(/^#L=(.+)$/);
-if(m){try{runs=decode(decodeURIComponent(m[1]));var all=[].concat.apply([],runs);map.fitBounds(L.latLngBounds(all),{maxZoom:19,padding:[40,40]});msg('Shared fence layout loaded.')}catch(e){runs=[[]]}}
+if(m){try{runs=decode(decodeURIComponent(m[1]));var all=[].concat.apply([],runs);map.fitBounds(L.latLngBounds(all),{maxZoom:20,padding:[40,40]});msg('Shared fence layout loaded.')}catch(e){runs=[[]]}}
 draw();
 
 /* ---------- send to the office ---------- */
