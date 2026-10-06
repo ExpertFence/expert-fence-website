@@ -428,7 +428,7 @@ var map=L.map('map',{zoomControl:true,doubleClickZoom:false,maxZoom:22}).setView
 /* Imagery, bottom to top. Each state's own survey only draws inside that state.
    - USGS national imagery: fast regional overview, sharp to zoom 16.
    - Virginia VBMP 2022–2025 (6-inch to 1-ft), pre-rendered tiles.
-   - Maryland six-inch 2023–2025, rendered on request; transparent outside Maryland.
+   - Maryland six-inch statewide composite, rendered on request (~3s); transparent outside Maryland.
    - DC 2025 orthophoto (8 cm), rendered on request; transparent outside DC. */
 L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
   {maxNativeZoom:16,maxZoom:22,className:'t256',attribution:'USGS The National Map'}).addTo(map);
@@ -442,7 +442,7 @@ var Export=L.TileLayer.extend({getTileUrl:function(c){
   return this._url+'&bbox='+[nw.x,se.y,se.x,nw.y].map(function(v){return v.toFixed(1)}).join(',')
     +'&bboxSR=3857&imageSR=3857&size='+s+','+s+'&f=image';
 }});
-new Export('https://mdgeodata.md.gov/imagery/rest/services/SixInch/SixInchImagery2023_2024_2025/MapServer/export?format=png32&transparent=true',
+new Export('https://mdgeodata.md.gov/imagery/rest/services/SixInch/SixInchImagery/ImageServer/exportImage?format=jpgpng&noData=0,0,0',
   {tileSize:512,minZoom:13,maxZoom:22,bounds:[[37.88,-79.49],[39.73,-75.04]],className:'t512',attribution:'Maryland iMAP'}).addTo(map);
 new Export('https://imagery.dcgis.dc.gov/dcgis/rest/services/Ortho/Ortho_2025/ImageServer/exportImage?format=png32&noData=0,0,0',
   {tileSize:512,minZoom:13,maxZoom:22,bounds:[[38.79,-77.12],[38.996,-76.909]],className:'t512',attribution:'DC Office of the CTO'}).addTo(map);
