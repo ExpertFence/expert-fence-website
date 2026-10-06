@@ -1,0 +1,50 @@
+{
+  "redirects": [
+    { "source": "/contact", "destination": "/expert-fence-booking.html", "permanent": true },
+    { "source": "/contact-info", "destination": "/expert-fence-booking.html", "permanent": true },
+    { "source": "/contact_us", "destination": "/expert-fence-booking.html", "permanent": true },
+    { "source": "/:section/contact_us", "destination": "/expert-fence-booking.html", "permanent": true },
+    { "source": "/newsite/contact/:path*", "destination": "/expert-fence-booking.html", "permanent": true },
+
+    { "source": "/why-expert-fence/:path*", "destination": "/expert-fence-about.html", "permanent": true },
+    { "source": "/site-content/why-expert-fence/:path*", "destination": "/expert-fence-about.html", "permanent": true },
+    { "source": "/newsite/why/:path*", "destination": "/expert-fence-about.html", "permanent": true },
+    { "source": "/newsite/otherinfo/licenses.shtml", "destination": "/expert-fence-about.html", "permanent": true },
+    { "source": "/newsite/otherinfo/our_employees.shtml", "destination": "/expert-fence-about.html", "permanent": true },
+    { "source": "/newsite/otherinfo/treating_cedar.shtml", "destination": "/expert-fence-about.html#care", "permanent": true },
+    { "source": "/cedar-vs-pressure-treated-fence", "destination": "/expert-fence-about.html#care", "permanent": true },
+    { "source": "/accessibility-info", "destination": "/expert-fence-legal.html#accessibility", "permanent": true },
+
+    { "source": "/commercial-fencing/:path*", "destination": "/expert-fence-commercial.html", "permanent": true },
+
+    { "source": "/gateshardwarepost-caps/:path*", "destination": "/expert-fence-materials.html", "permanent": true },
+    { "source": "/newsite/otherinfo/pricing.shtml", "destination": "/expert-fence-materials.html", "permanent": true },
+
+    { "source": "/wood-fences/:path*", "destination": "/expert-fence-residential.html", "permanent": true },
+    { "source": "/privacy-fences/:path*", "destination": "/expert-fence-residential.html", "permanent": true },
+    { "source": "/vinyl-fences/:path*", "destination": "/expert-fence-residential.html", "permanent": true },
+    { "source": "/metal-fences/:path*", "destination": "/expert-fence-residential.html", "permanent": true },
+    { "source": "/paddock-fences/:path*", "destination": "/expert-fence-residential.html", "permanent": true },
+    { "source": "/gothic-picket-fence/:path*", "destination": "/expert-fence-residential.html", "permanent": true },
+    { "source": "/site-content/wood/:path*", "destination": "/expert-fence-residential.html", "permanent": true },
+    { "source": "/site-content/metal/:path*", "destination": "/expert-fence-residential.html", "permanent": true },
+    { "source": "/newsite/wood/:path*", "destination": "/expert-fence-residential.html", "permanent": true },
+    { "source": "/newsite/metal/:path*", "destination": "/expert-fence-residential.html", "permanent": true },
+
+    { "source": "/site-content/other-info/:path*", "destination": "/expert-fence-gallery.html", "permanent": true },
+    { "source": "/footerText/:path*", "destination": "/expert-fence-gallery.html", "permanent": true },
+    { "source": "/lattice_fence_screening.htm", "destination": "/expert-fence-gallery.html", "permanent": true },
+    { "source": "/vertical_wyngate.htm", "destination": "/expert-fence-gallery.html", "permanent": true },
+    { "source": "/classic1.htm", "destination": "/expert-fence-gallery.html", "permanent": true },
+    { "source": "/new_page_:n.htm", "destination": "/expert-fence-gallery.html", "permanent": true },
+
+    { "source": "/home/:path*", "destination": "/", "permanent": true },
+    { "source": "/front-page/:path*", "destination": "/", "permanent": true },
+    { "source": "/newsite/:path*", "destination": "/", "permanent": true },
+    { "source": "/site-content/:path*", "destination": "/", "permanent": true },
+    { "source": "/news/:path*", "destination": "/", "permanent": true },
+    { "source": "/events/:path*", "destination": "/", "permanent": true },
+    { "source": "/banner/:path*", "destination": "/", "permanent": true },
+    { "source": "/sitemap", "destination": "/sitemap.xml", "permanent": true }
+  ]
+}
