@@ -12,6 +12,10 @@ html { overflow-x: hidden; }
            transition: opacity .25s, visibility 0s linear .25s !important; }
   .links.on { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .25s !important; }
 
+  /* The blurred top bar trapped the full-screen menu inside its own 115px height (a backdrop-filter
+     makes it the containing block for position:fixed children). A solid bar lets the menu fill the screen. */
+  nav { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: rgba(252, 251, 248, .98) !important; }
+
   /* Blur behind popups is slow on many Android phones; a darker tint looks the same and stays smooth. */
   .ov { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(8, 16, 10, .82); }
 }
