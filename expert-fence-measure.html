@@ -436,7 +436,7 @@ var map=L.map('map',{zoomControl:true,doubleClickZoom:false,maxZoom:22}).setView
 L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
   {maxNativeZoom:16,maxZoom:22,className:'t256',attribution:'USGS The National Map'}).addTo(map);
 L.tileLayer('https://vginmaps.vdem.virginia.gov/arcgis/rest/services/VBMP_Imagery/MostRecentImagery_WGS/MapServer/tile/{z}/{y}/{x}',
-  {minZoom:12,maxNativeZoom:20,maxZoom:22,bounds:[[36.5,-83.7],[39.47,-75.2]],className:'t256',attribution:'Virginia VBMP'}).addTo(map);
+  {minZoom:12,maxNativeZoom:19,maxZoom:22,bounds:[[36.5,-83.7],[39.47,-75.2]],className:'t256',attribution:'Virginia VBMP'}).addTo(map);
 /* ArcGIS "export" services: ask for exactly the area of each 512px tile */
 var Export=L.TileLayer.extend({getTileUrl:function(c){
   var s=this.getTileSize().x,   /* c.z is the map zoom; each tile is s px at that zoom */
