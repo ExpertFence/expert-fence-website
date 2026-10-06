@@ -244,6 +244,7 @@ img[loading=lazy]{background:#e6e3da}
 .total .big small{font-size:1rem;color:var(--mute);margin-left:.4rem;letter-spacing:.08em}
 .kv{display:flex;justify-content:space-between;gap:1rem;font-size:.88rem;padding:.45rem 0;border-top:1px solid var(--line)}
 .kv b{font-weight:700}
+.kv[hidden]{display:none}
 #lform .btn{width:100%;margin-top:.3rem}
 .st{font-size:.88rem;font-weight:600;margin-top:.6rem;text-align:center}
 .st.err{color:var(--red)}
@@ -420,13 +421,14 @@ var map=L.map('map',{zoomControl:true,doubleClickZoom:false,maxZoom:21}).setView
 L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
   {maxNativeZoom:16,maxZoom:21,attribution:'USGS The National Map'}).addTo(map);
 var NAIP=L.TileLayer.extend({getTileUrl:function(c){
-  var nw=L.CRS.EPSG3857.project(map.unproject([c.x*256,c.y*256],c.z)),
-      se=L.CRS.EPSG3857.project(map.unproject([(c.x+1)*256,(c.y+1)*256],c.z));
+  var s=this.getTileSize().x,   /* c.z is the map zoom; each tile is s px at that zoom */
+      nw=L.CRS.EPSG3857.project(map.unproject([c.x*s,c.y*s],c.z)),
+      se=L.CRS.EPSG3857.project(map.unproject([(c.x+1)*s,(c.y+1)*s],c.z));
   return 'https://imagery.nationalmap.gov/arcgis/rest/services/USGSNAIPImagery/ImageServer/exportImage?bbox='
     +[nw.x,se.y,se.x,nw.y].map(function(v){return v.toFixed(1)}).join(',')
     +'&bboxSR=3857&imageSR=3857&size=512,512&format=jpg&f=image';
 }});
-new NAIP('',{tileSize:512,zoomOffset:-1,minZoom:16,maxZoom:21,maxNativeZoom:21,attribution:'USDA NAIP'}).addTo(map);
+new NAIP('',{tileSize:512,minZoom:16,maxZoom:21,maxNativeZoom:21,attribution:'USDA NAIP'}).addTo(map);
 
 var runs=[[]], layer=L.layerGroup().addTo(map), home=null;
 var FT=3.28084;
