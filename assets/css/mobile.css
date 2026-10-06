@@ -1,0 +1,32 @@
+/* Shared mobile fixes for Android and iPhone. Loaded after each page's own <style>, so these win. */
+
+/* 1. Nothing may make the page wider than the screen. Android Chrome zooms the whole page out to fit
+      anything that sticks out sideways, which pushed popups off-centre and off-screen. */
+html { overflow-x: hidden; }
+@supports (overflow: clip) { html, body { overflow-x: clip; } }
+
+@media (max-width: 760px) {
+  /* 2. The closed slide-out menu used to sit just off the right edge (translateX(100%)), which is what
+        made Android pages twice as wide. Fade it in place instead. */
+  .links { transform: none !important; opacity: 0; visibility: hidden; pointer-events: none;
+           transition: opacity .25s, visibility 0s linear .25s !important; }
+  .links.on { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .25s !important; }
+
+  /* Blur behind popups is slow on many Android phones; a darker tint looks the same and stays smooth. */
+  .ov { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(8, 16, 10, .82); }
+}
+
+/* 3. Popups always fit the visible screen and scroll inside themselves. */
+.ov { overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.ov > .md { max-height: 92vh; max-height: 92dvh; }
+
+/* On phones the popup becomes a bottom sheet: full width, anchored to the bottom, clear of the home bar. */
+@media (max-width: 560px) {
+  .ov:has(> .md) { place-items: end center; padding: 0; }
+  .ov > .md { width: 100%; border-radius: 14px 14px 0 0; max-height: 94vh; max-height: 94dvh;
+              padding-bottom: env(safe-area-inset-bottom); }
+  .ov > .md .f2 { grid-template-columns: 1fr; }
+}
+
+/* 4. Comfortable tap targets and no accidental zoom-on-focus (iOS zooms inputs under 16px). */
+input, select, textarea { font-size: max(16px, 1em); }

@@ -227,18 +227,19 @@ input,textarea,[contenteditable]{cursor:text}
 img[loading=lazy]{background:#e6e3da}
 </style>
 <script src="assets/js/ef-analytics.js" defer></script>
+<link rel="stylesheet" href="assets/css/mobile.css">
 </head>
 <body>
 
 <div class="topbar">Free on-site estimates · DC · Maryland · Virginia</div>
 <nav>
   <div class="wrap nrow">
-    <a href="expert-fence-mockup.html" class="brand">
+    <a href="/" class="brand">
       <img loading="eager" decoding="async" width="392" height="126" class="logo" src="assets/img/logo.png" alt="Expert Fence — DC, MD &amp; VA">
       <span class="bsub">Since 1986 · DC · MD · VA</span>
     </a>
     <ul class="links" id="links">
-      <li><a href="expert-fence-mockup.html">Home</a></li>
+      <li><a href="/">Home</a></li>
       <li><a href="expert-fence-about.html">About</a></li>
       <li><a href="expert-fence-residential.html">Residential</a></li>
       <li><a href="expert-fence-commercial.html">Commercial</a></li>
@@ -352,17 +353,6 @@ img[loading=lazy]{background:#e6e3da}
             </select></div>
           </form>
         </div>
-
-        <div class="integ">
-          <b>For the developer:</b> live availability and two-way sync are stubbed in this build.
-          Replace <code>loadAvailability()</code> with a call to your middleware, which should proxy
-          <code>Google Calendar freeBusy.query</code> or <code>Microsoft Graph /me/calendar/getSchedule</code>
-          for the estimator calendars. On submit, <code>createCalendarEvent()</code> should POST to
-          <code>calendar.events.insert</code> (Google) or <code>/me/events</code> (Microsoft Graph) with the
-          customer as an attendee, which is also what pushes the notification into Teams. OAuth tokens must
-          stay server-side. The confirmation screen already issues a valid <code>.ics</code> so the flow
-          works end-to-end before that integration lands.
-        </div>
       </div>
 
       <aside>
@@ -429,9 +419,8 @@ img[loading=lazy]{background:#e6e3da}
 <script>
 /* ============================================================
    BOOKING — site visit scheduler
-   Availability is generated locally in this build. To go live,
-   swap loadAvailability() for your middleware call and implement
-   createCalendarEvent(). Both are marked below.
+   Availability is read live from the "Estimating" Outlook calendar
+   (api/availability.mjs) and bookings are written to it (api/book.mjs).
    ============================================================ */
 var OFFICE='expertfence@expertfence.com';
 var $=function(s){return document.querySelector(s)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
@@ -449,21 +438,33 @@ function blocks(d){
   for(var m=start;m<end;m+=45) out.push(m);
   return out;
 }
-/* ---- REPLACE ME: live free/busy lookup -------------------- */
-function loadAvailability(d,hour){
-  /* Deterministic stand-in so the demo behaves consistently.
-     Live: GET /api/availability?date=YYYY-MM-DD  → [{hour, free}] */
-  var k=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate()+hour*7;
-  return (k*2654435761 % 97) > 26;          /* ~73% of blocks open */
+/* ---- live availability: busy times from the Estimating calendar (api/availability.mjs) ---- */
+var BUSY={}, LIVE=false, loaded={}, LEAD=120;   /* LEAD = minutes of notice needed for a same-day visit */
+function toMin(t){return +t.slice(11,13)*60+ +t.slice(14,16)}
+function loadMonth(y,m){
+  var k=y+'-'+m; if(loaded[k])return loaded[k];
+  loaded[k]=fetch('/api/availability?from='+iso(new Date(y,m,1))+'&to='+iso(new Date(y,m+1,0)))
+    .then(function(r){return r.json()}).then(function(j){
+      LIVE=!!j.live;
+      (j.busy||[]).forEach(function(b){var d=b.start.slice(0,10);
+        (BUSY[d]=BUSY[d]||[]).push([toMin(b.start), b.end.slice(0,10)===d?toMin(b.end):1440])});
+      $('#syncTxt').textContent=LIVE?'Live availability from the Expert Fence estimating calendar':'Pick a time — our office confirms every visit';
+    }).catch(function(){}).then(function(){drawCal();drawSlots()});
+  return loaded[k];
 }
-function createCalendarEvent(payload){
-  /* Live: POST to your middleware, which calls
-     Google  → POST /calendar/v3/calendars/{id}/events
-     MS 365  → POST https://graph.microsoft.com/v1.0/me/events
-     Include the customer as an attendee so they get the invite,
-     and post the same summary to your Teams channel webhook. */
-  console.log('createCalendarEvent →',payload);
-  return Promise.resolve({ok:true});
+function loadAvailability(d,hour){
+  var now=new Date();
+  if(iso(d)===iso(now)&&hour<now.getHours()*60+now.getMinutes()+LEAD)return false;
+  return !(BUSY[iso(d)]||[]).some(function(b){return b[0]<hour+45&&b[1]>hour});
+}
+/* Books the visit on the Estimating calendar (api/book.mjs); the customer gets an Outlook invite. */
+function createCalendarEvent(f){
+  return fetch('/api/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      date:iso(state.date),slot:state.slot,type:state.type,ref:f.Reference,name:f.Customer,company:f.Company,
+      phone:f.Phone,email:f.Email,address:f['Property Address'],scope:f.Scope,presence:f['Customer Present'],
+      notes:f.Notes,photos:state.photos.length})})
+    .then(function(r){return r.json().then(function(j){return {ok:j.success==='true',conflict:!!j.conflict}})})
+    .catch(function(){return {ok:false,conflict:false}});
 }
 function fmtHour(mins){var h=Math.floor(mins/60),m=mins%60,p=h>=12?'PM':'AM',x=h%12||12;return x+(m?':'+String(m).padStart(2,'0'):':00')+' '+p}
 function slotLabel(h){return fmtHour(h)+' – '+fmtHour(h+45)}
@@ -472,6 +473,7 @@ function longDate(d){return d.toLocaleDateString('en-US',{weekday:'long',month:'
 
 /* ---------- calendar ---------- */
 function drawCal(){
+  loadMonth(viewY,viewM);
   $('#monthLbl').textContent=MONTHS[viewM]+' '+viewY;
   var first=new Date(viewY,viewM,1), n=new Date(viewY,viewM+1,0).getDate(), html='';
   for(var i=0;i<first.getDay();i++) html+='<button class="pad" disabled></button>';
@@ -630,13 +632,19 @@ $('#submit').addEventListener('click',async function(){
   state.photos.forEach(function(ph,i){p.append('Photo '+(i+1),ph.blob,ref+'-'+(i+1)+'-'+ph.name)});
 
   try{
+    var cal=await createCalendarEvent(fields);
+    if(cal.conflict){
+      btn.disabled=false; btn.textContent='Request This Visit'; st.className='err'; st.textContent='Sorry — that time was just booked. Please pick another hour.';
+      BUSY={}; loaded={}; state.slot=null; drawCal(); drawSlots(); sync();
+      $('#slots').scrollIntoView({behavior:'smooth',block:'center'}); return;
+    }
+    p.append('Calendar',cal.ok?'Booked on the Estimating calendar — customer was sent an Outlook invite':'NOT on the calendar — please add it and confirm with the customer');
     var res=await fetch('/api/contact',{method:'POST',headers:{Accept:'application/json'},body:p});
     if(!res.ok||String((await res.json().catch(()=>({}))).success)!=='true') throw new Error();
-    await createCalendarEvent(fields);
     var ics=icsFile(ref), gcal=googleLink(ref);
     $('#flow').innerHTML='<div class="panel"><div class="okbox"><div class="t">✓</div>'
       +'<h3>Visit Requested</h3><div class="ref">'+ref+'</div>'
-      +'<p>We have your request for <b>'+when+'</b>. Our office will confirm by phone or email — usually within a couple of hours during business hours. '
+      +'<p>'+(cal.ok?'A calendar invite is on its way to your email. ':'')+'We have your request for <b>'+when+'</b>. Our office will confirm by phone or email — usually within a couple of hours during business hours. '
       +(state.photos.length?'Your '+state.photos.length+' photo'+(state.photos.length>1?'s are':' is')+' attached to the request. ':'')
       +'Need to change it? Call <a href="tel:+17037513008" style="color:var(--green);font-weight:600">(703) 751-3008</a>.</p>'
       +'<div class="addcal"><a class="btn b-cedar" href="'+gcal+'" target="_blank" rel="noopener">Add to Google Calendar</a>'
