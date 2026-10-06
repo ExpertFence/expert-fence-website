@@ -50,6 +50,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
+  <url><loc>https://www.expertfence.com/expert-fence-measure.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url>
     <loc>https://www.expertfence.com/expert-fence-legal.html</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/expert-fence-legal.html"/>
