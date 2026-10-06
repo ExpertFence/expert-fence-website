@@ -56,7 +56,24 @@
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
-  <url><loc>https://www.expertfence.com/expert-fence-measure.html</loc><lastmod>2026-10-06</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url>
+    <loc>https://www.expertfence.com/expert-fence-measure.html</loc>
+    <lastmod>2026-10-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/expert-fence-measure.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/expert-fence-measure.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/expert-fence-measure.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/expert-fence-measure.html</loc>
+    <lastmod>2026-10-06</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/expert-fence-measure.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/expert-fence-measure.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/expert-fence-measure.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://www.expertfence.com/expert-fence-legal.html</loc>
     <lastmod>2026-10-06</lastmod>
