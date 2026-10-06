@@ -235,6 +235,7 @@ img[loading=lazy]{background:#e6e3da}
 .mst{font-size:.85rem;color:var(--mute);margin:0 0 .6rem;min-height:1.3em}
 .mst.err{color:var(--red)}
 #map{height:min(68vh,620px);min-height:380px;border-radius:4px;border:1px solid var(--line);background:#1d2a20;cursor:crosshair}
+#map .leaflet-tile-container img{width:512.5px!important;height:512.5px!important}  /* hide hairline seams between tiles */
 .tools{display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap}
 .tb{flex:1;min-height:44px;border:1.5px solid var(--line);background:#fff;border-radius:2px;font-family:var(--display);font-size:1rem;letter-spacing:.05em;cursor:pointer}
 .tb:hover{border-color:var(--cedar)}
@@ -482,7 +483,8 @@ function decode(s){return s.split('|').map(function(r){return r.split(';').map(f
 
 function msg(t,err){var m=$('#mst');m.textContent=t;m.className='mst'+(err?' err':'')}
 function goTo(lat,lng,label){
-  map.setView([lat,lng],20);
+  map.setView([lat,lng],19);   /* 19 = the imagery's native 30cm detail */
+  if(innerWidth<900)$('#map').scrollIntoView({behavior:'smooth',block:'start'});
   if(home)home.remove();
   home=L.circleMarker([lat,lng],{radius:6,color:'#fff',weight:2,fillColor:'#1f4d33',fillOpacity:1}).addTo(map);
   msg((label?label+' — ':'')+'Tap where each corner post goes. Sharp imagery loads in a few seconds.');
@@ -502,7 +504,7 @@ $('#locate').onclick=function(){
 };
 
 var m=location.hash.match(/^#L=(.+)$/);
-if(m){try{runs=decode(decodeURIComponent(m[1]));var all=[].concat.apply([],runs);map.fitBounds(L.latLngBounds(all),{maxZoom:20,padding:[40,40]});msg('Shared fence layout loaded.')}catch(e){runs=[[]]}}
+if(m){try{runs=decode(decodeURIComponent(m[1]));var all=[].concat.apply([],runs);map.fitBounds(L.latLngBounds(all),{maxZoom:19,padding:[40,40]});msg('Shared fence layout loaded.')}catch(e){runs=[[]]}}
 draw();
 
 /* ---------- send to the office ---------- */
