@@ -141,11 +141,8 @@ footer li{list-style:none;margin-bottom:.35rem}footer a:hover{color:var(--cedar)
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-/* ---- key cursor -------------------------------------------------- */
-:root{--cur-key:url('assets/img/img-8204812799.webp') 2 14;--cur-key-turn:url('assets/img/logo-white.webp') 2 14}
-html,body{cursor:var(--cur-key),auto}
-a,button,.btn,.chip,.gi,label,select,[role=button]{cursor:var(--cur-key),pointer}
-a:active,button:active,.btn:active,.chip:active{cursor:var(--cur-key-turn),pointer}
+/* ---- cursors ---------------------------------------------------- */
+a,button,.btn,.chip,.gi,label,select,[role=button]{cursor:pointer}
 input,textarea,[contenteditable]{cursor:text}
 ::selection{background:rgba(192,124,51,.28)}
 @media(hover:none){html,body,a,button,.btn{cursor:auto}}

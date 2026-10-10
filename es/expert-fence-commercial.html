@@ -163,14 +163,11 @@ footer a:hover{color:var(--cedar)}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-/* ---- key cursor -------------------------------------------------- */
-:root{--cur-key:url('../assets/img/img-8204812799.webp') 2 14;--cur-key-turn:url('../assets/img/logo-white.webp') 2 14}
-html,body{cursor:var(--cur-key),auto}
-a,button,.btn,.chip,.card,.opt,.prod,.flip,.tip button,label,summary,select,[data-open],[role=button]{cursor:var(--cur-key),pointer}
-a:active,button:active,.btn:active,.chip:active,[data-open]:active{cursor:var(--cur-key-turn),pointer}
+/* ---- cursors ---------------------------------------------------- */
+a,button,.btn,.chip,.card,.opt,.prod,.flip,.tip button,label,summary,select,[data-open],[role=button]{cursor:pointer}
 /* keep real cursors where people type or read */
 input,textarea,[contenteditable]{cursor:text}
-input[type=checkbox],input[type=radio],input[type=range],input[type=date],input[type=submit]{cursor:var(--cur-key),pointer}
+input[type=checkbox],input[type=radio],input[type=range],input[type=date],input[type=submit]{cursor:pointer}
 ::selection{background:rgba(192,124,51,.28)}
 @media(hover:none){html,body,a,button,.btn{cursor:auto}}
 
