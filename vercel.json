@@ -45,6 +45,9 @@
     { "source": "/news/:path*", "destination": "/", "permanent": true },
     { "source": "/events/:path*", "destination": "/", "permanent": true },
     { "source": "/banner/:path*", "destination": "/", "permanent": true },
-    { "source": "/sitemap", "destination": "/sitemap.xml", "permanent": true }
+    { "source": "/sitemap", "destination": "/sitemap.xml", "permanent": true },
+
+    { "source": "/expert-fence-mockup.html", "destination": "/", "permanent": true },
+    { "source": "/build/:path*", "destination": "/", "permanent": false }
   ]
 }
