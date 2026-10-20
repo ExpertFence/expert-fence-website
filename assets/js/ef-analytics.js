@@ -17,12 +17,16 @@
     w.fbq('track', 'PageView');
   }
 
+  // Every page already carries Google's own gtag snippet for GA4 in its <head>; reuse it so
+  // page views are not counted twice. Only load gtag here if a page is missing the snippet.
   if (TAGS.GA4_ID || TAGS.GOOGLE_ADS_ID) {
-    load('https://www.googletagmanager.com/gtag/js?id=' + (TAGS.GA4_ID || TAGS.GOOGLE_ADS_ID));
-    w.dataLayer = w.dataLayer || [];
-    w.gtag = function () { w.dataLayer.push(arguments); };
-    w.gtag('js', new Date());
-    if (TAGS.GA4_ID) w.gtag('config', TAGS.GA4_ID);
+    if (typeof w.gtag !== 'function') {
+      load('https://www.googletagmanager.com/gtag/js?id=' + (TAGS.GA4_ID || TAGS.GOOGLE_ADS_ID));
+      w.dataLayer = w.dataLayer || [];
+      w.gtag = function () { w.dataLayer.push(arguments); };
+      w.gtag('js', new Date());
+      if (TAGS.GA4_ID) w.gtag('config', TAGS.GA4_ID);
+    }
     if (TAGS.GOOGLE_ADS_ID) w.gtag('config', TAGS.GOOGLE_ADS_ID);
   }
 
