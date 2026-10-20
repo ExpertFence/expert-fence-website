@@ -526,4 +526,22 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-finder.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/fence-finder.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/fence-finder.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/fence-finder.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/fence-finder.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/fence-finder.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/fence-finder.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/fence-finder.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
