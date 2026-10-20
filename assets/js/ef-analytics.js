@@ -39,11 +39,23 @@
     try { if (w.gtag) w.gtag('event', googleEvent, data); } catch (e) {}
   }
 
-  // Any estimate / bid / booking / newsletter form submitted counts as a lead.
-  d.addEventListener('submit', function (e) {
-    var f = e.target;
-    fire('Lead', 'generate_lead', { form_id: f.id || f.getAttribute('name') || 'form', page: location.pathname });
-  }, true);
+  // A lead is counted only when a request actually reaches the office: a successful POST to the
+  // contact or booking API. (Counting raw form submits also counted failed sends and the
+  // measuring tool's address search.)
+  if (w.fetch) {
+    var realFetch = w.fetch;
+    w.fetch = function (input, init) {
+      var url = typeof input === 'string' ? input : (input && input.url) || '';
+      var post = init && String(init.method || '').toUpperCase() === 'POST';
+      var p = realFetch.apply(this, arguments);
+      if (post && /\/api\/contact\b/.test(url)) {   // bookings also email through /api/contact, so each request counts once
+        p.then(function (r) {
+          if (r.ok) fire('Lead', 'generate_lead', { page: location.pathname });
+        }).catch(function () {});
+      }
+      return p;
+    };
+  }
 
   // Tap-to-call and email clicks.
   d.addEventListener('click', function (e) {
