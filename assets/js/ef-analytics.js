@@ -3,7 +3,7 @@
 (function () {
   var TAGS = {
     META_PIXEL_ID: '',        // Meta Events Manager > Data sources > your pixel > Pixel ID (digits)
-    GA4_ID: '',               // Google Analytics > Admin > Data streams > Measurement ID (G-XXXXXXXXXX)
+    GA4_ID: 'G-WTPBWMVBZS',    // Google Analytics > Admin > Data streams > Measurement ID (G-XXXXXXXXXX)
     GOOGLE_ADS_ID: '',        // Google Ads > Goals > Conversions > Google tag (AW-XXXXXXXXX) — optional
     LINKEDIN_PARTNER_ID: ''   // LinkedIn Campaign Manager > Analyze > Insight Tag > Partner ID (digits)
   };
