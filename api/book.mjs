@@ -3,15 +3,18 @@
 // The customer is added as an attendee, so Outlook sends them the invite and any later change or cancellation.
 // Replies: 200 {success:"true", eventId} · 409 {success:"false", conflict:true} · 503 {success:"false", live:false}
 import { configured, graph, getCalendarId, busyBetween, at, overlaps, isValidSlot, TZ, MAILBOX, SLOT_MINUTES } from './_graph.mjs';
+import { checkRequest } from './_spam.mjs';
 
-const ALLOWED_ORIGINS = ['https://www.expertfence.com', 'https://expertfence.com'];
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const isEmail = (s) => /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(String(s || '').trim());
 const reply = (body, status = 200) => Response.json(body, { status });
 
 export async function POST(request) {
-  const origin = request.headers.get('origin') || '';
-  if (origin && !ALLOWED_ORIGINS.includes(origin) && !origin.endsWith('.vercel.app')) return reply({ success: 'false' }, 403);
+  // Spam screening (see _spam.mjs). A calendar invite goes to the attendee, so anything doubtful is
+  // not booked: the page then falls back to emailing the request, where it is flagged for the office.
+  const check = checkRequest(request);
+  if (check.verdict === 'block') { console.log('booking spam blocked:', check.reason); return reply({ success: 'false' }, 403); }
+  if (check.verdict === 'suspect') { console.log('booking not auto-booked:', check.reason); return reply({ success: 'false', live: false }, 503); }
   if (!configured()) return reply({ success: 'false', live: false }, 503);
 
   let b;

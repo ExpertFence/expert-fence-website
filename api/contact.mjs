@@ -3,10 +3,11 @@
 // Needs the RESEND_API_KEY environment variable (Vercel > Project > Settings > Environment Variables).
 // Replies {"success":"true"} / {"success":"false"} so the existing form scripts work unchanged.
 
+import { checkRequest, checkContent, worst } from './_spam.mjs';
+
 const TO = 'expertfence@expertfence.com';
 const FROM = 'Expert Fence Website <website@notify.expertfence.com>';
 const REVIEW_URL = 'https://g.page/r/Cef39bttPF9cEBM/review'; // Google Business Profile "write a review" link
-const ALLOWED_ORIGINS =['https://www.expertfence.com', 'https://expertfence.com'];
 const MAX_ATTACH_BYTES = 3.5 * 1024 * 1024; // stay under Vercel's 4.5 MB request limit
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -15,17 +16,15 @@ const reply = (ok, status = ok ? 200 : 500, extra = {}) =>
   Response.json({ success: ok ? 'true' : 'false', ...extra }, { status });
 
 export async function POST(request) {
-  const origin = request.headers.get('origin') || '';
-  if (origin && !ALLOWED_ORIGINS.includes(origin) && !origin.endsWith('.vercel.app')) return reply(false, 403);
+  // Spam screening (see _spam.mjs). Certain bots get a fake "success" so they don't retry.
+  const reqCheck = checkRequest(request);
+  if (reqCheck.verdict === 'block') { console.log('spam blocked:', reqCheck.reason); return reply(true); }
   if (!process.env.RESEND_API_KEY) return reply(false, 500, { message: 'RESEND_API_KEY is not set' });
 
   let form;
   try { form = await request.formData(); } catch { return reply(false, 400); }
 
-  // Hidden honeypot field: real people leave it empty.
-  if (String(form.get('_honey') || '').trim()) return reply(true);
-
-  const subject = String(form.get('_subject') || 'Website form submission').slice(0, 200);
+  let subject = String(form.get('_subject') || 'Website form submission').slice(0, 200);
   const replyTo = String(form.get('_replyto') || form.get('Email') || '').trim();
 
   const rows = [];
@@ -33,6 +32,7 @@ export async function POST(request) {
   let attachBytes = 0;
   for (const [key, value] of form.entries()) {
     if (key.startsWith('_')) continue;
+    if (key === 'company_website') continue;   // spam trap, never shown to people
     if (typeof value === 'object' && value && 'arrayBuffer' in value) {
       if (!value.size || attachBytes + value.size > MAX_ATTACH_BYTES) continue;
       attachBytes += value.size;
@@ -40,6 +40,16 @@ export async function POST(request) {
       continue;
     }
     rows.push([key, String(value)]);
+  }
+
+  const verdict = worst(reqCheck, checkContent(rows, String(form.get('company_website') || form.get('_honey') || '')));
+  if (verdict.verdict === 'block') { console.log('spam blocked:', verdict.reason); return reply(true); }
+  const suspect = verdict.verdict === 'suspect';
+  if (suspect) console.log('possible spam:', verdict.reason);
+
+  if (suspect) {
+    subject = '[Possible spam] ' + subject;
+    rows.push(['Spam check', 'Flagged as possible spam: ' + verdict.reason + '. No copy was sent to the sender.']);
   }
 
   const html =
@@ -70,7 +80,7 @@ export async function POST(request) {
   }
 
   // Copy for the customer. The office email already went out, so a failure here doesn't fail the request.
-  if (isEmail(replyTo)) {
+  if (isEmail(replyTo) && !suspect) {
     const es = (request.headers.get('referer') || '').includes('/es/');
     const intro = es
       ? '<p>Gracias por contactar a Expert Fence. Recibimos su solicitud y le responderemos dentro de un día hábil. ¿Lo necesita antes? Llame al <a href="tel:+17037513008">(703) 751-3008</a>.</p><p>Esta es una copia de lo que nos envió:</p>'
