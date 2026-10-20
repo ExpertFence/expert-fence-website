@@ -591,6 +591,7 @@ $('#qform').addEventListener('submit',async e=>{
     answers.forEach(function (a, qi) { var pts = Q[qi][4][a][4]; for (var k in pts) score[k] += pts[k]; });
     var rank = Object.keys(F).sort(function (a, b) { return score[b] - score[a]; });
     var goal = answers[0];
+    if (goal === 0) rank = rank.filter(function (k) { return k === 'wood' || k === 'horiz' || k === 'vinyl'; });   // privacy: only fences that give it
     if (goal === 2) rank = ['alum'].concat(rank.filter(function (k) { return k !== 'alum'; }));   // pool: code first
     var top = rank[0], alt = rank[1];
     var picked = Q.map(function (q, qi) { return txt(q[0], q[1]) + ' ' + txt(q[4][answers[qi]][0], q[4][answers[qi]][1]); });
