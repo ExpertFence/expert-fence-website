@@ -151,67 +151,379 @@
   <url>
     <loc>https://www.expertfence.com/fence-services.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/fence-services.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/fence-services.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/fence-services.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://www.expertfence.com/es/fence-services.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/fence-services.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/fence-services.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/fence-services.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.expertfence.com/wood-fence-installation.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/wood-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/wood-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/wood-fence-installation.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/wood-fence-installation.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/wood-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/wood-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/wood-fence-installation.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.expertfence.com/vinyl-fence-installation.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/vinyl-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/vinyl-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/vinyl-fence-installation.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/vinyl-fence-installation.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/vinyl-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/vinyl-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/vinyl-fence-installation.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.expertfence.com/aluminum-fence-installation.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/aluminum-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/aluminum-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/aluminum-fence-installation.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/aluminum-fence-installation.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/aluminum-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/aluminum-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/aluminum-fence-installation.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.expertfence.com/pool-fence-installation.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/pool-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/pool-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/pool-fence-installation.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/pool-fence-installation.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/pool-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/pool-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/pool-fence-installation.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.expertfence.com/chain-link-fence-installation.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/chain-link-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/chain-link-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/chain-link-fence-installation.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/chain-link-fence-installation.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/chain-link-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/chain-link-fence-installation.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/chain-link-fence-installation.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.expertfence.com/custom-gates.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/custom-gates.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/custom-gates.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/custom-gates.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/custom-gates.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/custom-gates.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/custom-gates.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/custom-gates.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.expertfence.com/fence-repair.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/fence-repair.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/fence-repair.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/fence-repair.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/fence-repair.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/fence-repair.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/fence-repair.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/fence-repair.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.expertfence.com/railings-metal-fabrication.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/railings-metal-fabrication.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/railings-metal-fabrication.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/railings-metal-fabrication.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/railings-metal-fabrication.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/railings-metal-fabrication.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/railings-metal-fabrication.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/railings-metal-fabrication.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.expertfence.com/fence-materials-supply.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/fence-materials-supply.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/fence-materials-supply.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/fence-materials-supply.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
+    <loc>https://www.expertfence.com/es/fence-materials-supply.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/fence-materials-supply.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/fence-materials-supply.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/fence-materials-supply.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.expertfence.com/fence-staining-sealing.html</loc>
     <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/fence-staining-sealing.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/fence-staining-sealing.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/fence-staining-sealing.html"/>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/es/fence-staining-sealing.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.expertfence.com/fence-staining-sealing.html"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.expertfence.com/es/fence-staining-sealing.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.expertfence.com/fence-staining-sealing.html"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/service-areas.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-washington-dc.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-alexandria-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-arlington-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-fairfax-county-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-loudoun-county-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-prince-william-county-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-montgomery-county-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-prince-georges-county-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-fairfax-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-falls-church-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-mclean-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-vienna-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-springfield-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-annandale-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-burke-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-reston-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-herndon-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-great-falls-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-woodbridge-va.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-bethesda-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-silver-spring-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-rockville-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-potomac-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-chevy-chase-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-gaithersburg-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-college-park-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-bowie-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-upper-marlboro-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.expertfence.com/fence-company-laurel-md.html</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
