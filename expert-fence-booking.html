@@ -431,7 +431,7 @@ var $=function(s){return document.querySelector(s)},$$=function(s){return [].sli
 
 var state={type:null,zip:'',date:null,slot:null,photos:[]};
 /* estimating areas by ZIP: visits in different areas need a free 45-min block between them (matches api/_regions.mjs) */
-var AREAS=[['DC',/^20[0-5]/],['MD-Montgomery',/^20[89]/],['MD-PG',/^20[67]/],['VA-Inner',/^22[23]/],['VA-Fairfax',/^22[01]/],['VA-Outer',/^(201|22[4-7])/]];
+var AREAS=[['VA-Outer',/^(201|2219[1-5]|2202[56]|22125|22134|22[4-7])/],['DC',/^20[02-5]/],['MD-Montgomery',/^20[89]/],['MD-PG',/^20[67]/],['VA-Inner',/^22[23]/],['VA-Fairfax',/^22[01]/]];
 function regionOf(z){z=String(z||'');if(!/^\d{5}$/.test(z))return '';for(var i=0;i<AREAS.length;i++)if(AREAS[i][1].test(z))return AREAS[i][0];return ''}
 var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 var today=new Date(); today.setHours(0,0,0,0);

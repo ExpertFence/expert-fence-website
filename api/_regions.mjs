@@ -2,12 +2,12 @@
 // Two visits in DIFFERENT areas need one free 45-minute block between them for the drive;
 // visits in the same area can be back to back. Must match regionOf() in the booking pages.
 const AREAS = [
-  ['DC', /^20[0-5]/],                      // Washington, DC
+  ['VA-Outer', /^(201|2219[1-5]|2202[56]|22125|22134|22[4-7])/],  // Loudoun, Prince William (incl. Woodbridge), Stafford, Fauquier — checked first
+  ['DC', /^20[02-5]/],                     // Washington, DC
   ['MD-Montgomery', /^20[89]/],            // Bethesda, Silver Spring, Rockville, Gaithersburg, Potomac
   ['MD-PG', /^20[67]/],                    // Prince George's, Southern Maryland
   ['VA-Inner', /^22[23]/],                 // Arlington, Alexandria
   ['VA-Fairfax', /^22[01]/],               // Fairfax County, Falls Church, Vienna, McLean
-  ['VA-Outer', /^(201|22[4-7])/],          // Loudoun, Prince William, Stafford, Fauquier
 ];
 export const regionOf = (zip) => { const z = String(zip || '').trim(); if (!/^\d{5}/.test(z)) return ''; const a = AREAS.find(([, re]) => re.test(z)); return a ? a[0] : ''; };
 export const zipFrom = (text) => { const m = String(text || '').match(/\b(2\d{4})(?:-\d{4})?\b(?!.*\b2\d{4}\b)/); return m ? m[1] : ''; };
