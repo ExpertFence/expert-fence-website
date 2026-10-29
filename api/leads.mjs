@@ -46,6 +46,19 @@ export async function POST(request) {
     if (b.quote !== undefined) { patch.quote = clip(b.quote, 40); patch.history.push({ t: now, by: who, what: `Quote: ${patch.quote}` }); }
     if (b.note) patch.history.push({ t: now, by: who, what: clip(b.note, 1000) });
     if (b.noReview !== undefined) patch.noReview = !!b.noReview;
+    // Edit customer details: only these fields, each trimmed and length-capped; changes go in the history.
+    if (b.edit && typeof b.edit === 'object') {
+      const LIMIT = { name: 100, phone: 40, email: 120, company: 100, address: 200, zip: 10, service: 200, notes: 2000, lang: 2 };
+      const changed = [];
+      for (const [k, n] of Object.entries(LIMIT)) {
+        if (b.edit[k] === undefined) continue;
+        let v = clip(String(b.edit[k]).trim(), n);
+        if (k === 'lang') v = v === 'es' ? 'es' : 'en';
+        if (k === 'email' && v && !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(v)) return json({ error: 'That email address does not look right.' }, 400);
+        if (v !== (lead[k] || (k === 'lang' ? 'en' : ''))) { patch[k] = v; changed.push(k); }
+      }
+      if (changed.length) patch.history.push({ t: now, by: who, what: `Edited: ${changed.join(', ')}` });
+    }
     return json({ lead: await saveLead(lead.ref, patch) });
   } catch (err) { console.error('leads update', err); return json({ error: 'store unavailable' }, 502); }
 }

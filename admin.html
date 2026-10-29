@@ -67,7 +67,7 @@ dialog label{display:block;font-size:.75rem;font-weight:700;text-transform:upper
 
 <script>
 (function(){
-var T=null, LEADS=[], STAGES=['New','Confirmed','Visit done','Quote sent','Won','Job complete','Lost','Spam'], tab='Open', q='', open=null;
+var T=null, LEADS=[], STAGES=['New','Confirmed','Visit done','Quote sent','Won','Job complete','Lost','Spam'], tab='Open', q='', open=null, editing=null;
 var app=document.getElementById('app');
 function store(k,v){try{v===undefined?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
 function read(k){try{return localStorage.getItem(k)}catch(e){return null}}
@@ -140,8 +140,13 @@ function draw(){
         '<td onclick="event.stopPropagation()"><select data-stage="'+l.ref+'">'+STAGES.map(function(s){return '<option'+(s===l.stage?' selected':'')+'>'+s+'</option>'}).join('')+'</select></td>'+
         '<td class="hide-m" onclick="event.stopPropagation()"><input class="q" data-quote="'+l.ref+'" placeholder="$" value="'+esc(l.quote||'')+'"></td></tr>';
       if(open===l.ref) row+='<tr class="detail"><td colspan="6"><div class="grid2"><div>'+
-        (l.email?'<div>✉ <a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div>':'')+(l.address?'<div>📍 <a target="_blank" rel="noopener" href="https://maps.google.com/?q='+encodeURIComponent(l.address)+'">'+esc(l.address)+'</a></div>':'')+
-        (l.notes?'<p style="margin-top:.5rem;white-space:pre-wrap">'+esc(l.notes)+'</p>':'')+'<p class="muted" style="margin-top:.5rem">Ref '+esc(l.ref)+(l.page?' · from '+esc(l.page):'')+'</p>'+
+        (editing===l.ref ? editForm(l) :
+        '<div><b>'+esc(l.name||'(no name)')+'</b>'+(l.company?' · '+esc(l.company):'')+(l.phone?' · <a href="tel:'+esc(l.phone.replace(/[^\d+]/g,''))+'">'+esc(l.phone)+'</a>':'')+'</div>'+
+        (l.email?'<div>✉ <a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div>':'')+(l.address?'<div>📍 <a target="_blank" rel="noopener" href="https://maps.google.com/?q='+encodeURIComponent(l.address)+'">'+esc(l.address)+'</a>'+(l.zip&&String(l.address).indexOf(l.zip)<0?' '+esc(l.zip):'')+'</div>':(l.zip?'<div>📍 '+esc(l.zip)+'</div>':''))+
+        (l.service?'<div>🔧 '+esc(l.service)+'</div>':'')+
+        (l.notes?'<p style="margin-top:.5rem;white-space:pre-wrap">'+esc(l.notes)+'</p>':'')+
+        '<p style="margin-top:.6rem"><button class="s" data-edit="'+l.ref+'">✎ Edit customer details</button></p>')+
+        '<p class="muted" style="margin-top:.5rem">Ref '+esc(l.ref)+(l.page?' · from '+esc(l.page):'')+'</p>'+
         (l.stage==='Job complete'||l.stage==='Won'?'<label style="display:flex;gap:.4rem;align-items:center;margin-top:.5rem;font-size:.85rem"><input type="checkbox" style="width:auto" data-noreview="'+l.ref+'"'+(l.noReview?' checked':'')+'> Don\'t send this customer a review request</label>':'')+
         '</div><div><ul class="hist">'+(l.history||[]).slice().reverse().map(function(h){return '<li><b>'+dt(h.t)+' · '+esc(String(h.by||'').split('@')[0])+':</b> '+esc(h.what)+'</li>'}).join('')+'</ul>'+
         '<div style="display:flex;gap:.4rem"><input data-note="'+l.ref+'" placeholder="Add a note (call outcome, next step…)"><button class="s" data-savenote="'+l.ref+'">Save</button></div></div></div></td></tr>';
@@ -150,7 +155,15 @@ function draw(){
     '<p class="muted" style="margin-top:1rem">Marking a lead <b>Job complete</b> emails the customer a Google review request 2 days later. Every morning the office gets a summary of today\'s visits, unanswered requests and quotes to follow up.</p>';
   bind();
 }
-function update(body){return api('POST',body).then(function(j){if(j.lead){LEADS=LEADS.map(function(l){return l.ref===j.lead.ref?j.lead:l});draw()}})}
+function update(body){return api('POST',body).then(function(j){if(j.error){alert(j.error);return false}if(j.lead){LEADS=LEADS.map(function(l){return l.ref===j.lead.ref?j.lead:l});draw()}return true})}
+var EDIT_FIELDS=[['name','Name'],['phone','Phone'],['email','Email'],['company','Company'],['address','Address'],['zip','ZIP'],['service','What they need'],['notes','Notes']];
+function editForm(l){
+  return '<form class="editf" data-editform="'+l.ref+'" onclick="event.stopPropagation()" style="display:grid;gap:.45rem">'+
+    EDIT_FIELDS.map(function(f){var v=esc(l[f[0]]||'');return '<label class="muted" style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em">'+f[1]+
+      (f[0]==='notes'?'<textarea name="notes" rows="3">'+v+'</textarea>':'<input name="'+f[0]+'" value="'+v+'"'+(f[0]==='email'?' type="email"':'')+(f[0]==='name'?' required':'')+'>')+'</label>'}).join('')+
+    '<label class="muted" style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em">Language<select name="lang"><option value="en"'+(l.lang!=='es'?' selected':'')+'>English</option><option value="es"'+(l.lang==='es'?' selected':'')+'>Español</option></select></label>'+
+    '<div style="display:flex;gap:.5rem;margin-top:.3rem"><button class="p" type="submit">Save changes</button><button class="s" type="button" data-canceledit="1">Cancel</button></div></form>';
+}
 function bind(){
   app.querySelectorAll('[data-tab]').forEach(function(b){b.onclick=function(){tab=b.dataset.tab;draw()}});
   var s=document.getElementById('srch'); s.oninput=function(){q=s.value.toLowerCase().trim();var p=s.selectionStart;draw();var n=document.getElementById('srch');n.focus();n.setSelectionRange(p,p)};
@@ -160,6 +173,13 @@ function bind(){
   app.querySelectorAll('[data-noreview]').forEach(function(x){x.onchange=function(){update({ref:x.dataset.noreview,noReview:x.checked})}});
   app.querySelectorAll('[data-savenote]').forEach(function(b){b.onclick=function(){var i=app.querySelector('[data-note="'+b.dataset.savenote+'"]');if(i.value.trim())update({ref:b.dataset.savenote,note:i.value.trim()})}});
   document.getElementById('addBtn').onclick=function(){document.getElementById('addDlg').showModal()};
+  app.querySelectorAll('[data-edit]').forEach(function(b){b.onclick=function(e){e.stopPropagation();editing=b.dataset.edit;draw()}});
+  app.querySelectorAll('[data-canceledit]').forEach(function(b){b.onclick=function(e){e.stopPropagation();editing=null;draw()}});
+  app.querySelectorAll('[data-editform]').forEach(function(f){f.onsubmit=function(e){e.preventDefault();
+    var d={};new FormData(f).forEach(function(v,k){d[k]=v});
+    var btn=f.querySelector('button[type=submit]');btn.disabled=true;btn.textContent='Saving…';
+    update({ref:f.dataset.editform,edit:d}).then(function(ok){if(ok){editing=null;draw()}else{btn.disabled=false;btn.textContent='Save changes'}});
+  }});
 }
 document.getElementById('addDlg').addEventListener('close',function(){
   var d=this; if(d.returnValue!=='ok')return; var f=new FormData(document.getElementById('addForm')),a={};f.forEach(function(v,k){a[k]=v});
