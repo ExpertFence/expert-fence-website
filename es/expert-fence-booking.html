@@ -128,6 +128,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(252,251,248,.95);backdrop-
 .slot small{font-weight:500;font-size:.7rem;color:var(--mute)}
 .slot:hover:not(:disabled){border-color:var(--cedar);transform:translateY(-2px)}
 .slot.on{background:var(--green);color:#fff;border-color:var(--green)}
+.slot.near small{color:var(--green);font-weight:700}.slot.near.on small{color:#fff}
 .slot.on small{color:rgba(255,255,255,.75)}
 .slot:disabled{opacity:.42;cursor:not-allowed;text-decoration:line-through}
 .hint{font-size:.82rem;color:var(--mute);padding:1.4rem 0;text-align:center}
@@ -298,6 +299,8 @@ img[loading=lazy]{background:#e6e3da}
             <button type="button" data-t="Residential"><b>Residencial</b><span>Una casa, patio, piscina o portón vehicular</span></button>
             <button type="button" data-t="Commercial"><b>Comercial</b><span>HOA, constructor, administración de propiedad, instalación</span></button>
           </div>
+          <div class="f" style="margin-top:1.1rem;max-width:280px"><label for="zip1">Código postal de la propiedad *</label><input id="zip1" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="22304"></div>
+          <p class="sub" style="margin:-.3rem 0 0">Lo usamos para ofrecerle horas en que un estimador ya está cerca.</p>
         </div>
 
         <div class="panel">
@@ -429,7 +432,10 @@ img[loading=lazy]{background:#e6e3da}
 var OFFICE='expertfence@expertfence.com';
 var $=function(s){return document.querySelector(s)},$$=function(s){return [].slice.call(document.querySelectorAll(s))};
 
-var state={type:null,date:null,slot:null,photos:[]};
+var state={type:null,zip:'',date:null,slot:null,photos:[]};
+/* estimating areas by ZIP: visits in different areas need a free 45-min block between them (matches api/_regions.mjs) */
+var AREAS=[['DC',/^20[0-5]/],['MD-Montgomery',/^20[89]/],['MD-PG',/^20[67]/],['VA-Inner',/^22[23]/],['VA-Fairfax',/^22[01]/],['VA-Outer',/^(201|22[4-7])/]];
+function regionOf(z){z=String(z||'');if(!/^\d{5}$/.test(z))return '';for(var i=0;i<AREAS.length;i++)if(AREAS[i][1].test(z))return AREAS[i][0];return ''}
 var MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 var today=new Date(); today.setHours(0,0,0,0);
 var maxDate=new Date(today); maxDate.setDate(maxDate.getDate()+56);
@@ -451,22 +457,27 @@ function loadMonth(y,m){
     .then(function(r){return r.json()}).then(function(j){
       LIVE=!!j.live;
       (j.busy||[]).forEach(function(b){var d=b.start.slice(0,10);
-        (BUSY[d]=BUSY[d]||[]).push([toMin(b.start), b.end.slice(0,10)===d?toMin(b.end):1440])});
+        (BUSY[d]=BUSY[d]||[]).push([toMin(b.start), b.end.slice(0,10)===d?toMin(b.end):1440, regionOf(b.zip)])});
       $('#syncTxt').textContent=LIVE?'Disponibilidad en vivo del calendario de estimados de Expert Fence':'Elija una hora — nuestra oficina confirma cada visita';
     }).catch(function(){}).then(function(){drawCal();drawSlots()});
   return loaded[k];
 }
+function nearVisit(d,hour){var R=regionOf(state.zip);return !!R&&(BUSY[iso(d)]||[]).some(function(b){return b[2]===R&&(b[1]===hour||b[0]===hour+45)})}
 function loadAvailability(d,hour){
   var now=new Date();
   if(iso(d)===iso(now)&&hour<now.getHours()*60+now.getMinutes()+LEAD)return false;
-  return !(BUSY[iso(d)]||[]).some(function(b){return b[0]<hour+45&&b[1]>hour});
+  var R=regionOf(state.zip);
+  return !(BUSY[iso(d)]||[]).some(function(b){
+    if(b[0]<hour+45&&b[1]>hour)return true;                                           /* taken */
+    return R&&b[2]&&b[2]!==R&&b[0]<hour+90&&b[1]>hour-45;                             /* other area: leave a block to drive */
+  });
 }
 /* Books the visit on the Estimating calendar (api/book.mjs); the customer gets an Outlook invite. */
 function createCalendarEvent(f){
   return fetch('/api/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
       date:iso(state.date),slot:state.slot,type:state.type,ref:f.Reference,name:f.Customer,company:f.Company,
       phone:f.Phone,email:f.Email,address:f['Property Address'],scope:f.Scope,presence:f['Customer Present'],
-      notes:f.Notes,photos:state.photos.length})})
+      notes:f.Notes,photos:state.photos.length,zip:state.zip})})
     .then(function(r){return r.json().then(function(j){return {ok:j.success==='true',conflict:!!j.conflict}})})
     .catch(function(){return {ok:false,conflict:false}});
 }
@@ -507,9 +518,9 @@ function drawSlots(){
   var d=state.date, hs=blocks(d);
   $('#slotSub').textContent=longDate(d);
   $('#slots').innerHTML=hs.map(function(h){
-    var free=loadAvailability(d,h);
-    return '<button type="button" class="slot'+(state.slot===h?' on':'')+'" data-h="'+h+'" '+(free?'':'disabled')+'>'
-      +slotLabel(h)+'<small>'+(free?'45 min':'ocupado')+'</small></button>';
+    var free=loadAvailability(d,h), near=free&&nearVisit(d,h);
+    return '<button type="button" class="slot'+(near?' near':'')+(state.slot===h?' on':'')+'" data-h="'+h+'" '+(free?'':'disabled')+'>'
+      +slotLabel(h)+'<small>'+(near?'📍 visita cercana':free?'45 min':'ocupado')+'</small></button>';
   }).join('');
 }
 $('#slots').addEventListener('click',function(e){
@@ -517,6 +528,12 @@ $('#slots').addEventListener('click',function(e){
   state.slot=+b.dataset.h; drawSlots(); sync();
 });
 
+$('#zip1').addEventListener('input',function(){
+  var z=this.value.replace(/\D/g,'').slice(0,5); if(z!==this.value)this.value=z;
+  state.zip=z.length===5?z:''; var f=document.querySelector('#bform [name="ZIP"]'); if(f&&state.zip)f.value=state.zip;
+  if(state.slot!==null&&state.date&&!loadAvailability(state.date,state.slot))state.slot=null;
+  drawCal(); drawSlots(); sync();
+});
 /* ---------- project type ---------- */
 $$('#tt button').forEach(function(b){
   b.onclick=function(){
@@ -573,9 +590,9 @@ function sync(){
   set('#rTime',state.slot!==null?slotLabel(state.slot):null);
   var p=state.photos.length; $('#rPhotos').textContent=p?p+' foto'+(p>1?'s':'')+' adjunta'+(p>1?'s':''):'Ninguna aún';
   $('#rPhotos').classList.toggle('empty',!p);
-  var done=[!!state.type,!!state.date,state.slot!==null,true,false];
+  var done=[!!state.type&&/^\d{5}$/.test(state.zip),!!state.date,state.slot!==null,true,false];
   $$('.stp').forEach(function(s,i){s.classList.toggle('done',done[i]&&i<3);s.classList.toggle('on',!done[i]&&(i===0||done[i-1]))});
-  $('#submit').disabled=!(state.type&&state.date&&state.slot!==null);
+  $('#submit').disabled=!(state.type&&/^\d{5}$/.test(state.zip)&&state.date&&state.slot!==null);
 }
 
 /* ---------- .ics + calendar links ---------- */
@@ -633,6 +650,7 @@ $('#submit').addEventListener('click',async function(){
     'ACTION':'Confirm this slot and add it to the estimator calendar.'
   };
   Object.keys(fields).forEach(function(k){p.append(k,fields[k])});
+  p.append('_visitDate',iso(state.date)); p.append('_visitSlot',String(state.slot)); p.append('_zip',state.zip);
   state.photos.forEach(function(ph,i){p.append('Photo '+(i+1),ph.blob,ref+'-'+(i+1)+'-'+ph.name)});
 
   try{

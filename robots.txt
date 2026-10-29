@@ -3,6 +3,7 @@ User-agent: *
 Allow: /
 Disallow: /expert-fence-materials.html
 Disallow: /build/
+Disallow: /admin.html
 
 User-agent: Googlebot
 Allow: /

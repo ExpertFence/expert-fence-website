@@ -4,6 +4,7 @@
 // Replies: 200 {success:"true", eventId} · 409 {success:"false", conflict:true} · 503 {success:"false", live:false}
 import { configured, graph, getCalendarId, busyBetween, at, overlaps, isValidSlot, TZ, MAILBOX, SLOT_MINUTES } from './_graph.mjs';
 import { checkRequest } from './_spam.mjs';
+import { regionOf, zipFrom, travelConflict } from './_regions.mjs';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const isEmail = (s) => /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(String(s || '').trim());
@@ -28,9 +29,13 @@ export async function POST(request) {
   if (Date.parse(`${start}:00-05:00`) < Date.now()) return reply({ success: 'false', error: 'past' }, 400);
 
   try {
-    if (overlaps(await busyBetween(b.date, b.date), start, end)) {
-      return reply({ success: 'false', conflict: true }, 409);
-    }
+    const busy = await busyBetween(b.date, b.date);
+    if (overlaps(busy, start, end)) return reply({ success: 'false', conflict: true }, 409);
+    // Keep the day's route tight: a visit in another area needs a free block before/after it to drive.
+    const toMin = (t) => +t.slice(11, 13) * 60 + +t.slice(14, 16);
+    const region = regionOf(b.zip) || regionOf(zipFrom(b.address));
+    const sameDay = busy.filter((x) => x.start.slice(0, 10) === b.date).map((x) => ({ s: toMin(x.start), e: x.end.slice(0, 10) === b.date ? toMin(x.end) : 1440, region: regionOf(x.zip) }));
+    if (travelConflict(sameDay, region, minutes, minutes + SLOT_MINUTES)) return reply({ success: 'false', conflict: true, travel: true }, 409);
     const rows = [
       ['Reference', b.ref], ['Visit type', b.type], ['Customer', b.name], ['Company', b.company],
       ['Phone', b.phone], ['Email', b.email], ['Address', b.address], ['Scope', b.scope],

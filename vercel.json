@@ -1,4 +1,7 @@
 {
+  "crons": [
+    { "path": "/api/cron-daily", "schedule": "0 11 * * *" }
+  ],
   "redirects": [
     { "source": "/contact", "destination": "/expert-fence-booking.html", "permanent": true },
     { "source": "/contact-info", "destination": "/expert-fence-booking.html", "permanent": true },

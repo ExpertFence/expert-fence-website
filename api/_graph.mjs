@@ -3,6 +3,8 @@
 //             CALENDAR_MAILBOX (default expertfence@expertfence.com), CALENDAR_NAME (default "Estimating").
 // Files starting with "_" in /api are not exposed as endpoints.
 
+import { zipFrom } from './_regions.mjs';
+
 export const TZ = 'Eastern Standard Time'; // Windows zone name Graph uses for America/New_York
 export const MAILBOX = process.env.CALENDAR_MAILBOX || 'expertfence@expertfence.com';
 export const CALENDAR_NAME = process.env.CALENDAR_NAME || 'Estimating';
@@ -75,7 +77,7 @@ export async function busyBetween(fromDate, toDate) {
   const qs = new URLSearchParams({
     startDateTime: `${shift(fromDate, -1)}T00:00:00Z`,
     endDateTime: `${shift(toDate, 1)}T23:59:59Z`,
-    $select: 'start,end,showAs,isCancelled',
+    $select: 'start,end,showAs,isCancelled,location',
     $top: '500',
   });
   const busy = [];
@@ -84,7 +86,7 @@ export async function busyBetween(fromDate, toDate) {
     const page = await graph(next);
     for (const e of page.value) {
       if (e.isCancelled || e.showAs === 'free') continue;
-      busy.push({ start: e.start.dateTime.slice(0, 16), end: e.end.dateTime.slice(0, 16) });
+      busy.push({ start: e.start.dateTime.slice(0, 16), end: e.end.dateTime.slice(0, 16), zip: zipFrom(e.location && e.location.displayName) });
     }
     next = page['@odata.nextLink'] ? page['@odata.nextLink'].replace('https://graph.microsoft.com/v1.0', '') : null;
   }

@@ -4,6 +4,7 @@
 // Replies {"success":"true"} / {"success":"false"} so the existing form scripts work unchanged.
 
 import { checkRequest, checkContent, worst } from './_spam.mjs';
+import { saveLead } from './_store.mjs';
 
 const TO = 'expertfence@expertfence.com';
 const FROM = 'Expert Fence Website <website@notify.expertfence.com>';
@@ -107,5 +108,40 @@ export async function POST(request) {
     });
     if (!copy.ok) console.error('Customer copy failed', copy.status, await copy.text());
   }
+
+  // Lead tracker (only when the Upstash store is connected; never fails the request).
+  try { await recordLead(form, rows, subject, replyTo, request, suspect); } catch (err) { console.error('lead store', err); }
   return reply(true);
+}
+
+// Saves the request as a lead for the tracker, reminders and review requests.
+// Machine-readable booking fields arrive as "_visitDate" (YYYY-MM-DD), "_visitSlot" (minutes after midnight)
+// and "_zip"; underscore fields never appear in the emails.
+async function recordLead(form, rows, subject, email, request, suspect) {
+  const pick = (...names) => {
+    for (const n of names) { const r = rows.find(([k]) => k.toLowerCase() === n.toLowerCase()); if (r && r[1] && r[1] !== '—') return r[1]; }
+    return '';
+  };
+  const ref = pick('Reference') || 'EF-' + new Date().toISOString().slice(2, 10).replace(/-/g, '') + '-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+  const booked = /^Booked on the Estimating calendar/.test(pick('Calendar'));
+  const visitDate = String(form.get('_visitDate') || '');
+  const visitSlot = Number(form.get('_visitSlot'));
+  const now = new Date().toISOString();
+  await saveLead(ref, {
+    source: subject.replace(/^\[Possible spam\]\s*/, '').split(' — ')[0].slice(0, 80),
+    subject: subject.slice(0, 200),
+    name: pick('Name', 'Customer').slice(0, 100),
+    email: email.slice(0, 120),
+    phone: pick('Phone').slice(0, 40),
+    company: pick('Company').slice(0, 100),
+    address: pick('Property Address', 'Address', 'Property').slice(0, 200),
+    zip: String(form.get('_zip') || pick('ZIP') || '').slice(0, 10),
+    service: pick('Service', 'Fence Finder result', 'Visit Type', 'Selections', 'Fence type', 'Enquiry Type').slice(0, 200),
+    notes: pick('Details', 'Notes', 'Anything else?', 'Message').slice(0, 2000),
+    lang: (request.headers.get('referer') || '').includes('/es/') ? 'es' : 'en',
+    page: (request.headers.get('referer') || '').replace(/^https?:\/\/[^/]+/, '').slice(0, 120),
+    ...(/^\d{4}-\d{2}-\d{2}$/.test(visitDate) && Number.isFinite(visitSlot) ? { visit: { date: visitDate, slot: visitSlot, booked } } : {}),
+    stage: suspect ? 'Spam' : (booked ? 'Confirmed' : 'New'),
+    history: [{ t: now, by: 'website', what: suspect ? 'Received (flagged as possible spam)' : (booked ? 'Booked online, on the calendar' : 'Received') }],
+  });
 }
