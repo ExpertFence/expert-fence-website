@@ -56,3 +56,19 @@ input, select, textarea { font-size: max(16px, 1em); }
   .links .ddm a { padding: .45rem 0; color: #6e756a; white-space: normal; }
   .links .ddm .ddall { border-bottom: none; margin: 0; padding-bottom: .45rem; }
 }
+
+/* 7. Menu on medium screens (small laptops, tablets sideways): keep every tab on one line. */
+@media (min-width: 761px) {
+  .links > li > a { white-space: nowrap; }
+}
+@media (min-width: 761px) and (max-width: 1180px) {
+  .links { gap: .85rem !important; font-size: .9rem !important; }
+  .nact { gap: .4rem; }
+  .nact .btn { padding: .55rem .75rem !important; font-size: .85rem !important; white-space: nowrap; }
+  .nact .btn:not(:last-of-type):not(.burg) { display: none; }   /* keep just the main button */
+  .tel { display: none !important; }
+}
+@media (min-width: 761px) and (max-width: 940px) {
+  .links { gap: .6rem !important; font-size: .82rem !important; }
+  .brand .bsub, .brand .bname + span { display: none; }
+}
