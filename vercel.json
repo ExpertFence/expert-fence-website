@@ -53,6 +53,8 @@
     { "source": "/expert-fence-mockup.html", "destination": "/", "permanent": true },
     { "source": "/build/:path*", "destination": "/", "permanent": false },
     { "source": "/index.html", "destination": "/", "permanent": true },
-    { "source": "/es/index.html", "destination": "/es/", "permanent": true }
+    { "source": "/es/index.html", "destination": "/es/", "permanent": true },
+    { "source": "/fence-materials-supply.html", "destination": "/expert-fence-supply.html", "permanent": true },
+    { "source": "/es/fence-materials-supply.html", "destination": "/es/expert-fence-supply.html", "permanent": true }
   ]
 }

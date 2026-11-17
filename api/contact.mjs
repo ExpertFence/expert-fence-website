@@ -7,6 +7,8 @@ import { checkRequest, checkContent, worst } from './_spam.mjs';
 import { saveLead } from './_store.mjs';
 
 const TO = 'expertfence@expertfence.com';
+const SALES = 'sales@expertfence.com'; // material quote requests (Expert Fence Supply page) go here
+const isMaterialQuote = (subject) => /^(\[Possible spam\]\s*)?(MATERIAL QUOTE|COTIZACI[OÓ]N DE MATERIALES)/i.test(subject);
 const FROM = 'Expert Fence Website <website@notify.expertfence.com>';
 const REVIEW_URL = 'https://g.page/r/Cef39bttPF9cEBM/review'; // Google Business Profile "write a review" link
 const MAX_ATTACH_BYTES = 3.5 * 1024 * 1024; // stay under Vercel's 4.5 MB request limit
@@ -53,6 +55,8 @@ export async function POST(request) {
     rows.push(['Spam check', 'Flagged as possible spam: ' + verdict.reason + '. No copy was sent to the sender.']);
   }
 
+  const office = isMaterialQuote(subject) ? SALES : TO;
+
   const html =
     `<h2 style="font-family:Arial,sans-serif;color:#1f4d33">${esc(subject)}</h2>` +
     '<table cellpadding="8" style="border-collapse:collapse;font-family:Arial,sans-serif;font-size:14px">' +
@@ -67,7 +71,7 @@ export async function POST(request) {
     headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       from: FROM,
-      to: [TO],
+      to: [office],
       subject,
       html,
       text,
@@ -99,7 +103,7 @@ export async function POST(request) {
       body: JSON.stringify({
         from: 'Expert Fence <website@notify.expertfence.com>',
         to: [replyTo],
-        reply_to: TO,
+        reply_to: office,
         subject: (es ? 'Copia de su solicitud — ' : 'Copy of your request — ') + subject,
         html: `<div style="font-family:Arial,sans-serif;font-size:14px">${intro}</div>` + html + reviewHtml,
         text: (es ? 'Copia de su solicitud a Expert Fence:\n\n' : 'Copy of your request to Expert Fence:\n\n') + text +
