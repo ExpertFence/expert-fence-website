@@ -388,6 +388,32 @@ img[loading=lazy]{background:#e6e3da}
 <script src="../assets/js/ef-analytics.js" defer></script>
 <script src="../assets/js/ef-forms.js" defer></script>
 <link rel="stylesheet" href="../assets/css/mobile.css">
+<style>
+/* ---- materials announcement ---- */
+.mat{background:var(--green-d);color:#eef3ef;position:relative;overflow:hidden}
+.mat::before{content:"";position:absolute;inset:0;background:radial-gradient(1200px 400px at 85% -10%,rgba(192,124,51,.22),transparent 60%)}
+.mat .wrap{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(1.8rem,4vw,3.4rem);align-items:center}
+.mat .tag{color:#e6a866}
+.mat h2{font-size:clamp(2.4rem,5.4vw,4.2rem);color:#fff}.mat h2 span{color:var(--cedar)}
+.mat .lede{color:rgba(238,243,239,.8);max-width:58ch;margin-top:.9rem;font-size:clamp(1rem,1.3vw,1.08rem)}
+.matgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:.55rem;margin:1.6rem 0 1.5rem;list-style:none}
+.matgrid li{display:flex;gap:.75rem;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:.7rem .8rem;transition:.25s}
+.matgrid li:hover{background:rgba(255,255,255,.1);border-color:rgba(192,124,51,.6);transform:translateY(-2px)}
+.matgrid i{flex:none;width:38px;height:38px;border-radius:3px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);background-image:repeating-linear-gradient(90deg,rgba(0,0,0,.08) 0 2px,transparent 2px 9px)}
+.matgrid b{display:block;font-size:.95rem;color:#fff;line-height:1.25}
+.matgrid small{display:block;font-size:.78rem;color:rgba(238,243,239,.65)}
+.matgrid em{display:inline-block;margin-top:.2rem;font-style:normal;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#1a1a1a;background:#e6a866;border-radius:2px;padding:.1rem .4rem}
+.matcta{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.matcta .b-out{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}.matcta .b-out:hover{background:#fff;color:var(--ink)}
+.matnote{font-size:.82rem;color:rgba(238,243,239,.65);margin-top:1rem}
+.matnote a{color:#e6a866;font-weight:600}
+.matmail{display:block;margin-top:.7rem;font-size:.95rem}.matmail a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.matpic{position:relative;border-radius:4px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.35);aspect-ratio:4/3}
+.matpic img{width:100%;height:100%;object-fit:cover;display:block}
+.matpic span{position:absolute;left:1rem;bottom:1rem;background:var(--cedar);color:#fff;font-family:var(--display);letter-spacing:.06em;font-size:1.05rem;padding:.4rem .8rem;border-radius:2px}
+@media(max-width:900px){.mat .wrap{grid-template-columns:1fr}.matpic{order:-1}}
+@media(max-width:480px){.matgrid{grid-template-columns:1fr 1fr}.matgrid li{flex-direction:column;align-items:flex-start;gap:.45rem}}
+</style>
 </head>
 <body>
 
@@ -485,6 +511,25 @@ img[loading=lazy]{background:#e6e3da}
         <div class="txt"><h3>Comercial</h3><p>Piscinas, clubes, urbanizaciones — además de reparación de bases oxidadas y barandales en vez de reemplazo total.</p><span class="go">Explorar Comercial →</span></div>
       </a>
     </div>
+  </div>
+</section>
+
+<!-- ================= MATERIALS (NEW) ================= -->
+<section class="mat" id="materials-new">
+  <div class="wrap">
+    <div class="rv">
+      <span class="tag">Nuevo · Materiales</span>
+      <h2>Ahora Vendemos<br><span>Materiales para Cercas</span></h2>
+      <p class="lede">Después de 40 años construyendo cercas en DC, Maryland y Virginia, Expert Fence ahora vende el mismo material de grado contratista que instalan nuestros equipos, a propietarios, contratistas y constructores.</p>
+      <ul class="matgrid"><li><i style="background-color:#c8b27a"></i><div><b>Pino Tratado a Presión</b><small>Postes, rieles y estacas</small></div></li><li><i style="background-color:#a5583a"></i><div><b>Cedro Rojo del Oeste</b><small>Tablas, estacas y postes</small></div></li><li><i style="background-color:#c98252"></i><div><b>Cedro Rojo Limpio</b><small>Premium, sin nudos</small></div></li><li><i style="background-color:#d9bd8e"></i><div><b>Cedro Japonés</b><small>Tablas limpias y modernas</small></div></li><li><i style="background-color:#f1f0ea"></i><div><b>Vinilo</b><small>Paneles de privacidad y estacas</small></div></li><li><i style="background-color:#2c2f31"></i><div><b>Aluminio</b><small>Secciones ornamentales</small><em>Muy pronto</em></div></li><li><i style="background-color:#7a7f84"></i><div><b>Herrajes</b><small>Bisagras, pestillos, tapas y más</small><em>Gran variedad</em></div></li></ul>
+      <div class="matcta">
+        <a class="btn b-cedar" href="mailto:sales@expertfence.com?subject=Solicitud%20de%20cotización%20de%20materiales&amp;body=Hola%20Expert%20Fence,%0D%0A%0D%0AQuisiera%20una%20cotización%20de:%0D%0A%0D%0A(materiales,%20cantidades,%20entrega%20o%20recogida,%20dirección)%0D%0A">Pedir Cotización</a>
+        <a class="btn b-out" href="tel:+17037513008">Llamar (703) 751-3008</a>
+      </div>
+      <span class="matmail">✉ <a href="mailto:sales@expertfence.com">sales@expertfence.com</a></span>
+      <p class="matnote">Recoja en 6027 Farrington Ave, Alexandria · Entrega en todo el DMV · <a href="fence-materials-supply.html">Conozca el patio de materiales →</a></p>
+    </div>
+    <div class="matpic rv"><img src="../assets/img/yard-alexandria.jpg" alt="Patio de materiales de Expert Fence en Alexandria, VA, con postes tratados y cedro" loading="lazy" width="1200" height="900"><span>Alexandria, VA</span></div>
   </div>
 </section>
 
