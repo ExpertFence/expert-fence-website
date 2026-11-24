@@ -26,7 +26,7 @@
   var realFetch = w.fetch;
   w.fetch = function (input, init) {
     var url = typeof input === 'string' ? input : (input && input.url) || '';
-    if (init && String(init.method || '').toUpperCase() === 'POST' && /^\/api\/(contact|book)\b/.test(url)) {
+    if (init && String(init.method || '').toUpperCase() === 'POST' && /^\/api\/(contact|book|reviews)\b/.test(url)) {
       var h = new Headers(init.headers || {});
       var stamp = t0.toString(36);
       h.set('X-EF-Form', stamp + '.' + sig(stamp) + '.' + human + '.' + Math.round((Date.now() - t0) / 1000));
