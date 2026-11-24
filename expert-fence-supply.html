@@ -363,6 +363,14 @@ legend{font-weight:700;font-size:14px;color:var(--forest);margin-bottom:8px}
 .starpick button.on{color:#E0A526}
 .starpick button:hover{transform:scale(1.18)}
 
+.rreply{margin-top:16px;padding:14px 16px;border-radius:14px;background:var(--mint-50);border-left:4px solid var(--lime-strong)}
+.rrn{display:flex;align-items:center;flex-wrap:wrap;gap:7px;font-weight:800;color:var(--forest)}
+.rlogo{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--forest)}
+.rlogo svg{width:18px;fill:var(--lime)}
+.rrn i{font-style:normal;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--lime);color:var(--forest);font-size:12px;box-shadow:0 0 0 3px rgba(168,224,127,.3)}
+.rrn small{font-weight:600;color:var(--muted);font-size:12.5px}
+.rreply p{margin:6px 0 0;color:#2D4734;white-space:pre-line}
+
 /* goodbye animation */
 #outro{position:fixed;inset:0;z-index:999;display:none;perspective:1400px;overflow:hidden}
 #outro.go{display:block}
@@ -833,6 +841,7 @@ var T = {
   added: "Added to your quote",
   addBtn: "+ Add to quote",
   all: "All",
+  owner: "Owner response",
   noReviews: "<b>No reviews yet</b>Be the first to share your experience with Expert Fence Supply.",
   reviewsOne: "review", reviewsMany: "reviews",
   errName: "Please enter your name.", errEmail: "Please enter a valid email.", errServer: "Something went wrong. Please try again or email sales@expertfence.com.",
@@ -1048,6 +1057,7 @@ var T = {
   document.addEventListener('keydown', function(e){ if (e.key==='Escape') closeProduct(); });
 
   /* ---------- Reviews ---------- */
+  var ICON = (document.querySelector('.logo svg')||{innerHTML:''}).innerHTML;
   var TK = 'efs-review-token', revLoaded = false, rating = 0;
   function getToken(){ try { return localStorage.getItem(TK) || ''; } catch(e){ return window.__efsTok || ''; } }
   function saveToken(t){ window.__efsTok = t; try { localStorage.setItem(TK, t); } catch(e){} }
@@ -1070,7 +1080,8 @@ var T = {
         document.getElementById('rcount').textContent = d.count + ' ' + (d.count===1?T.reviewsOne:T.reviewsMany);
         list.innerHTML = rs.map(function(r,i){
           return '<article class="rcard rv" style="--d:'+Math.min(i*0.06,.4)+'s"><div class="top"><div class="rwho"><span class="av">'+esc(r.name.charAt(0))+'</span>'+esc(r.name)+'</div><time>'+fmt(r.created.slice(0,10),{month:'short',day:'numeric',year:'numeric'})+'</time></div>'+
-            '<div class="rstars" aria-label="'+r.rating+' / 5">'+starsTxt(r.rating)+'</div>'+(r.title?'<h3>'+esc(r.title)+'</h3>':'')+'<p>'+esc(r.text)+'</p></article>';
+            '<div class="rstars" aria-label="'+r.rating+' / 5">'+starsTxt(r.rating)+'</div>'+(r.title?'<h3>'+esc(r.title)+'</h3>':'')+'<p>'+esc(r.text)+'</p>'+
+            (r.reply?'<div class="rreply"><div class="rrn"><span class="rlogo"><svg viewBox="0 0 172 152" aria-hidden="true">'+ICON+'</svg></span>Expert Fence <i title="'+T.owner+'" aria-label="'+T.owner+'">★</i><small>'+T.owner+' · '+fmt(r.reply.at.slice(0,10),{month:'short',day:'numeric',year:'numeric'})+'</small></div><p>'+esc(r.reply.text)+'</p></div>':'')+'</article>';
         }).join('');
         observe(list);
       }

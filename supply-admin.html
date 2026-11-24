@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Reviews Admin | Expert Fence Supply</title>
+<link rel="icon" type="image/svg+xml" href="/assets/img/logo-supply-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@800;900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--mint-50:#F5FCF0;--mint-100:#E8F8DC;--mint-300:#B6E596;--lime:#A8E07F;--lime-strong:#8BD35E;--green:#3F8F2E;--green-dark:#2C6B20;--forest:#173D22;--forest-900:#0E2716;--muted:#4D6653;--line:#D5EBC6;--ease:cubic-bezier(.16,1,.3,1);--slab:"Roboto Slab",Georgia,serif;--sans:"Manrope",system-ui,sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;font-family:var(--sans);background:var(--mint-50);color:#16301D}
+header{background:var(--forest-900);color:var(--lime);padding:0 24px}
+.bar{max-width:1100px;margin:auto;height:76px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;color:var(--lime);text-decoration:none}
+.logo img{width:46px}
+.logo b{font:900 20px var(--slab);text-transform:uppercase;letter-spacing:.02em}
+.logo small{display:block;font-size:11px;letter-spacing:.3em;font-weight:800}
+.hr{display:flex;gap:14px;align-items:center;font-size:14px;color:#CFEBBB}
+.hr button,.hr a{background:none;border:1px solid rgba(168,224,127,.35);color:var(--lime);padding:8px 14px;border-radius:999px;font:700 13px var(--sans);cursor:pointer;text-decoration:none}
+main{max-width:1100px;margin:auto;padding:36px 24px 80px}
+h1{font:900 36px var(--slab);color:var(--forest);margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 24px}
+.card{background:#fff;border-radius:22px;padding:28px;box-shadow:0 8px 28px rgba(14,39,22,.08)}
+.login{max-width:460px;margin:60px auto;text-align:center}
+.login input{width:100%;font:600 16px var(--sans);padding:14px;border-radius:12px;border:1.5px solid var(--line);background:var(--mint-50);margin:16px 0 12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;border:0;font:800 14px var(--sans);cursor:pointer;transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px)}
+.b-dark{background:var(--forest);color:var(--lime)}
+.b-lime{background:var(--lime);color:var(--forest)}
+.b-ghost{background:#fff;color:var(--forest);box-shadow:inset 0 0 0 1.5px var(--mint-300)}
+.b-red{background:#fbe4df;color:#8a2a1a}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.tabs button{padding:9px 16px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font:700 14px var(--sans);cursor:pointer;color:var(--forest)}
+.tabs button.on{background:var(--forest);border-color:var(--forest);color:var(--lime)}
+.tabs .n{display:inline-block;min-width:22px;margin-left:6px;padding:0 6px;border-radius:999px;background:var(--mint-100);color:var(--green-dark);font-size:12px}
+.tabs button.on .n{background:var(--lime);color:var(--forest)}
+.list{display:grid;gap:16px}
+.rv{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 6px 22px rgba(14,39,22,.07);animation:in .5s var(--ease)}
+@keyframes in{from{opacity:0;transform:translateY(10px)}}
+.top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.who b{color:var(--forest)}.who span{color:var(--muted);font-size:13.5px}
+.st{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.st.pending{background:#fff3d6;color:#8a5a00}.st.approved{background:var(--mint-100);color:var(--green-dark)}.st.hidden,.st.rejected{background:#eee;color:#555}
+.stars{color:#E0A526;font-size:18px;letter-spacing:2px;margin-top:6px}
+.rv h3{margin:8px 0 2px;font:800 17px var(--slab);color:var(--forest)}
+.rv p.t{margin:6px 0 0;white-space:pre-line}
+.flag{margin-top:8px;font-size:13px;color:#8a2a1a}
+.reply{margin-top:14px;padding:14px 16px;border-radius:14px;background:var(--mint-50);border-left:4px solid var(--lime-strong)}
+.reply .rn{font-weight:800;color:var(--forest);display:flex;align-items:center;gap:6px}
+.reply .rn i{font-style:normal;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--lime);color:var(--forest);font-size:12px}
+.reply textarea{width:100%;min-height:90px;font:500 15px var(--sans);padding:12px;border-radius:12px;border:1.5px solid var(--line);margin:10px 0 8px;resize:vertical}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.confirm{display:flex;gap:8px;align-items:center;font-weight:700;color:#8a2a1a;font-size:14px}
+.empty{text-align:center;padding:50px;color:var(--muted);border:2px dashed var(--mint-300);border-radius:20px}
+.msg{font-size:14px;color:var(--muted);margin:8px 0 0}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,30px);opacity:0;padding:12px 20px;border-radius:999px;background:var(--forest);color:var(--lime);font-weight:800;transition:.4s var(--ease)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <a class="logo" href="/expert-fence-supply.html#reviews"><img src="/assets/img/logo-supply-icon.svg" alt=""><span><b>Expert Fence</b><small>SUPPLY · ADMIN</small></span></a>
+  <div class="hr" id="who" hidden><span id="whoEmail"></span><a href="/expert-fence-supply.html#reviews" target="_blank" rel="noopener">View reviews page</a><button type="button" id="signout">Sign out</button></div>
+</div></header>
+<main>
+  <section id="login" class="card login" hidden>
+    <h1>Reviews admin</h1>
+    <p class="sub">Sign in with your company email. We will send you a sign-in link.</p>
+    <form id="loginForm">
+      <input type="email" id="email" value="admin@expertfence.com" autocomplete="email" required>
+      <button class="btn b-dark" type="submit">Email me a sign-in link →</button>
+    </form>
+    <p class="msg" id="loginMsg" hidden></p>
+  </section>
+
+  <section id="app" hidden>
+    <h1>Customer reviews</h1>
+    <p class="sub">Publish, hide, delete and reply. Replies show on the website as <b>Expert Fence ★</b>.</p>
+    <div class="tabs" id="tabs">
+      <button type="button" data-f="pending" class="on">Waiting<span class="n" id="n-pending">0</span></button>
+      <button type="button" data-f="approved">Published<span class="n" id="n-approved">0</span></button>
+      <button type="button" data-f="hidden">Hidden<span class="n" id="n-hidden">0</span></button>
+      <button type="button" data-f="all">All<span class="n" id="n-all">0</span></button>
+    </div>
+    <div class="list" id="list"></div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  var KEY='efs-admin-token', filter='pending', all=[];
+  function get(){ try{ return localStorage.getItem(KEY)||''; }catch(e){ return window.__t||''; } }
+  function set(t){ window.__t=t; try{ t?localStorage.setItem(KEY,t):localStorage.removeItem(KEY); }catch(e){} }
+  function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function toast(m){ var t=document.getElementById('toast'); t.textContent=m; t.classList.add('on'); setTimeout(function(){ t.classList.remove('on'); },1800); }
+  var m = /#t=([^&]+)/.exec(location.hash); if (m) { set(decodeURIComponent(m[1])); history.replaceState(null,'',location.pathname); }
+  try { var who = JSON.parse(atob(get().split('.')[0].replace(/-/g,'+').replace(/_/g,'/'))).e; document.getElementById('whoEmail').textContent = who; } catch(e){}
+
+  function showLogin(text){ document.getElementById('app').hidden=true; document.getElementById('who').hidden=true; document.getElementById('login').hidden=false; var el=document.getElementById('loginMsg'); el.textContent=text||''; el.hidden=!text; }
+  function api(method, body){
+    return fetch('/api/reviews'+(method==='GET'?'?admin=1':''), { method:method, headers:Object.assign({ Authorization:'Bearer '+get(), Accept:'application/json' }, body?{'Content-Type':'application/json'}:{}), body: body?JSON.stringify(body):undefined })
+      .then(function(r){ if(r.status===401){ set(''); showLogin('Your sign-in expired. Please sign in again.'); throw 0; } return r.json(); });
+  }
+  function load(){
+    api('GET').then(function(d){
+      all = d.reviews||[];
+      document.getElementById('login').hidden=true; document.getElementById('app').hidden=false; document.getElementById('who').hidden=false;
+      render();
+    }).catch(function(e){ if(e!==0) toast('Could not load reviews'); });
+  }
+  function count(f){ return all.filter(function(r){ return f==='all' || (f==='hidden' ? (r.status==='hidden'||r.status==='rejected') : r.status===f); }).length; }
+  function render(){
+    ['pending','approved','hidden','all'].forEach(function(f){ document.getElementById('n-'+f).textContent=count(f); });
+    var rs = all.filter(function(r){ return filter==='all' || (filter==='hidden' ? (r.status==='hidden'||r.status==='rejected') : r.status===filter); });
+    var L=document.getElementById('list');
+    if(!rs.length){ L.innerHTML='<div class="empty">No reviews here.</div>'; return; }
+    L.innerHTML = rs.map(function(r){
+      var st = r.status==='rejected'?'hidden':r.status;
+      return '<article class="rv" data-id="'+esc(r.id)+'"><div class="top"><div class="who"><b>'+esc(r.fullName||r.name)+'</b> <span>· '+esc(r.email||'')+' · shown as '+esc(r.name)+' · '+new Date(r.created).toLocaleString()+'</span></div><span class="st '+esc(st)+'">'+(st==='pending'?'Waiting':st==='approved'?'Published':'Hidden')+'</span></div>'+
+        '<div class="stars">'+'★★★★★'.slice(0,r.rating)+'☆☆☆☆☆'.slice(0,5-r.rating)+'</div>'+(r.title?'<h3>'+esc(r.title)+'</h3>':'')+'<p class="t">'+esc(r.text)+'</p>'+
+        (r.flag?'<div class="flag">Spam check: '+esc(r.flag)+'</div>':'')+
+        '<div class="reply"><div class="rn">Expert Fence <i>★</i> <span style="font-weight:600;color:var(--muted);font-size:13px">'+(r.reply?'replied '+new Date(r.reply.at).toLocaleDateString():'reply')+'</span></div>'+
+        '<textarea placeholder="Write a reply that will show under this review…">'+esc(r.reply?r.reply.text:'')+'</textarea>'+
+        '<button class="btn b-lime" data-act="reply" type="button">'+(r.reply?'Update reply':'Post reply')+'</button>'+(r.reply?' <button class="btn b-ghost" data-act="unreply" type="button">Remove reply</button>':'')+'</div>'+
+        '<div class="acts">'+(st!=='approved'?'<button class="btn b-dark" data-act="approve" type="button">Publish</button>':'<button class="btn b-ghost" data-act="hide" type="button">Hide from website</button>')+
+        '<span class="del"><button class="btn b-red" data-act="del" type="button">Delete</button></span></div></article>';
+    }).join('');
+  }
+  document.getElementById('tabs').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; filter=b.dataset.f; document.querySelectorAll('#tabs button').forEach(function(x){ x.classList.toggle('on',x===b); }); render(); });
+  document.getElementById('list').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-act]'); if(!b) return; var card=b.closest('.rv'), id=card.dataset.id, act=b.dataset.act;
+    function update(r){ all=all.map(function(x){ return x.id===r.id?r:x; }); render(); }
+    if(act==='del'){ b.parentNode.innerHTML='<span class="confirm">Delete forever? <button class="btn b-red" data-act="del2" type="button">Yes, delete</button><button class="btn b-ghost" data-act="cancel" type="button">Cancel</button></span>'; return; }
+    if(act==='cancel'){ render(); return; }
+    b.disabled=true;
+    if(act==='del2') api('POST',{action:'adminDelete',id:id}).then(function(){ all=all.filter(function(x){ return x.id!==id; }); render(); toast('Review deleted'); });
+    if(act==='approve'||act==='hide') api('POST',{action:'adminStatus',id:id,status:act==='approve'?'approved':'hidden'}).then(function(d){ update(d.review); toast(act==='approve'?'Published on the website':'Hidden from the website'); });
+    if(act==='reply'||act==='unreply'){ var txt=act==='reply'?card.querySelector('textarea').value:''; api('POST',{action:'adminReply',id:id,text:txt}).then(function(d){ update(d.review); toast(txt?'Reply saved':'Reply removed'); }); }
+  });
+  document.getElementById('loginForm').addEventListener('submit',function(e){
+    e.preventDefault(); var em=document.getElementById('email').value.trim(), btn=e.target.querySelector('button'); btn.disabled=true;
+    fetch('/api/admin-login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,app:'reviews'})}).then(function(){
+      btn.disabled=false; showLogin('If '+em+' is an Expert Fence admin address, a sign-in link is on its way. Open it on this device.');
+    }).catch(function(){ btn.disabled=false; showLogin('Could not send. Please try again.'); });
+  });
+  document.getElementById('signout').addEventListener('click',function(){ set(''); showLogin('Signed out.'); });
+  window.addEventListener('hashchange',function(){ var h=/#t=([^&]+)/.exec(location.hash); if(h){ set(decodeURIComponent(h[1])); history.replaceState(null,'',location.pathname); load(); } });
+  if(get()) load(); else showLogin('');
+})();
+</script>
+</body>
+</html>
