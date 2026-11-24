@@ -7,8 +7,11 @@ import { checkRequest, checkContent, worst } from './_spam.mjs';
 import { saveLead } from './_store.mjs';
 
 const TO = 'expertfence@expertfence.com';
-const SALES = 'sales@expertfence.com'; // material quote requests (Expert Fence Supply page) go here
-const isMaterialQuote = (subject) => /^(\[Possible spam\]\s*)?(MATERIAL QUOTE|COTIZACI[OÓ]N DE MATERIALES)/i.test(subject);
+const SALES = 'sales@expertfence.com'; // material orders and quotes (Expert Fence Supply + online store) go here
+// Material quote requests, online store orders and supply-service requests are routed to sales@.
+const isMaterialQuote = (subject) =>
+  /^(\[Possible spam\]\s*)?(MATERIAL QUOTE|COTIZACI[OÓ]N DE MATERIALES|NEW MATERIALS ORDER|PEDIDO DE MATERIALES)/i.test(subject) ||
+  /\((Fence Supply & Materials|Materiales para Cercas)\)/i.test(subject);
 const FROM = 'Expert Fence Website <website@notify.expertfence.com>';
 const REVIEW_URL = 'https://g.page/r/Cef39bttPF9cEBM/review'; // Google Business Profile "write a review" link
 const MAX_ATTACH_BYTES = 3.5 * 1024 * 1024; // stay under Vercel's 4.5 MB request limit
