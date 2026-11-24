@@ -50,6 +50,8 @@ function unsign(t) {
   try { const o = JSON.parse(Buffer.from(body, 'base64url').toString()); return o.x > Date.now() ? o : null; } catch { return null; }
 }
 
+// Reviews go live right away. Only reviews the spam check flagged wait for a person to publish them.
+const isLive = (r) => r.status === 'approved' || (r.status === 'pending' && !r.flag);
 const clean = (s, n) => String(s || '').replace(/\s+/g, ' ').trim().slice(0, n);
 const publicName = (n) => { const p = clean(n, 60).split(' ').filter(Boolean); return p.length > 1 ? `${p[0]} ${p[p.length - 1][0].toUpperCase()}.` : (p[0] || 'Customer'); };
 const pageFor = (lang) => `${SITE}${lang === 'es' ? '/es' : ''}/expert-fence-supply.html`;
@@ -60,9 +62,10 @@ export async function GET(request) {
   if (u.searchParams.get('mod')) return moderationPage(u.searchParams.get('mod'));
   if (u.searchParams.get('admin')) return adminList(request);
   try {
-    const [ids] = await redis([['ZRANGE', 'reviews:approved', '0', '199', 'REV']]);
-    const vals = ids && ids.length ? await redis(ids.map((id) => ['GET', `review:${id}`])) : [];
-    const reviews = vals.filter(Boolean).map((v) => JSON.parse(v)).filter((r) => r.status === 'approved')
+    const ids = await allReviewIds();
+    const vals = ids.length ? await redis(ids.map((id) => ['GET', `review:${id}`])) : [];
+    const reviews = vals.filter(Boolean).map((v) => JSON.parse(v)).filter(isLive)
+      .sort((a, b) => b.created.localeCompare(a.created)).slice(0, 200)
       .map(({ id, name, rating, title, text, lang, created, reply }) => ({ id, name, rating, title, text, lang, created, reply: reply && reply.text ? { text: reply.text, at: reply.at } : undefined }));
     const avg = reviews.length ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10 : 0;
     return Response.json({ success: 'true', count: reviews.length, avg, reviews }, { headers: { 'Cache-Control': 's-maxage=60, stale-while-revalidate=300' } });
@@ -134,24 +137,27 @@ async function submit(d, suspectReason) {
   const [wait] = await redis([['GET', `review-wait:${t.e}`]]);
   if (wait) return fail('wait', 429);
   const id = Date.now().toString(36) + randomBytes(3).toString('hex');
-  const review = { id, name: publicName(t.n), fullName: t.n, email: t.e, rating, title, text, lang: d.lang === 'es' ? 'es' : 'en', created: new Date().toISOString(), status: 'pending', flag: suspectReason || undefined };
-  await redis([['SET', `review:${id}`, JSON.stringify(review)], ['SET', `review-wait:${t.e}`, '1', 'EX', '43200']]);
+  const review = { id, name: publicName(t.n), fullName: t.n, email: t.e, rating, title, text, lang: d.lang === 'es' ? 'es' : 'en', created: new Date().toISOString(), status: suspectReason ? 'pending' : 'approved', flag: suspectReason || undefined };
+  const live = review.status === 'approved';
+  await redis([['SET', `review:${id}`, JSON.stringify(review)], ['SET', `review-wait:${t.e}`, '1', 'EX', '43200'],
+    ...(live ? [['ZADD', 'reviews:approved', String(Date.parse(review.created)), id]] : [])]);
+  const adminLink = `${SITE}/expert-fence-supply.html/admin`;
   const modLink = `${SITE}/api/reviews?mod=${sign({ k: 'm', id }, 60)}`;
   const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
   await sendMail({
     to: SALES,
-    subject: `${suspectReason ? '[Possible spam] ' : ''}NEW REVIEW ${stars} — ${t.n} — waiting for approval`,
+    subject: live ? `NEW REVIEW ${stars} — ${t.n} — now live on the website` : `[Possible spam] NEW REVIEW ${stars} — ${t.n} — waiting for approval`,
     html: wrap(
-      `<p><b>New customer review on Expert Fence Supply</b> — it is <b>not public</b> until you approve it.</p>` +
+      (live ? `<p><b>New customer review on Expert Fence Supply</b> — it is <b>already live</b> on the website. You can hide it, delete it or reply from the reviews admin.</p>` : `<p><b>New customer review on Expert Fence Supply</b> — our spam check flagged it, so it is <b>not public</b> until you publish it.</p>`) +
       `<p style="font-size:20px;color:#c07c33;margin:0">${stars}</p>` +
       (title ? `<p style="margin:6px 0 0"><b>${esc(title)}</b></p>` : '') +
       `<p style="white-space:pre-wrap;background:#f2f0e9;padding:12px;border-radius:4px">${esc(text)}</p>` +
       `<p>From: ${esc(t.n)} &lt;${esc(t.e)}&gt; (email confirmed)${suspectReason ? `<br>Spam check: ${esc(suspectReason)}` : ''}</p>` +
-      `<p>${button(modLink, 'Review it: publish or reject')}</p>`),
-    text: `New review (${rating}/5) from ${t.n} <${t.e}>:\n\n${title ? title + '\n' : ''}${text}\n\nPublish or reject: ${modLink}`,
+      `<p>${button(adminLink, live ? 'Open reviews admin: reply, hide or delete' : 'Open reviews admin to publish or delete')}</p><p style="font-size:13px"><a href="${modLink}">Quick ${live ? 'hide' : 'publish or reject'} link</a></p>`),
+    text: `New review (${rating}/5) from ${t.n} <${t.e}>${live ? ' — live on the website' : ' — flagged, waiting'}:\n\n${title ? title + '\n' : ''}${text}\n\nReviews admin: ${adminLink}`,
     replyTo: t.e,
   });
-  return ok({ pending: true });
+  return ok({ pending: !live });
 }
 
 /* ---------- moderation: GET shows the review + buttons (safe from link scanners), POST acts ---------- */
@@ -175,7 +181,7 @@ async function moderationPage(token) {
     `<p>From ${esc(r.fullName)} &lt;${esc(r.email)}&gt; — shown publicly as <b>${esc(r.name)}</b></p>` +
     `<p>Status: <span class="st">${esc(r.status)}</span></p>` +
     `<form method="post" action="/api/reviews"><input type="hidden" name="action" value="moderate"><input type="hidden" name="mod" value="${esc(token)}">` +
-    `<button class="a" name="do" value="approve">Publish on the website</button><button class="r" name="do" value="reject">Reject</button></form>`);
+    `<button class="a" name="do" value="approve">Show on the website</button><button class="r" name="do" value="reject">Hide from the website</button></form>`);
 }
 
 async function moderate(d) {
@@ -208,6 +214,11 @@ async function adminList(request) {
     const ids = await allReviewIds();
     const vals = ids.length ? await redis(ids.map((id) => ['GET', `review:${id}`])) : [];
     const reviews = vals.filter(Boolean).map((v) => JSON.parse(v)).sort((a, b) => b.created.localeCompare(a.created));
+    const fix = reviews.filter((r) => r.status === 'pending' && !r.flag);
+    if (fix.length) {
+      fix.forEach((r) => { r.status = 'approved'; });
+      await redis(fix.flatMap((r) => [['SET', `review:${r.id}`, JSON.stringify(r)], ['ZADD', 'reviews:approved', String(Date.parse(r.created)), r.id]]));
+    }
     return noStore({ success: 'true', reviews });
   } catch (e) { console.error('reviews admin list', e); return noStore({ error: 'store unavailable' }, 502); }
 }
