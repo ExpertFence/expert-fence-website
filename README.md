@@ -42,3 +42,9 @@ No build step — open any `expert-fence-*.html` file directly in a browser, or 
 ```bash
 npx serve .
 ```
+
+## Supply reviews
+
+Customer reviews on Expert Fence Supply (`api/reviews.mjs`) go live as soon as the customer posts them
+(reviews the spam check flags wait for approval). Manage them at `/expert-fence-supply.html/admin`
+(sign-in link emailed to an admin address): hide, delete or reply as "Expert Fence ★".
