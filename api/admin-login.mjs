@@ -4,16 +4,18 @@ import { ADMIN_EMAILS, makeToken } from './_auth.mjs';
 import { sendMail, wrap, button, SITE } from './_mail.mjs';
 
 export async function POST(request) {
-  let email = '';
-  try { email = String((await request.json()).email || '').trim().toLowerCase(); } catch {}
+  let email = '', app = '';
+  try { const b = await request.json(); email = String(b.email || '').trim().toLowerCase(); app = String(b.app || ''); } catch {}
   if (ADMIN_EMAILS.includes(email)) {
-    const link = `${SITE}/admin.html#t=${makeToken(email)}`;
+    const reviews = app === 'reviews';
+    const link = reviews ? `${SITE}/expert-fence-supply.html/admin#t=${makeToken(email)}` : `${SITE}/admin.html#t=${makeToken(email)}`;
+    const what = reviews ? 'Expert Fence Supply reviews admin' : 'lead tracker';
     try {
       await sendMail({
         to: email,
-        subject: 'Your Expert Fence lead tracker sign-in link',
-        html: wrap(`<p>Click to open the lead tracker. The link works on this device for 30 days.</p><p>${button(link, 'Open the lead tracker')}</p><p style="font-size:13px;color:#6e756a">Didn't ask for this? Ignore this email.</p>`),
-        text: `Open the lead tracker: ${link}`,
+        subject: `Your Expert Fence ${reviews ? 'Supply reviews admin' : 'lead tracker'} sign-in link`,
+        html: wrap(`<p>Click to open the ${what}. The link works on this device for 30 days.</p><p>${button(link, 'Open the ' + what)}</p><p style="font-size:13px;color:#6e756a">Didn't ask for this? Ignore this email.</p>`),
+        text: `Open the ${what}: ${link}`,
       });
     } catch (err) { console.error('admin-login', err); }
   }

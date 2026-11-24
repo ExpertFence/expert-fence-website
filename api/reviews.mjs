@@ -15,6 +15,7 @@
 import { createHmac, timingSafeEqual, randomBytes } from 'node:crypto';
 import { checkRequest } from './_spam.mjs';
 import { sendMail, wrap, button, esc, isEmail, SITE } from './_mail.mjs';
+import { verify } from './_auth.mjs';
 
 const SALES = 'sales@expertfence.com';
 const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
@@ -57,11 +58,12 @@ const pageFor = (lang) => `${SITE}${lang === 'es' ? '/es' : ''}/expert-fence-sup
 export async function GET(request) {
   const u = new URL(request.url);
   if (u.searchParams.get('mod')) return moderationPage(u.searchParams.get('mod'));
+  if (u.searchParams.get('admin')) return adminList(request);
   try {
     const [ids] = await redis([['ZRANGE', 'reviews:approved', '0', '199', 'REV']]);
     const vals = ids && ids.length ? await redis(ids.map((id) => ['GET', `review:${id}`])) : [];
     const reviews = vals.filter(Boolean).map((v) => JSON.parse(v)).filter((r) => r.status === 'approved')
-      .map(({ id, name, rating, title, text, lang, created }) => ({ id, name, rating, title, text, lang, created }));
+      .map(({ id, name, rating, title, text, lang, created, reply }) => ({ id, name, rating, title, text, lang, created, reply: reply && reply.text ? { text: reply.text, at: reply.at } : undefined }));
     const avg = reviews.length ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / reviews.length) * 10) / 10 : 0;
     return Response.json({ success: 'true', count: reviews.length, avg, reviews }, { headers: { 'Cache-Control': 's-maxage=60, stale-while-revalidate=300' } });
   } catch (e) {
@@ -78,6 +80,7 @@ export async function POST(request) {
   catch { return fail('bad request'); }
 
   if (data.action === 'moderate') return moderate(data);
+  if (String(data.action || '').startsWith('admin')) return adminAction(request, data);
 
   const req = checkRequest(request);
   if (req.verdict === 'block' || String(data.company_website || '').trim()) { console.log('review spam blocked:', req.reason || 'trap'); return ok(); }
@@ -187,4 +190,49 @@ async function moderate(d) {
   return html(approve
     ? `<h1>✓ Published</h1><p>The review from <b>${esc(r.name)}</b> is now live on <a href="${SITE}/expert-fence-supply.html#reviews">Expert Fence Supply → Reviews</a>.</p><p>Changed your mind? Use the same email link to reject it.</p>`
     : `<h1>Rejected</h1><p>The review from <b>${esc(r.name)}</b> will not be shown. You can still publish it later from the same email link.</p>`);
+}
+
+/* ---------- admin (sign-in via /api/admin-login, see _auth.mjs) ---------- */
+const noStore = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
+async function allReviewIds() {
+  const ids = new Set(); let cursor = '0', n = 0;
+  do {
+    const [res] = await redis([['SCAN', cursor, 'MATCH', 'review:*', 'COUNT', '500']]);
+    cursor = String(res[0]); (res[1] || []).forEach((k) => ids.add(k.slice(7))); n++;
+  } while (cursor !== '0' && n < 20);
+  return [...ids];
+}
+async function adminList(request) {
+  if (!verify(request)) return noStore({ error: 'sign in' }, 401);
+  try {
+    const ids = await allReviewIds();
+    const vals = ids.length ? await redis(ids.map((id) => ['GET', `review:${id}`])) : [];
+    const reviews = vals.filter(Boolean).map((v) => JSON.parse(v)).sort((a, b) => b.created.localeCompare(a.created));
+    return noStore({ success: 'true', reviews });
+  } catch (e) { console.error('reviews admin list', e); return noStore({ error: 'store unavailable' }, 502); }
+}
+async function adminAction(request, d) {
+  const who = verify(request);
+  if (!who) return noStore({ error: 'sign in' }, 401);
+  const id = clean(d.id, 40);
+  const [v] = await redis([['GET', `review:${id}`]]);
+  if (!v) return noStore({ error: 'not found' }, 404);
+  const r = JSON.parse(v), now = new Date().toISOString();
+  if (d.action === 'adminDelete') {
+    await redis([['DEL', `review:${id}`], ['ZREM', 'reviews:approved', id]]);
+    return noStore({ success: 'true', deleted: id });
+  }
+  if (d.action === 'adminStatus') {
+    const approve = d.status === 'approved';
+    r.status = approve ? 'approved' : 'hidden'; r.moderated = now; r.moderatedBy = who;
+    await redis([['SET', `review:${id}`, JSON.stringify(r)], approve ? ['ZADD', 'reviews:approved', String(Date.parse(r.created)), id] : ['ZREM', 'reviews:approved', id]]);
+    return noStore({ success: 'true', review: r });
+  }
+  if (d.action === 'adminReply') {
+    const text = String(d.text || '').trim().slice(0, 2000);
+    if (text) r.reply = { text, at: now, by: who }; else delete r.reply;
+    await redis([['SET', `review:${id}`, JSON.stringify(r)]]);
+    return noStore({ success: 'true', review: r });
+  }
+  return noStore({ error: 'unknown action' }, 400);
 }
