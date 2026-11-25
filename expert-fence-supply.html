@@ -321,6 +321,13 @@ legend{font-weight:700;font-size:14px;color:var(--forest);margin-bottom:8px}
 .price b{font:900 44px var(--slab);color:var(--green)}
 .price span{font-weight:700;color:var(--muted)}
 .pnote{font-size:13.5px;color:var(--muted);background:var(--mint-100);padding:12px 14px;border-radius:12px;margin:0 0 20px}
+.pgroup{padding:52px 0 0}
+.pgroup+.products{padding-top:26px}
+.pgroup .eyebrow{display:inline-block}
+.pgroup h2{margin-top:10px}
+.pgroup .lead{max-width:720px}
+.pgroup.second{margin-top:44px;padding-top:52px;border-top:1px solid var(--line)}
+.price b.ask{font-size:30px}
 .more-head{padding:60px 0 0}
 .more-head h2{margin-top:10px}
 .cats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
@@ -677,6 +684,11 @@ body.entering .stage{transform:scale(1.06);filter:blur(8px)}
   </section>
 
   <div class="wrap">
+    <div class="pgroup" id="pressure-treated">
+      <span class="eyebrow rv">Pressure-treated pine</span>
+      <h2 class="rv" style="--d:.06s">#2 Grade Pressure-Treated Lumber</h2>
+      <p class="lead rv" style="--d:.1s">Budget-friendly, knotty #2 boards and rails, pressure-treated to resist rot, decay and insects.</p>
+    </div>
     <div class="products">
       <article class="product rv" data-product="pt-1x6x6">
         <div class="pimg" data-open-product="pt-1x6x6">
@@ -722,18 +734,54 @@ body.entering .stage{transform:scale(1.06);filter:blur(8px)}
       </article>
     </div>
 
-    <div class="more-head">
-      <span class="eyebrow rv">Also at the yard</span>
-      <h2 class="rv" style="--d:.06s">More fence materials</h2>
-      <p class="lead rv" style="--d:.1s">Ask a sales rep for sizes, lengths and today's price.</p>
+    <div class="pgroup second" id="western-red-cedar">
+      <span class="eyebrow rv">Western red cedar</span>
+      <h2 class="rv" style="--d:.06s">#2 Knotty Western Red Cedar</h2>
+      <p class="lead rv" style="--d:.1s">Natural cedar with a warm color and rustic knots. Naturally resistant to rot and insects, with no chemical treatment.</p>
     </div>
-    <div class="cats">
-      <a class="catcard rv" href="mailto:sales@expertfence.com?subject=Pressure-treated%20posts%20and%20rails"><i class="sw-pine"></i><div><h3>Pressure-treated posts &amp; rails</h3><p>4x4 and 6x6 posts and 2x4 rails for strong, long-lasting fence frames.</p><span>Ask for sizes &amp; prices →</span></div></a>
-      <a class="catcard rv" style="--d:.06s" href="mailto:sales@expertfence.com?subject=Cedar%20fence%20boards"><i class="sw-cedar"></i><div><h3>Western red cedar</h3><p>Naturally beautiful, naturally rot-resistant boards, pickets and posts.</p><span>Ask for sizes &amp; prices →</span></div></a>
-      <a class="catcard rv" style="--d:.12s" href="mailto:sales@expertfence.com?subject=Clear%20cedar"><i class="sw-clear"></i><div><h3>Clear cedar</h3><p>Knot-free, premium cedar for high-end privacy and horizontal fences.</p><span>Ask for sizes &amp; prices →</span></div></a>
-      <a class="catcard rv" href="mailto:sales@expertfence.com?subject=Japanese%20cedar"><i class="sw-jap"></i><div><h3>Japanese cedar</h3><p>Light, straight-grained boards for clean, modern designs.</p><span>Ask for sizes &amp; prices →</span></div></a>
-      <a class="catcard rv" style="--d:.06s" href="mailto:sales@expertfence.com?subject=Vinyl%20fence"><i class="sw-vinyl"></i><div><h3>Vinyl fence</h3><p>Privacy and picket panels, posts and caps. Zero maintenance, never needs stain.</p><span>Ask for sizes &amp; prices →</span></div></a>
-      <a class="catcard rv" style="--d:.12s" href="mailto:sales@expertfence.com?subject=Gate%20hardware"><i class="sw-hw"></i><div><h3>Gate &amp; fence hardware</h3><p>Hinges, latches, drop rods, gate wheels, post caps and fasteners.</p><span>Ask for sizes &amp; prices →</span></div></a>
+    <div class="products">
+      <article class="product rv" data-product="wrc-1x6x6">
+        <div class="pimg" data-open-product="wrc-1x6x6">
+          <img src="assets/img/products/wrc-1x6x6.jpg" alt="1x6x6 #2 knotty western red cedar fence board at Expert Fence Supply, Alexandria VA" loading="lazy" onerror="this.remove()">
+          <span class="ptag">Western red cedar</span>
+        </div>
+        <div class="pbody">
+          <h2>1x6x6 #2 Knotty Western Red Cedar Board</h2>
+          <p>The classic cedar privacy board. Warm, reddish-brown #2 knotty western red cedar that is naturally resistant to rot and insects, with no chemical treatment, a full 6&nbsp;ft long.</p>
+          <div class="prow">
+            <span class="psize">1" × 6" × 6'</span>
+            <button class="btn btn-primary btn-sm" type="button" data-open-product="wrc-1x6x6">View more →</button>
+          </div>
+        </div>
+      </article>
+      <article class="product rv" style="--d:.08s" data-product="wrc-1x4x8">
+        <div class="pimg" data-open-product="wrc-1x4x8">
+          <img src="assets/img/products/wrc-1x4x8.jpg" alt="1x4x8 #2 knotty western red cedar board at Expert Fence Supply, Alexandria VA" loading="lazy" onerror="this.remove()">
+          <span class="ptag">Western red cedar</span>
+        </div>
+        <div class="pbody">
+          <h2>1x4x8 #2 Knotty Western Red Cedar Board</h2>
+          <p>A slim 8&nbsp;ft cedar board with natural knots and rich color. Light, easy to cut and naturally rot-resistant: great for picket fences, battens, trim and garden projects.</p>
+          <div class="prow">
+            <span class="psize">1" × 4" × 8'</span>
+            <button class="btn btn-primary btn-sm" type="button" data-open-product="wrc-1x4x8">View more →</button>
+          </div>
+        </div>
+      </article>
+      <article class="product rv" style="--d:.16s" data-product="wrc-2x4x8">
+        <div class="pimg" data-open-product="wrc-2x4x8">
+          <img src="assets/img/products/wrc-2x4x8.jpg" alt="2x4x8 #2 knotty western red cedar lumber at Expert Fence Supply, Alexandria VA" loading="lazy" onerror="this.remove()">
+          <span class="ptag">Western red cedar</span>
+        </div>
+        <div class="pbody">
+          <h2>2x4x8 #2 Knotty Western Red Cedar Lumber</h2>
+          <p>A matching cedar rail for an all-cedar fence. Sturdy 8&nbsp;ft 2x4 in #2 knotty grade, naturally resistant to rot and insects, for fence rails, gate frames and outdoor projects.</p>
+          <div class="prow">
+            <span class="psize">2" × 4" × 8'</span>
+            <button class="btn btn-primary btn-sm" type="button" data-open-product="wrc-2x4x8">View more →</button>
+          </div>
+        </div>
+      </article>
     </div>
 
     <div class="mat-cta">
@@ -898,6 +946,75 @@ body.entering .stage{transform:scale(1.06);filter:blur(8px)}
       </ul>
       <p class="pnote anim" style="--d:.22s">*Price subject to change. Contact a sales rep at <a href="mailto:sales@expertfence.com">sales@expertfence.com</a> to confirm current pricing and availability.</p>
       <div class="anim" style="--d:.26s"><a class="btn btn-primary" href="mailto:sales@expertfence.com?subject=2x4x8%20%232%20Grade%20Pressure-Treated%20Lumber%20-%20price%20and%20availability">Email a sales rep →</a></div>
+    </div>
+  </div>
+</div>
+<div class="dlg" id="pdlg-wrc-1x6x6" data-pdlg role="dialog" aria-modal="true" aria-labelledby="pTitle-wrc-1x6x6">
+  <div class="backdrop"></div>
+  <div class="sheet">
+    <div class="gal"><div class="main pmain"><img src="assets/img/products/wrc-1x6x6-detail.jpg" alt="1x6x6 #2 knotty western red cedar fence board" onerror="this.remove()"></div></div>
+    <div class="dinfo">
+      <button class="close" type="button" aria-label="Close">×</button>
+      <div class="when anim">Western red cedar</div>
+      <h2 id="pTitle-wrc-1x6x6" class="anim" style="--d:.06s">1x6x6 #2 Knotty Western Red Cedar Board</h2>
+      <div class="price anim" style="--d:.1s"><b class="ask">Ask for today's price</b></div>
+      <div class="msg anim" style="--d:.14s"><p>Nothing looks or smells like a real cedar fence. This 1x6x6 #2 knotty western red cedar board has a warm, reddish-brown color and natural knots that give your fence a rustic, timeless character. Cedar is naturally resistant to rot, decay and insects, so it lasts outdoors without any chemical treatment.</p><p>Use it for privacy, shadowbox and board-on-board fences, or to match and repair an existing cedar fence. Leave it to weather to a soft silver gray, or stain it to keep its rich color.</p></div>
+      <ul class="facts anim" style="--d:.18s">
+        <li><span>Size</span><b>1" × 6" × 6' (nominal)</b></li>
+        <li><span>Grade</span><b>#2 (knotty)</b></li>
+        <li><span>Wood</span><b>Western red cedar</b></li>
+        <li><span>Best for</span><b>Privacy, shadowbox &amp; board-on-board fences</b></li>
+        <li><span>Pickup</span><b>6027 Farrington Ave, Alexandria, VA</b></li>
+        <li><span>Delivery</span><b>DC, MD &amp; VA</b></li>
+      </ul>
+      <p class="pnote anim" style="--d:.22s">Cedar prices follow the market. Contact a sales rep at <a href="mailto:sales@expertfence.com">sales@expertfence.com</a> for current pricing and availability.</p>
+      <div class="anim" style="--d:.26s"><a class="btn btn-primary" href="mailto:sales@expertfence.com?subject=1x6x6%20%232%20Knotty%20Western%20Red%20Cedar%20Board%20-%20price%20and%20availability">Email a sales rep →</a></div>
+    </div>
+  </div>
+</div>
+<div class="dlg" id="pdlg-wrc-1x4x8" data-pdlg role="dialog" aria-modal="true" aria-labelledby="pTitle-wrc-1x4x8">
+  <div class="backdrop"></div>
+  <div class="sheet">
+    <div class="gal"><div class="main pmain"><img src="assets/img/products/wrc-1x4x8-detail.jpg" alt="1x4x8 #2 knotty western red cedar board" onerror="this.remove()"></div></div>
+    <div class="dinfo">
+      <button class="close" type="button" aria-label="Close">×</button>
+      <div class="when anim">Western red cedar</div>
+      <h2 id="pTitle-wrc-1x4x8" class="anim" style="--d:.06s">1x4x8 #2 Knotty Western Red Cedar Board</h2>
+      <div class="price anim" style="--d:.1s"><b class="ask">Ask for today's price</b></div>
+      <div class="msg anim" style="--d:.14s"><p>Light, straight and easy to work with. This 1x4x8 #2 knotty western red cedar board brings the warm color and natural knots of real cedar to picket fences and trim. Cedar is naturally resistant to rot, decay and insects, with no chemical treatment.</p><p>Use it for picket fences, battens, trim, lattice frames, planters and garden projects. A full 8&nbsp;ft length gives you more from every board.</p></div>
+      <ul class="facts anim" style="--d:.18s">
+        <li><span>Size</span><b>1" × 4" × 8' (nominal)</b></li>
+        <li><span>Grade</span><b>#2 (knotty)</b></li>
+        <li><span>Wood</span><b>Western red cedar</b></li>
+        <li><span>Best for</span><b>Picket fences, battens, trim &amp; garden projects</b></li>
+        <li><span>Pickup</span><b>6027 Farrington Ave, Alexandria, VA</b></li>
+        <li><span>Delivery</span><b>DC, MD &amp; VA</b></li>
+      </ul>
+      <p class="pnote anim" style="--d:.22s">Cedar prices follow the market. Contact a sales rep at <a href="mailto:sales@expertfence.com">sales@expertfence.com</a> for current pricing and availability.</p>
+      <div class="anim" style="--d:.26s"><a class="btn btn-primary" href="mailto:sales@expertfence.com?subject=1x4x8%20%232%20Knotty%20Western%20Red%20Cedar%20Board%20-%20price%20and%20availability">Email a sales rep →</a></div>
+    </div>
+  </div>
+</div>
+<div class="dlg" id="pdlg-wrc-2x4x8" data-pdlg role="dialog" aria-modal="true" aria-labelledby="pTitle-wrc-2x4x8">
+  <div class="backdrop"></div>
+  <div class="sheet">
+    <div class="gal"><div class="main pmain"><img src="assets/img/products/wrc-2x4x8-detail.jpg" alt="2x4x8 #2 knotty western red cedar lumber" onerror="this.remove()"></div></div>
+    <div class="dinfo">
+      <button class="close" type="button" aria-label="Close">×</button>
+      <div class="when anim">Western red cedar</div>
+      <h2 id="pTitle-wrc-2x4x8" class="anim" style="--d:.06s">2x4x8 #2 Knotty Western Red Cedar Lumber</h2>
+      <div class="price anim" style="--d:.1s"><b class="ask">Ask for today's price</b></div>
+      <div class="msg anim" style="--d:.14s"><p>Build an all-cedar fence from top to bottom. This 2x4x8 #2 knotty western red cedar lumber is the matching rail for cedar boards and pickets, with the same warm color and natural knots. Cedar is naturally resistant to rot, decay and insects, so your fence frame looks good and lasts.</p><p>Use it for fence rails, gate frames, pergola trim, planter boxes and other outdoor projects where you want the look of real cedar.</p></div>
+      <ul class="facts anim" style="--d:.18s">
+        <li><span>Size</span><b>2" × 4" × 8' (nominal)</b></li>
+        <li><span>Grade</span><b>#2 (knotty)</b></li>
+        <li><span>Wood</span><b>Western red cedar</b></li>
+        <li><span>Best for</span><b>Fence rails, gate frames &amp; outdoor projects</b></li>
+        <li><span>Pickup</span><b>6027 Farrington Ave, Alexandria, VA</b></li>
+        <li><span>Delivery</span><b>DC, MD &amp; VA</b></li>
+      </ul>
+      <p class="pnote anim" style="--d:.22s">Cedar prices follow the market. Contact a sales rep at <a href="mailto:sales@expertfence.com">sales@expertfence.com</a> for current pricing and availability.</p>
+      <div class="anim" style="--d:.26s"><a class="btn btn-primary" href="mailto:sales@expertfence.com?subject=2x4x8%20%232%20Knotty%20Western%20Red%20Cedar%20Lumber%20-%20price%20and%20availability">Email a sales rep →</a></div>
     </div>
   </div>
 </div>
