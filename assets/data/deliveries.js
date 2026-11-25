@@ -5,6 +5,29 @@
    ===================================================================== */
 window.EF_DELIVERIES = [
   {
+    id: "2026-11-25-hampton-cedar",
+    date: "2026-11-25",
+    supplier: "Hampton Lumber",
+    origin: { en: "Portland, Oregon", es: "Portland, Oregón" },
+    material: { en: "1x6 Cedar, Knotty & Clear", es: "Cedro 1x6, nudoso y clear" },
+    photos: [
+      "assets/img/trucks/2026-11-25-hampton-cedar-1.jpg",
+      "assets/img/trucks/2026-11-25-hampton-cedar-2.jpg"
+    ],
+    title: {
+      en: "A full container of 1x6 cedar, knotty and clear",
+      es: "Un contenedor completo de cedro 1x6, nudoso y clear"
+    },
+    summary: {
+      en: "Another delivery from Hampton Lumber pulled into the yard today: a full container of 1x6 boards in both knotty and clear grades.",
+      es: "Hoy llegó a la yarda otra entrega de Hampton Lumber: un contenedor completo de tablas 1x6, en grado nudoso y en clear."
+    },
+    message: {
+      en: "One day after our last cedar delivery, another full container from Hampton Lumber pulled into our Alexandria yard this morning, packed with 1x6 boards in two grades.\n\nThe knotty boards bring the rustic, natural character that makes a privacy fence feel warm and timeless. The clear boards are the premium choice: smooth, knot-free faces for sleek horizontal fences, modern gates and the projects where every detail shows.\n\nFresh stock like this does not sit for long. Whether you are building one gate or a few hundred feet of fence, email sales@expertfence.com and a sales rep will set aside the boards your project needs.",
+      es: "Un día después de nuestra última entrega de cedro, esta mañana entró a nuestra yarda de Alexandria otro contenedor completo de Hampton Lumber, cargado de tablas 1x6 en dos grados.\n\nLas tablas nudosas traen ese carácter rústico y natural que hace que una cerca de privacidad se vea cálida y atemporal. Las tablas clear son la opción premium: caras lisas y sin nudos para cercas horizontales elegantes, portones modernos y los proyectos donde cada detalle se nota.\n\nEl material fresco como este no dura mucho en la yarda. Ya sea que construya un solo portón o cientos de pies de cerca, escriba a sales@expertfence.com y un vendedor le apartará las tablas que su proyecto necesita."
+    }
+  },
+  {
     id: "2026-11-24-hampton-wrc",
     date: "2026-11-24",
     supplier: "Hampton Lumber",
