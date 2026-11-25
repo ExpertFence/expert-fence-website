@@ -321,6 +321,13 @@ legend{font-weight:700;font-size:14px;color:var(--forest);margin-bottom:8px}
 .price b{font:900 44px var(--slab);color:var(--green)}
 .price span{font-weight:700;color:var(--muted)}
 .pnote{font-size:13.5px;color:var(--muted);background:var(--mint-100);padding:12px 14px;border-radius:12px;margin:0 0 20px}
+.pgroup{padding:52px 0 0}
+.pgroup+.products{padding-top:26px}
+.pgroup .eyebrow{display:inline-block}
+.pgroup h2{margin-top:10px}
+.pgroup .lead{max-width:720px}
+.pgroup.second{margin-top:44px;padding-top:52px;border-top:1px solid var(--line)}
+.price b.ask{font-size:30px}
 .more-head{padding:60px 0 0}
 .more-head h2{margin-top:10px}
 .cats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
@@ -677,6 +684,11 @@ body.entering .stage{transform:scale(1.06);filter:blur(8px)}
   </section>
 
   <div class="wrap">
+    <div class="pgroup" id="pressure-treated">
+      <span class="eyebrow rv">Pino tratado</span>
+      <h2 class="rv" style="--d:.06s">Madera tratada grado #2</h2>
+      <p class="lead rv" style="--d:.1s">Tablas y rieles grado #2 nudosos a precio económico, tratados a presión para resistir la pudrición y los insectos.</p>
+    </div>
     <div class="products">
       <article class="product rv" data-product="pt-1x6x6">
         <div class="pimg" data-open-product="pt-1x6x6">
@@ -702,7 +714,7 @@ body.entering .stage{transform:scale(1.06);filter:blur(8px)}
           <p>Tabla delgada y versátil de 8&nbsp;pies, grado #2 nudosa, a un precio económico. Perfecta para cercas de piquetes, listones, molduras y proyectos de jardín, y tratada a presión para resistir la pudrición y los insectos.</p>
           <div class="prow">
             <span class="psize">1" × 4" × 8'</span>
-            <button class="btn btn-primary btn-sm" type="button" data-open-product="pt-1x4x8">View more →</button>
+            <button class="btn btn-primary btn-sm" type="button" data-open-product="pt-1x4x8">Ver más →</button>
           </div>
         </div>
       </article>
@@ -716,24 +728,60 @@ body.entering .stage{transform:scale(1.06);filter:blur(8px)}
           <p>El riel de trabajo de toda cerca de madera. Un 2x4 resistente de 8&nbsp;pies, grado #2 nudoso, a un precio económico y tratado a presión para resistir la pudrición y los insectos. Ideal para rieles de cerca, marcos de portón y estructuras al aire libre.</p>
           <div class="prow">
             <span class="psize">2" × 4" × 8'</span>
-            <button class="btn btn-primary btn-sm" type="button" data-open-product="pt-2x4x8">View more →</button>
+            <button class="btn btn-primary btn-sm" type="button" data-open-product="pt-2x4x8">Ver más →</button>
           </div>
         </div>
       </article>
     </div>
 
-    <div class="more-head">
-      <span class="eyebrow rv">También en la yarda</span>
-      <h2 class="rv" style="--d:.06s">Más materiales para cercas</h2>
-      <p class="lead rv" style="--d:.1s">Pregunte a un vendedor por medidas, largos y el precio del día.</p>
+    <div class="pgroup second" id="western-red-cedar">
+      <span class="eyebrow rv">Cedro rojo del oeste</span>
+      <h2 class="rv" style="--d:.06s">Cedro rojo del oeste #2 nudoso</h2>
+      <p class="lead rv" style="--d:.1s">Cedro natural de color cálido y nudos rústicos. Resistente por naturaleza a la pudrición y los insectos, sin tratamiento químico.</p>
     </div>
-    <div class="cats">
-      <a class="catcard rv" href="mailto:sales@expertfence.com?subject=Pressure-treated%20posts%20and%20rails"><i class="sw-pine"></i><div><h3>Postes y rieles tratados</h3><p>Postes 4x4 y 6x6 y rieles 2x4 para estructuras fuertes y duraderas.</p><span>Pedir medidas y precios →</span></div></a>
-      <a class="catcard rv" style="--d:.06s" href="mailto:sales@expertfence.com?subject=Cedar%20fence%20boards"><i class="sw-cedar"></i><div><h3>Cedro rojo del oeste</h3><p>Tablas, piquetes y postes de belleza natural y resistentes a la pudrición.</p><span>Pedir medidas y precios →</span></div></a>
-      <a class="catcard rv" style="--d:.12s" href="mailto:sales@expertfence.com?subject=Clear%20cedar"><i class="sw-clear"></i><div><h3>Cedro clear</h3><p>Cedro premium sin nudos para privacidad de alta gama y cercas horizontales.</p><span>Pedir medidas y precios →</span></div></a>
-      <a class="catcard rv" href="mailto:sales@expertfence.com?subject=Japanese%20cedar"><i class="sw-jap"></i><div><h3>Cedro japonés</h3><p>Tablas ligeras de veta recta para diseños limpios y modernos.</p><span>Pedir medidas y precios →</span></div></a>
-      <a class="catcard rv" style="--d:.06s" href="mailto:sales@expertfence.com?subject=Vinyl%20fence"><i class="sw-vinyl"></i><div><h3>Cercas de vinilo</h3><p>Paneles de privacidad y de piquetes, postes y tapas. Cero mantenimiento, nunca necesita tinte.</p><span>Pedir medidas y precios →</span></div></a>
-      <a class="catcard rv" style="--d:.12s" href="mailto:sales@expertfence.com?subject=Gate%20hardware"><i class="sw-hw"></i><div><h3>Herrajes para portones y cercas</h3><p>Bisagras, cerrojos, pasadores, ruedas para portón, tapas de poste y tornillería.</p><span>Pedir medidas y precios →</span></div></a>
+    <div class="products">
+      <article class="product rv" data-product="wrc-1x6x6">
+        <div class="pimg" data-open-product="wrc-1x6x6">
+          <img src="../assets/img/products/wrc-1x6x6.jpg" alt="Tabla de cedro rojo del oeste 1x6x6 #2 nudosa en Expert Fence Supply, Alexandria VA" loading="lazy" onerror="this.remove()">
+          <span class="ptag">Cedro rojo del oeste</span>
+        </div>
+        <div class="pbody">
+          <h2>Tabla de cedro rojo 1x6x6 #2 nudosa</h2>
+          <p>La tabla clásica de cedro para privacidad. Cedro rojo del oeste #2 nudoso, de color café rojizo cálido, resistente por naturaleza a la pudrición y los insectos, sin tratamiento químico y de 6&nbsp;pies completos.</p>
+          <div class="prow">
+            <span class="psize">1" × 6" × 6'</span>
+            <button class="btn btn-primary btn-sm" type="button" data-open-product="wrc-1x6x6">Ver más →</button>
+          </div>
+        </div>
+      </article>
+      <article class="product rv" style="--d:.08s" data-product="wrc-1x4x8">
+        <div class="pimg" data-open-product="wrc-1x4x8">
+          <img src="../assets/img/products/wrc-1x4x8.jpg" alt="Tabla de cedro rojo del oeste 1x4x8 #2 nudosa en Expert Fence Supply, Alexandria VA" loading="lazy" onerror="this.remove()">
+          <span class="ptag">Cedro rojo del oeste</span>
+        </div>
+        <div class="pbody">
+          <h2>Tabla de cedro rojo 1x4x8 #2 nudosa</h2>
+          <p>Tabla de cedro delgada de 8&nbsp;pies, con nudos naturales y un color intenso. Ligera, fácil de cortar y resistente a la pudrición: ideal para cercas de piquetes, listones, molduras y proyectos de jardín.</p>
+          <div class="prow">
+            <span class="psize">1" × 4" × 8'</span>
+            <button class="btn btn-primary btn-sm" type="button" data-open-product="wrc-1x4x8">Ver más →</button>
+          </div>
+        </div>
+      </article>
+      <article class="product rv" style="--d:.16s" data-product="wrc-2x4x8">
+        <div class="pimg" data-open-product="wrc-2x4x8">
+          <img src="../assets/img/products/wrc-2x4x8.jpg" alt="Madera de cedro rojo del oeste 2x4x8 #2 nudosa en Expert Fence Supply, Alexandria VA" loading="lazy" onerror="this.remove()">
+          <span class="ptag">Cedro rojo del oeste</span>
+        </div>
+        <div class="pbody">
+          <h2>Madera de cedro rojo 2x4x8 #2 nudosa</h2>
+          <p>El riel de cedro que combina para una cerca toda de cedro. Un 2x4 resistente de 8&nbsp;pies, grado #2 nudoso, resistente por naturaleza a la pudrición y los insectos, para rieles de cerca, marcos de portón y proyectos al aire libre.</p>
+          <div class="prow">
+            <span class="psize">2" × 4" × 8'</span>
+            <button class="btn btn-primary btn-sm" type="button" data-open-product="wrc-2x4x8">Ver más →</button>
+          </div>
+        </div>
+      </article>
     </div>
 
     <div class="mat-cta">
@@ -898,6 +946,75 @@ body.entering .stage{transform:scale(1.06);filter:blur(8px)}
       </ul>
       <p class="pnote anim" style="--d:.22s">*Precio sujeto a cambios. Comuníquese con un vendedor en <a href="mailto:sales@expertfence.com">sales@expertfence.com</a> para confirmar el precio y la disponibilidad actuales.</p>
       <div class="anim" style="--d:.26s"><a class="btn btn-primary" href="mailto:sales@expertfence.com?subject=Madera%20tratada%202x4x8%20grado%20%232%20-%20precio%20y%20disponibilidad">Escribir a un vendedor →</a></div>
+    </div>
+  </div>
+</div>
+<div class="dlg" id="pdlg-wrc-1x6x6" data-pdlg role="dialog" aria-modal="true" aria-labelledby="pTitle-wrc-1x6x6">
+  <div class="backdrop"></div>
+  <div class="sheet">
+    <div class="gal"><div class="main pmain"><img src="../assets/img/products/wrc-1x6x6-detail.jpg" alt="Tabla de cedro rojo del oeste 1x6x6 #2 nudosa" onerror="this.remove()"></div></div>
+    <div class="dinfo">
+      <button class="close" type="button" aria-label="Cerrar">×</button>
+      <div class="when anim">Cedro rojo del oeste</div>
+      <h2 id="pTitle-wrc-1x6x6" class="anim" style="--d:.06s">Tabla de cedro rojo 1x6x6 #2 nudosa</h2>
+      <div class="price anim" style="--d:.1s"><b class="ask">Pregunte el precio del día</b></div>
+      <div class="msg anim" style="--d:.14s"><p>Nada se ve ni huele como una cerca de cedro de verdad. Esta tabla 1x6x6 de cedro rojo del oeste #2 nudosa tiene un color café rojizo cálido y nudos naturales que le dan a su cerca un carácter rústico y atemporal. El cedro resiste por naturaleza la pudrición y los insectos, así que dura al aire libre sin ningún tratamiento químico.</p><p>Úsela para cercas de privacidad, shadowbox y tabla sobre tabla, o para combinar y reparar una cerca de cedro existente. Déjela envejecer a un gris plateado suave o tíñala para conservar su color intenso.</p></div>
+      <ul class="facts anim" style="--d:.18s">
+        <li><span>Medida</span><b>1" × 6" × 6' (nominal)</b></li>
+        <li><span>Grado</span><b>#2 (nudosa)</b></li>
+        <li><span>Madera</span><b>Cedro rojo del oeste</b></li>
+        <li><span>Ideal para</span><b>Cercas de privacidad, shadowbox y tabla sobre tabla</b></li>
+        <li><span>Recogida</span><b>6027 Farrington Ave, Alexandria, VA</b></li>
+        <li><span>Entrega</span><b>DC, MD y VA</b></li>
+      </ul>
+      <p class="pnote anim" style="--d:.22s">El precio del cedro cambia con el mercado. Comuníquese con un vendedor en <a href="mailto:sales@expertfence.com">sales@expertfence.com</a> para saber el precio y la disponibilidad del día.</p>
+      <div class="anim" style="--d:.26s"><a class="btn btn-primary" href="mailto:sales@expertfence.com?subject=Tabla%20de%20cedro%20rojo%201x6x6%20%232%20nudosa%20-%20precio%20y%20disponibilidad">Escribir a un vendedor →</a></div>
+    </div>
+  </div>
+</div>
+<div class="dlg" id="pdlg-wrc-1x4x8" data-pdlg role="dialog" aria-modal="true" aria-labelledby="pTitle-wrc-1x4x8">
+  <div class="backdrop"></div>
+  <div class="sheet">
+    <div class="gal"><div class="main pmain"><img src="../assets/img/products/wrc-1x4x8-detail.jpg" alt="Tabla de cedro rojo del oeste 1x4x8 #2 nudosa" onerror="this.remove()"></div></div>
+    <div class="dinfo">
+      <button class="close" type="button" aria-label="Cerrar">×</button>
+      <div class="when anim">Cedro rojo del oeste</div>
+      <h2 id="pTitle-wrc-1x4x8" class="anim" style="--d:.06s">Tabla de cedro rojo 1x4x8 #2 nudosa</h2>
+      <div class="price anim" style="--d:.1s"><b class="ask">Pregunte el precio del día</b></div>
+      <div class="msg anim" style="--d:.14s"><p>Ligera, derecha y fácil de trabajar. Esta tabla 1x4x8 de cedro rojo del oeste #2 nudosa lleva el color cálido y los nudos naturales del cedro auténtico a cercas de piquetes y molduras. El cedro resiste por naturaleza la pudrición y los insectos, sin tratamiento químico.</p><p>Úsela para cercas de piquetes, listones, molduras, marcos de celosía, maceteros y proyectos de jardín. Con 8&nbsp;pies completos rinde más cada tabla.</p></div>
+      <ul class="facts anim" style="--d:.18s">
+        <li><span>Medida</span><b>1" × 4" × 8' (nominal)</b></li>
+        <li><span>Grado</span><b>#2 (nudosa)</b></li>
+        <li><span>Madera</span><b>Cedro rojo del oeste</b></li>
+        <li><span>Ideal para</span><b>Cercas de piquetes, listones, molduras y proyectos de jardín</b></li>
+        <li><span>Recogida</span><b>6027 Farrington Ave, Alexandria, VA</b></li>
+        <li><span>Entrega</span><b>DC, MD y VA</b></li>
+      </ul>
+      <p class="pnote anim" style="--d:.22s">El precio del cedro cambia con el mercado. Comuníquese con un vendedor en <a href="mailto:sales@expertfence.com">sales@expertfence.com</a> para saber el precio y la disponibilidad del día.</p>
+      <div class="anim" style="--d:.26s"><a class="btn btn-primary" href="mailto:sales@expertfence.com?subject=Tabla%20de%20cedro%20rojo%201x4x8%20%232%20nudosa%20-%20precio%20y%20disponibilidad">Escribir a un vendedor →</a></div>
+    </div>
+  </div>
+</div>
+<div class="dlg" id="pdlg-wrc-2x4x8" data-pdlg role="dialog" aria-modal="true" aria-labelledby="pTitle-wrc-2x4x8">
+  <div class="backdrop"></div>
+  <div class="sheet">
+    <div class="gal"><div class="main pmain"><img src="../assets/img/products/wrc-2x4x8-detail.jpg" alt="Madera de cedro rojo del oeste 2x4x8 #2 nudosa" onerror="this.remove()"></div></div>
+    <div class="dinfo">
+      <button class="close" type="button" aria-label="Cerrar">×</button>
+      <div class="when anim">Cedro rojo del oeste</div>
+      <h2 id="pTitle-wrc-2x4x8" class="anim" style="--d:.06s">Madera de cedro rojo 2x4x8 #2 nudosa</h2>
+      <div class="price anim" style="--d:.1s"><b class="ask">Pregunte el precio del día</b></div>
+      <div class="msg anim" style="--d:.14s"><p>Construya una cerca toda de cedro, de arriba a abajo. Esta madera 2x4x8 de cedro rojo del oeste #2 nudosa es el riel que combina con tablas y piquetes de cedro, con el mismo color cálido y nudos naturales. El cedro resiste por naturaleza la pudrición y los insectos, así que la estructura de su cerca se ve bien y dura.</p><p>Úsela para rieles de cerca, marcos de portón, detalles de pérgola, maceteros y otros proyectos al aire libre donde quiera el look del cedro auténtico.</p></div>
+      <ul class="facts anim" style="--d:.18s">
+        <li><span>Medida</span><b>2" × 4" × 8' (nominal)</b></li>
+        <li><span>Grado</span><b>#2 (nudosa)</b></li>
+        <li><span>Madera</span><b>Cedro rojo del oeste</b></li>
+        <li><span>Ideal para</span><b>Rieles de cerca, marcos de portón y proyectos al aire libre</b></li>
+        <li><span>Recogida</span><b>6027 Farrington Ave, Alexandria, VA</b></li>
+        <li><span>Entrega</span><b>DC, MD y VA</b></li>
+      </ul>
+      <p class="pnote anim" style="--d:.22s">El precio del cedro cambia con el mercado. Comuníquese con un vendedor en <a href="mailto:sales@expertfence.com">sales@expertfence.com</a> para saber el precio y la disponibilidad del día.</p>
+      <div class="anim" style="--d:.26s"><a class="btn btn-primary" href="mailto:sales@expertfence.com?subject=Madera%20de%20cedro%20rojo%202x4x8%20%232%20nudosa%20-%20precio%20y%20disponibilidad">Escribir a un vendedor →</a></div>
     </div>
   </div>
 </div>
